@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="184" id="J1F-br-oBS" customClass="ProfileHeaderCell" customModule="WESST" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="184"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="J1F-br-oBS" id="LAQ-lT-GhB">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="183.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nPU-1s-RhK">
+                        <rect key="frame" x="0.0" y="93" width="320" height="91"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PSU-dx-E1q" customClass="PFImageView">
+                        <rect key="frame" x="110" y="8" width="100" height="100"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="TTw-SB-zf0"/>
+                            <constraint firstAttribute="height" constant="100" id="pNf-a3-LTe"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="School" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u1c-ie-Ozr">
+                        <rect key="frame" x="8" y="140" width="304" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="18" id="O7P-CZ-Sej"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dUJ-0E-Ffk">
+                        <rect key="frame" x="8" y="159" width="304" height="21"/>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="17"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yxj-3H-MXC">
+                        <rect key="frame" x="8" y="116" width="304" height="23"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="23" id="mbb-jl-KZw"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="21"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                <constraints>
+                    <constraint firstItem="nPU-1s-RhK" firstAttribute="top" secondItem="LAQ-lT-GhB" secondAttribute="topMargin" constant="85" id="8I6-Ix-d9q"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="nPU-1s-RhK" secondAttribute="bottom" constant="-8.5" id="C5U-eu-hsk"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="dUJ-0E-Ffk" secondAttribute="bottom" constant="-4.5" id="GDP-jv-mVk"/>
+                    <constraint firstAttribute="trailing" secondItem="nPU-1s-RhK" secondAttribute="trailing" id="IJI-Lk-RUT"/>
+                    <constraint firstItem="PSU-dx-E1q" firstAttribute="centerX" secondItem="Yxj-3H-MXC" secondAttribute="centerX" id="PTd-4r-Zfy"/>
+                    <constraint firstItem="Yxj-3H-MXC" firstAttribute="top" secondItem="PSU-dx-E1q" secondAttribute="bottom" constant="8" symbolic="YES" id="SEV-Rb-ghO"/>
+                    <constraint firstItem="dUJ-0E-Ffk" firstAttribute="top" secondItem="u1c-ie-Ozr" secondAttribute="bottom" constant="1" id="VDH-wD-hSN"/>
+                    <constraint firstItem="u1c-ie-Ozr" firstAttribute="trailing" secondItem="dUJ-0E-Ffk" secondAttribute="trailing" id="aIt-yF-FOY"/>
+                    <constraint firstItem="nPU-1s-RhK" firstAttribute="centerX" secondItem="u1c-ie-Ozr" secondAttribute="centerX" id="fkr-Nf-RHS"/>
+                    <constraint firstItem="u1c-ie-Ozr" firstAttribute="top" secondItem="Yxj-3H-MXC" secondAttribute="bottom" constant="1" id="jiF-B0-yPO"/>
+                    <constraint firstItem="Yxj-3H-MXC" firstAttribute="leading" secondItem="LAQ-lT-GhB" secondAttribute="leadingMargin" id="lwn-ay-3d0"/>
+                    <constraint firstItem="nPU-1s-RhK" firstAttribute="leading" secondItem="LAQ-lT-GhB" secondAttribute="leading" id="mio-ZN-mXk"/>
+                    <constraint firstItem="PSU-dx-E1q" firstAttribute="top" secondItem="LAQ-lT-GhB" secondAttribute="topMargin" id="nKK-dc-lPO"/>
+                    <constraint firstItem="u1c-ie-Ozr" firstAttribute="leading" secondItem="dUJ-0E-Ffk" secondAttribute="leading" id="oGu-vJ-ke5"/>
+                    <constraint firstItem="Yxj-3H-MXC" firstAttribute="trailing" secondItem="u1c-ie-Ozr" secondAttribute="trailing" id="pWg-Ib-85w"/>
+                    <constraint firstItem="Yxj-3H-MXC" firstAttribute="leading" secondItem="u1c-ie-Ozr" secondAttribute="leading" id="vbE-Iq-XuT"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="backgroundLabel" destination="nPU-1s-RhK" id="x9c-Nq-frW"/>
+                <outlet property="iconView" destination="PSU-dx-E1q" id="l7C-mg-DQN"/>
+                <outlet property="nameLabel" destination="Yxj-3H-MXC" id="QRG-9T-Ez5"/>
+                <outlet property="schoolLabel" destination="u1c-ie-Ozr" id="xd6-h5-IAn"/>
+                <outlet property="titleLabel" destination="dUJ-0E-Ffk" id="6lB-Zd-dd1"/>
+            </connections>
+            <point key="canvasLocation" x="325" y="295"/>
+        </tableViewCell>
+    </objects>
+</document>

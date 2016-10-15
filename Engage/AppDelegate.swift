@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Parse
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +18,64 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Configure connection to Parse-Server
+        /*
+        let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
+            ParseMutableClientConfiguration.applicationId = "myAppId";
+            ParseMutableClientConfiguration.clientKey = "myMasterKey";
+            ParseMutableClientConfiguration.server = "http://parseserver-5qrkt-env.us-east-1.elasticbeanstalk.com/parse";
+        });
+        Parse.initialize(with: config) 
+        */
+        
+        
+        Parse.setApplicationId("G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b", clientKey: "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq")
+        
+        // Remove shadow from navbar
+        UINavigationBar.appearance().shadowImage = UIImage()
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        UIApplication.shared.statusBarStyle = .lightContent
+        
+        // Change navbar color
+        let navbar = UINavigationBar.appearance()
+        navbar.barTintColor = MAIN_COLOR
+        navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName: UIFont(name: "Avenir Next", size: 22)!]
+        navbar.tintColor = UIColor.white
+        navbar.isTranslucent = false
+        
+        // Remove back button text from navbar
+        let barAppearace = UIBarButtonItem.appearance()
+        barAppearace.setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -60), for:UIBarMetrics.default)
+
+        
+        // Register for push notifications
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+            // Enable or disable features based on authorization.
+        }
+        application.registerForRemoteNotifications()
+
         return true
+    }
+    
+    // Mark - Push Notification methods
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let installation = PFInstallation.current()
+        installation?.setDeviceTokenFrom(deviceToken as Data)
+        installation?.saveInBackground()
+        print("Registered for Push Notifications")
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register for Push Notifications")
+    }
+    
+    internal func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+        
+        print("Recieved Remote Notification")
+        print(userInfo)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

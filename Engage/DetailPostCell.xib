@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="150" id="N9E-zA-NzZ" customClass="DetailPostCell" customModule="WESST" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="601" height="150"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="N9E-zA-NzZ" id="0Ip-1b-WTG">
+                <rect key="frame" x="0.0" y="0.0" width="601" height="149.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SCHOOL" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qWt-bj-LXu">
+                        <rect key="frame" x="8" y="127" width="52" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="82" id="2mr-MX-hkZ"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                        <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2mr-MX-hkZ"/>
+                            </mask>
+                        </variation>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SHq-Ib-tS2">
+                        <rect key="frame" x="8" y="8" width="75" height="75"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="75" id="YdI-5U-f0W"/>
+                            <constraint firstAttribute="width" constant="75" id="mrE-68-quC"/>
+                            <constraint firstAttribute="width" secondItem="SHq-Ib-tS2" secondAttribute="height" multiplier="1:1" id="tnv-KN-0tY"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5xy-DF-2VF">
+                        <rect key="frame" x="91" y="8" width="501" height="75"/>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Feed" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQD-67-rN5">
+                        <rect key="frame" x="8" y="91" width="584" height="27"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="Uy8-Ew-jLD"/>
+                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="40" id="lu8-rE-TXY"/>
+                            <constraint firstAttribute="height" constant="27" id="pU8-ga-AKQ"/>
+                            <constraint firstAttribute="height" constant="40" id="ztG-IE-HuP"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
+                        <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Uy8-Ew-jLD"/>
+                                <exclude reference="lu8-rE-TXY"/>
+                                <exclude reference="pU8-ga-AKQ"/>
+                                <exclude reference="ztG-IE-HuP"/>
+                            </mask>
+                        </variation>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dhD-36-Z2f">
+                        <rect key="frame" x="558.5" y="127" width="34.5" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="72" id="nZl-wn-uBw"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                        <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="nZl-wn-uBw"/>
+                            </mask>
+                        </variation>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="SHq-Ib-tS2" firstAttribute="leading" secondItem="LQD-67-rN5" secondAttribute="leading" id="6DI-Xq-NBT"/>
+                    <constraint firstItem="5xy-DF-2VF" firstAttribute="trailing" secondItem="LQD-67-rN5" secondAttribute="trailing" id="7eY-Go-wQX"/>
+                    <constraint firstItem="qWt-bj-LXu" firstAttribute="leading" secondItem="LQD-67-rN5" secondAttribute="leading" id="EFh-wM-7Rl"/>
+                    <constraint firstItem="LQD-67-rN5" firstAttribute="centerX" secondItem="0Ip-1b-WTG" secondAttribute="centerX" id="FBb-57-rXm"/>
+                    <constraint firstItem="SHq-Ib-tS2" firstAttribute="top" secondItem="5xy-DF-2VF" secondAttribute="top" id="FQ0-J4-2XE"/>
+                    <constraint firstItem="LQD-67-rN5" firstAttribute="top" secondItem="5xy-DF-2VF" secondAttribute="bottom" constant="8" symbolic="YES" id="GhG-1J-8S5"/>
+                    <constraint firstItem="dhD-36-Z2f" firstAttribute="trailing" secondItem="0Ip-1b-WTG" secondAttribute="trailingMargin" id="HNK-Ud-nK4"/>
+                    <constraint firstItem="SHq-Ib-tS2" firstAttribute="leading" secondItem="0Ip-1b-WTG" secondAttribute="leadingMargin" id="SaS-zu-h51"/>
+                    <constraint firstItem="5xy-DF-2VF" firstAttribute="leading" secondItem="SHq-Ib-tS2" secondAttribute="trailing" constant="8" symbolic="YES" id="ZMR-aU-1V8"/>
+                    <constraint firstItem="qWt-bj-LXu" firstAttribute="baseline" secondItem="dhD-36-Z2f" secondAttribute="baseline" id="cBM-1j-2tz"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="qWt-bj-LXu" secondAttribute="bottom" constant="-0.5" id="d9k-M2-RfY"/>
+                    <constraint firstItem="qWt-bj-LXu" firstAttribute="top" secondItem="LQD-67-rN5" secondAttribute="bottom" constant="9" id="e3u-Ar-nUr"/>
+                    <constraint firstItem="SHq-Ib-tS2" firstAttribute="top" secondItem="0Ip-1b-WTG" secondAttribute="topMargin" id="hNm-Sp-HYb"/>
+                    <constraint firstItem="LQD-67-rN5" firstAttribute="top" secondItem="SHq-Ib-tS2" secondAttribute="bottom" constant="8" symbolic="YES" id="rJV-9N-XEQ"/>
+                    <constraint firstItem="qWt-bj-LXu" firstAttribute="firstBaseline" secondItem="dhD-36-Z2f" secondAttribute="firstBaseline" id="z61-wv-F3E"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="date" destination="dhD-36-Z2f" id="PUf-zg-dha"/>
+                <outlet property="iconView" destination="SHq-Ib-tS2" id="NkP-IW-bZC"/>
+                <outlet property="info" destination="LQD-67-rN5" id="GDc-52-qxA"/>
+                <outlet property="school" destination="qWt-bj-LXu" id="lNQ-NB-mnc"/>
+                <outlet property="username" destination="5xy-DF-2VF" id="X8H-et-6hA"/>
+            </connections>
+            <point key="canvasLocation" x="571.5" y="230"/>
+        </tableViewCell>
+    </objects>
+</document>
