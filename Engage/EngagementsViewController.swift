@@ -14,8 +14,10 @@ import SVProgressHUD
 
 final class EngagementsViewController: FormViewController {
     
+    let refreshControl = UIRefreshControl()
     var firstLoad = true
-    var engagementsCount = 0
+    var engagementsCount = -1
+    var isLoading = false
     
     // MARK: Public
     
@@ -25,15 +27,33 @@ final class EngagementsViewController: FormViewController {
         // Configure UI
         title = "Engage"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutButtonPressed))
+        self.refreshControl.addTarget(self, action: #selector(EngagementsViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        self.tableView.addSubview(refreshControl)
         
         SVProgressHUD.show(withStatus: "Loading")
         queryEngagements()
+    }
+    
+    func walkthroughPageDidChange(_ pageNumber: Int) {
+        print("Current Page \(pageNumber)")
+    }
+    
+    func walkthroughCloseButtonPressed() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         Engagement.sharedInstance.clear()
         MAIN_COLOR = UIColor.flatSkyBlueColorDark()
         refresh(self)
+    }
+    
+    func handleRefresh(_ refreshControl: UIRefreshControl) {
+        if isLoading == false {
+            engagementsCount = -1
+            queryEngagements()
+        }
+        refreshControl.endRefreshing()
     }
     
     func refresh(_ sender:AnyObject) {
@@ -77,8 +97,10 @@ final class EngagementsViewController: FormViewController {
         engagementsQuery.includeKey(PF_ENGAGEMENTS_MEMBERS)
         engagementsQuery.includeKey(PF_ENGAGEMENTS_ADMINS)
         engagementsQuery.whereKey(PF_INSTALLATION_OBJECTID, containedIn: Profile.sharedInstance.engagements)
+        isLoading = true
         engagementsQuery.findObjectsInBackground { (engagements: [PFObject]?, error: Error?) in
             SVProgressHUD.dismiss()
+            self.isLoading = false
             if error == nil {
                 if engagements?.count != self.engagementsCount {
                     if self.former.sectionFormers.count > 0 {
@@ -138,7 +160,7 @@ final class EngagementsViewController: FormViewController {
                                         if Engagement.sharedInstance.password != "" {
                                             // Group password protected
                                             let actionSheetController: UIAlertController = UIAlertController(title: "Password", message: "Case sensitive", preferredStyle: .alert)
-                                            actionSheetController.view.tintColor = MAIN_COLOR
+                                            actionSheetController.view.tintColor = UIColor.flatSkyBlueColorDark()
                                             
                                             //Create and add the Cancel action
                                             let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
@@ -193,18 +215,29 @@ final class EngagementsViewController: FormViewController {
                         //Present the AlertController
                         self!.present(actionSheetController, animated: true, completion: nil)
                     }
+                    let aboutRow = self.createMenu("About Engage") { [weak self] in
+                        self?.former.deselect(animated: true)
+                        self?.navigationController!.pushViewController(AppInfoViewController(), animated: true)
+                    }
                     
                     myRows.append(self.onlyImageRow)
                     myRows.append(findRow)
                     myRows.append(joinRow)
+                    myRows.append(aboutRow)
                     
-                    self.former.append(sectionFormer: SectionFormer(rowFormers: myRows).set(headerViewFormer: TableFunctions.createHeader(text: "My Groups")))
+                    self.former.append(sectionFormer: SectionFormer(rowFormers: myRows).set(headerViewFormer: TableFunctions.createHeader(text: "My Groups")).set(footerViewFormer: TableFunctions.createFooter(text: "Engage - Version: \(VERSION)")))
                     self.former.reload()
                     
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Plus"), style: .plain, target: self, action: #selector(self.createEngagement))
+                } else {
+                    print("Will not refresh")
                 }
             } else {
-                self.former.append(sectionFormer: self.reloadSection)
+                if self.former.sectionFormers.count > 0 {
+                    self.former.removeAll()
+                    self.former.reload()
+                }
+                self.former.append(sectionFormer: self.reloadSection.set(footerViewFormer: TableFunctions.createFooter(text: "Engage - Version: \(VERSION)")))
                 self.former.reload()
                 print(error)
                 SVProgressHUD.showError(withStatus: "You appear to be offline")

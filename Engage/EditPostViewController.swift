@@ -141,6 +141,7 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
     
     private func presentImagePicker() {
         let picker = UIImagePickerController()
+        picker.navigationBar.barTintColor = MAIN_COLOR
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = false

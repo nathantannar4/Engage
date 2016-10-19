@@ -24,7 +24,6 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createButtonPressed))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
         
-        Event.sharedInstance.clear()
         configure()
     }
     
@@ -130,8 +129,11 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
             $0.titleLabel.font = .boldSystemFont(ofSize: 15)
             $0.displayLabel.textColor = .formerSubColor()
             $0.displayLabel.font = .systemFont(ofSize: 15)
+            }.configure {
+                $0.date = Event.sharedInstance.start as! Date
             }.inlineCellSetup {
                 $0.datePicker.datePickerMode = .dateAndTime
+                $0.datePicker.date = Event.sharedInstance.start as! Date
             }.onDateChanged {
                 Event.sharedInstance.end = $0 as NSDate!
             }.displayTextFromDate(String.mediumDateShortTime)
@@ -142,10 +144,17 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
             $0.titleLabel.font = .boldSystemFont(ofSize: 15)
             $0.displayLabel.textColor = .formerSubColor()
             $0.displayLabel.font = .systemFont(ofSize: 15)
+            }.configure {
+                $0.date = Event.sharedInstance.start as! Date
             }.inlineCellSetup {
                 $0.datePicker.datePickerMode = .dateAndTime
             }.onDateChanged {
                 Event.sharedInstance.start = $0 as NSDate!
+                if (Event.sharedInstance.start?.isLaterThanDate(Event.sharedInstance.end as! Date))! {
+                    endRow.update {
+                        $0.date = Event.sharedInstance.start as! Date
+                    }
+                }
             }.displayTextFromDate(String.mediumDateShortTime)
         
         let allDayRow = SwitchRowFormer<FormSwitchCell>() {

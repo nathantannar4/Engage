@@ -1,9 +1,9 @@
 //
-//  SubGroupsViewController.swift
+//  SponsorsViewController.swift
 //  Engage
 //
-//  Created by Tannar, Nathan on 2016-08-13.
-//  Copyright © 2016 NathanTannar. All rights reserved.
+//  Created by Nathan Tannar on 10/15/16.
+//  Copyright © 2016 Nathan Tannar. All rights reserved.
 //
 
 import UIKit
@@ -12,8 +12,7 @@ import Parse
 import Agrume
 import SVProgressHUD
 
-class SubGroupsViewController: FormViewController {
-        var firstLoad = true
+class SponsorsViewController: FormViewController {
     
     // MARK: Public
     
@@ -21,10 +20,14 @@ class SubGroupsViewController: FormViewController {
         super.viewDidLoad()
         
         // Configure UI
+        title = "Sponsors"
         tableView.contentInset.top = 0
         tableView.contentInset.bottom = 50
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Plus"), style: .plain, target: self, action: #selector(createSubGroup))
+        if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Plus"), style: .plain, target: self, action: #selector(createSubGroup))
+        }
         
+        SVProgressHUD.show(withStatus: "Loading")
         configure()
     }
     
@@ -44,21 +47,6 @@ class SubGroupsViewController: FormViewController {
             self.navigationItem.leftBarButtonItem = menuButton
             view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
             tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
-        
-        if Engagement.sharedInstance.subGroupName != "" {
-            title = Engagement.sharedInstance.subGroupName
-        } else {
-            title = "Subgroups"
-        }
-        
-        EngagementSubGroup.sharedInstance.clear()
-        if firstLoad {
-            SVProgressHUD.show(withStatus: "Loading")
-            firstLoad = false
-        } else {
-            SVProgressHUD.show(withStatus: "Refreshing")
-            self.refresh(sender: self)
         }
     }
     
@@ -91,24 +79,29 @@ class SubGroupsViewController: FormViewController {
         UIApplication.shared.beginIgnoringInteractionEvents()
         let subGroupQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_\(PF_SUBGROUP_CLASS_NAME)")
         subGroupQuery.order(byAscending: PF_SUBGROUP_NAME)
+        subGroupQuery.whereKey(PF_SUBGROUP_IS_SPONSOR, equalTo: true)
         subGroupQuery.findObjectsInBackground { (subGroups: [PFObject]?, error: Error?) in
             UIApplication.shared.endIgnoringInteractionEvents()
             if error == nil {
                 for subGroup in subGroups! {
+                    subGroupRows.append(LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
+                        $0.displayImage.file = subGroup[PF_SUBGROUP_COVER_PHOTO] as? PFFile
+                        $0.displayImage.loadInBackground()
+                        $0.displayImage.contentMode = UIViewContentMode.scaleAspectFill
+                        }.configure {
+                            $0.rowHeight = 200
+                        })
                     subGroupRows.append(self.createMenu(subGroup[PF_SUBGROUP_NAME] as! String) { [weak self] in
                         self?.former.deselect(animated: true)
                         // Transition to SubGroup page
                         EngagementSubGroup.sharedInstance.clear()
                         EngagementSubGroup.sharedInstance.subgroup = subGroup
                         EngagementSubGroup.sharedInstance.unpack()
-                        let subGroupVC = SubGroupDetailViewController()
-                        self!.navigationController?.pushViewController(subGroupVC, animated: true)
+                        self!.navigationController?.pushViewController(SponsorDetailViewController(), animated: true)
                     })
                 }
                 if Engagement.sharedInstance.subGroupName != "" {
-                    self.former.append(sectionFormer: SectionFormer(rowFormers: subGroupRows).set(headerViewFormer: TableFunctions.createHeader(text: "\(Engagement.sharedInstance.name!) \(Engagement.sharedInstance.subGroupName!)")))
-                } else {
-                    self.former.append(sectionFormer: SectionFormer(rowFormers: subGroupRows).set(headerViewFormer: TableFunctions.createHeader(text: "\(Engagement.sharedInstance.name!) Sub Groups")))
+                    self.former.append(sectionFormer: SectionFormer(rowFormers: subGroupRows).set(headerViewFormer: TableFunctions.createHeader(text: "\(Engagement.sharedInstance.name!) Sponsors")))
                 }
                 self.former.reload()
                 SVProgressHUD.dismiss()
@@ -122,7 +115,9 @@ class SubGroupsViewController: FormViewController {
     // MARK: User Actions
     
     func createSubGroup(sender: UIBarButtonItem) {
-        let navVC = UINavigationController(rootViewController: CreateSubGroupViewController())
+        let vc = CreateSubGroupViewController()
+        vc.isSponsor = true
+        let navVC = UINavigationController(rootViewController: vc)
         navVC.navigationBar.barTintColor = MAIN_COLOR!
         self.present(navVC, animated: true, completion: nil)
     }

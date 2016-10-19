@@ -16,6 +16,7 @@ import ChameleonFramework
 class CreateSubGroupViewController: FormViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var searching = false
+    var isSponsor = false
     
     // MARK: Public
     
@@ -23,10 +24,14 @@ class CreateSubGroupViewController: FormViewController, UIImagePickerControllerD
         super.viewDidLoad()
         
         // Configure UI
-        if Engagement.sharedInstance.subGroupName != "" {
-            title = "New \(Engagement.sharedInstance.subGroupName!)"
+        if !isSponsor {
+            if Engagement.sharedInstance.subGroupName != "" {
+                title = "New \(Engagement.sharedInstance.subGroupName!)"
+            } else {
+                title = "New Subgroup"
+            }
         } else {
-            title = "New Subgroup"
+            title = "New Sponsor"
         }
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createButtonPressed))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
@@ -142,6 +147,7 @@ class CreateSubGroupViewController: FormViewController, UIImagePickerControllerD
     
     private func presentImagePicker() {
         let picker = UIImagePickerController()
+        picker.navigationBar.barTintColor = MAIN_COLOR
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = false
@@ -159,7 +165,7 @@ class CreateSubGroupViewController: FormViewController, UIImagePickerControllerD
         } else if EngagementSubGroup.sharedInstance.name != "" {
             EngagementSubGroup.sharedInstance.create(completion: {
                 self.dismiss(animated: true, completion: nil)
-            })
+            }, isSponsor: self.isSponsor)
         } else {
             SVProgressHUD.showError(withStatus: "Invalid Name")
         }

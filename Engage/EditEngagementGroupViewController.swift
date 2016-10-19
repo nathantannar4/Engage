@@ -91,6 +91,43 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
         }
     }()
     
+    private lazy var deleteSection: SectionFormer = {
+        let deleteRow = CustomRowFormer<TitleCell>(instantiateType: .Nib(nibName: "TitleCell")) {
+            $0.titleLabel.textColor = MAIN_COLOR
+            $0.titleLabel.text = "Delete \(Engagement.sharedInstance.name!)"
+            $0.titleLabel.textAlignment = .center
+            }.onSelected { _ in
+                self.former.deselect(animated: true)
+                let alert = UIAlertController(title: "Delete Group?", message: "All data will be deleted.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.view.tintColor = MAIN_COLOR
+                //Create and add the Cancel action
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                }
+                alert.addAction(cancelAction)
+                let leave: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+                    let alert = UIAlertController(title: "Are you sure?", message: "This cannot be undone.", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.view.tintColor = MAIN_COLOR
+                    //Create and add the Cancel action
+                    let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                        //Do some stuff
+                    }
+                    alert.addAction(cancelAction)
+                    let leave: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+                        Engagement.sharedInstance.delete(completion: {
+                            SVProgressHUD.showSuccess(withStatus: "Group Deleted")
+                            self.dismiss(animated: true, completion: nil)
+                        }())
+                    }
+                    alert.addAction(leave)
+                    self.present(alert, animated: true, completion: nil)
+
+                }
+                alert.addAction(leave)
+                self.present(alert, animated: true, completion: nil)
+        }
+        return SectionFormer(rowFormer: deleteRow).set(headerViewFormer: TableFunctions.createFooter(text: ""))
+    }()
+    
     private lazy var formerInputAccessoryView: FormerInputAccessoryView = FormerInputAccessoryView(former: self.former)
     
     private func configure() {
@@ -323,7 +360,7 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
         let adminSection = SectionFormer(rowFormer: inviteRow).set(headerViewFormer: TableFunctions.createHeader(text: "Administration"))
 
         
-        self.former.append(sectionFormer: personalizationSection, aboutSection, securitySection, customSection, adminSection).onCellSelected { [weak self] _ in
+        self.former.append(sectionFormer: personalizationSection, aboutSection, securitySection, customSection, adminSection, deleteSection).onCellSelected { [weak self] _ in
             self?.formerInputAccessoryView.update()
         }
         self.former.reload()
@@ -335,6 +372,7 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
     
     private func presentImagePicker() {
         let picker = UIImagePickerController()
+        picker.navigationBar.barTintColor = MAIN_COLOR
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = false

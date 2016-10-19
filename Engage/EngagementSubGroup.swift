@@ -26,6 +26,7 @@ final class EngagementSubGroup {
     var url: String?
     var positionsField: String?
     var positions = [String]()
+    var isSponsor: Bool?
     
     func clear() {
         subgroup = nil
@@ -40,6 +41,7 @@ final class EngagementSubGroup {
         url = ""
         positionsField = ""
         positions.removeAll()
+        isSponsor = false
     }
     
     func removeSpecialCharsFromString(text: String) -> String {
@@ -57,7 +59,7 @@ final class EngagementSubGroup {
             EngagementSubGroup.sharedInstance.subgroup![PF_SUBGROUP_ADDRESS] = EngagementSubGroup.sharedInstance.address!
             EngagementSubGroup.sharedInstance.subgroup![PF_SUBGROUP_EMAIL] = EngagementSubGroup.sharedInstance.email!
             EngagementSubGroup.sharedInstance.subgroup![PF_SUBGROUP_URL] = EngagementSubGroup.sharedInstance.url!
-            
+            EngagementSubGroup.sharedInstance.subgroup![PF_SUBGROUP_IS_SPONSOR] = EngagementSubGroup.sharedInstance.isSponsor!
             
             // Custom Positions
             var responses = EngagementSubGroup.sharedInstance.positionsField!
@@ -87,22 +89,12 @@ final class EngagementSubGroup {
             EngagementSubGroup.sharedInstance.positions = fieldsArray
             EngagementSubGroup.sharedInstance.subgroup![PF_SUBGROUP_POSITIONS] = fieldsArray
             
-            if EngagementSubGroup.sharedInstance.coverPhoto != nil {
-                let pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(EngagementSubGroup.sharedInstance.coverPhoto!, 0.6)!)
-                pictureFile!.saveInBackground { (succeeded: Bool, error: Error?) -> Void in
-                    if error != nil {
-                        print("Network error")
-                        SVProgressHUD.showError(withStatus: "Error Saving Photo")
-                    }
-                }
-                EngagementSubGroup.sharedInstance.subgroup![PF_SUBGROUP_COVER_PHOTO] = pictureFile
-            }
             EngagementSubGroup.sharedInstance.subgroup!.saveInBackground { (success: Bool, error: Error?) in
                 UIApplication.shared.endIgnoringInteractionEvents()
                 if !success {
                     SVProgressHUD.showError(withStatus: "Error Saving")
                 } else {
-                    SVProgressHUD.dismiss()
+                    SVProgressHUD.showSuccess(withStatus: "Saved")
                 }
             }
         } else {
@@ -126,6 +118,11 @@ final class EngagementSubGroup {
         address = subgroup![PF_SUBGROUP_ADDRESS] as? String
         url = subgroup![PF_SUBGROUP_URL] as? String
         email = subgroup![PF_SUBGROUP_EMAIL] as? String
+        if subgroup![PF_SUBGROUP_IS_SPONSOR] != nil {
+            isSponsor = subgroup![PF_SUBGROUP_IS_SPONSOR] as? Bool
+        } else {
+            isSponsor = false
+        }
         if subgroup![PF_SUBGROUP_COVER_PHOTO] != nil {
             (subgroup![PF_SUBGROUP_COVER_PHOTO] as? PFFile)?.getDataInBackground(block: { (data: Data?, error: Error?) in
                 EngagementSubGroup.sharedInstance.coverPhoto = UIImage(data: data!)
@@ -141,7 +138,7 @@ final class EngagementSubGroup {
         }
     }
     
-    func create(completion: @escaping () -> Void) {
+    func create(completion: @escaping () -> Void, isSponsor: Bool) {
         
         UIApplication.shared.beginIgnoringInteractionEvents()
         SVProgressHUD.show(withStatus: "Verifying Creation")
@@ -160,6 +157,7 @@ final class EngagementSubGroup {
                             let oldAdmins = oldSubgroup![PF_SUBGROUP_ADMINS] as? [String]
                             let removeAdminIndex = oldAdmins!.index(of: PFUser.current()!.objectId!)
                             if removeAdminIndex != nil && oldAdmins!.count == 1 {
+                                SVProgressHUD.showError(withStatus: "Cannot Resign")
                                 Utilities.showBanner(title: "Cannot create a new sub group", subtitle: "You are the only admin of your current sub group.", duration: 1.0)
                             } else {
                                 print("Not an admin of another group")
@@ -200,14 +198,19 @@ final class EngagementSubGroup {
                                     newSubGroup[PF_SUBGROUP_EMAIL] = ""
                                     newSubGroup[PF_SUBGROUP_URL] = ""
                                     newSubGroup[PF_SUBGROUP_POSITIONS] = []
+                                    newSubGroup[PF_SUBGROUP_IS_SPONSOR] = isSponsor
                                     
                                     newSubGroup.saveInBackground { (success: Bool, error: Error?) in
                                         UIApplication.shared.endIgnoringInteractionEvents()
                                         if success {
-                                            if Engagement.sharedInstance.subGroupName != "" {
-                                                SVProgressHUD.showSuccess(withStatus: "\(Engagement.sharedInstance.subGroupName!) Created")
+                                            if isSponsor {
+                                                SVProgressHUD.showSuccess(withStatus: "Sponsor Created")
                                             } else {
-                                                SVProgressHUD.showSuccess(withStatus: "Subgroup Created")
+                                                if Engagement.sharedInstance.subGroupName != "" {
+                                                    SVProgressHUD.showSuccess(withStatus: "\(Engagement.sharedInstance.subGroupName!) Created")
+                                                } else {
+                                                    SVProgressHUD.showSuccess(withStatus: "Subgroup Created")
+                                                }
                                             }
                                             
                                             user["subgroup"] = newSubGroup

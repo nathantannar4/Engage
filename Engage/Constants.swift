@@ -93,6 +93,7 @@ let PF_SUBGROUP_ADDRESS                 = "address"                 //  String
 let PF_SUBGROUP_EMAIL                   = "email"                   //  String
 let PF_SUBGROUP_URL                     = "url"                     //  String
 let PF_SUBGROUP_POSITIONS               = "positions"               //  Array
+let PF_SUBGROUP_IS_SPONSOR              = "isSponsor"
 
 /* Conference */
 let PF_CONFERENCE_DELEGATES             = "delegates"               //  String

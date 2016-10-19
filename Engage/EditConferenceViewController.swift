@@ -189,6 +189,7 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
     
     private func presentImagePicker() {
         let picker = UIImagePickerController()
+        picker.navigationBar.barTintColor = MAIN_COLOR
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = false

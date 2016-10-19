@@ -154,6 +154,14 @@
 		38CB5DD81DAC336F00E71612 /* ConferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CB5DD51DAC336F00E71612 /* ConferenceViewController.swift */; };
 		38CB5DD91DAC336F00E71612 /* EditConferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CB5DD61DAC336F00E71612 /* EditConferenceViewController.swift */; };
 		38CB5DE01DB09E9300E71612 /* Engage-Wide.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 38CB5DDF1DB09E9300E71612 /* Engage-Wide.jpg */; };
+		38F5CEBF1DB2DDB900F64DF0 /* SponsorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F5CEBE1DB2DDB900F64DF0 /* SponsorsViewController.swift */; };
+		38F5CEC11DB2E12F00F64DF0 /* SponsorDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F5CEC01DB2E12F00F64DF0 /* SponsorDetailViewController.swift */; };
+		38F5CED51DB4974D00F64DF0 /* BWWalkthroughPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F5CED31DB4974D00F64DF0 /* BWWalkthroughPageViewController.swift */; };
+		38F5CED61DB4974D00F64DF0 /* BWWalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F5CED41DB4974D00F64DF0 /* BWWalkthroughViewController.swift */; };
+		38F5CEDA1DB49D0E00F64DF0 /* Walkthrough.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38F5CED91DB49D0E00F64DF0 /* Walkthrough.storyboard */; };
+		38F5CEDC1DB4AFC300F64DF0 /* people.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F5CEDB1DB4AFC300F64DF0 /* people.png */; };
+		38F5CEE21DB4B98B00F64DF0 /* city.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F5CEE11DB4B98B00F64DF0 /* city.png */; };
+		38F5CEE41DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 38F5CEE31DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg */; };
 		8ED999A7EE2A63C1A99CF644 /* Pods_Engage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09C4FBD64CE6919FED248A6D /* Pods_Engage.framework */; };
 /* End PBXBuildFile section */
 
@@ -319,6 +327,14 @@
 		38CB5DD51DAC336F00E71612 /* ConferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConferenceViewController.swift; sourceTree = "<group>"; };
 		38CB5DD61DAC336F00E71612 /* EditConferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditConferenceViewController.swift; sourceTree = "<group>"; };
 		38CB5DDF1DB09E9300E71612 /* Engage-Wide.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Engage-Wide.jpg"; sourceTree = "<group>"; };
+		38F5CEBE1DB2DDB900F64DF0 /* SponsorsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorsViewController.swift; sourceTree = "<group>"; };
+		38F5CEC01DB2E12F00F64DF0 /* SponsorDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorDetailViewController.swift; sourceTree = "<group>"; };
+		38F5CED31DB4974D00F64DF0 /* BWWalkthroughPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BWWalkthroughPageViewController.swift; sourceTree = "<group>"; };
+		38F5CED41DB4974D00F64DF0 /* BWWalkthroughViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BWWalkthroughViewController.swift; sourceTree = "<group>"; };
+		38F5CED91DB49D0E00F64DF0 /* Walkthrough.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Walkthrough.storyboard; sourceTree = "<group>"; };
+		38F5CEDB1DB4AFC300F64DF0 /* people.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = people.png; sourceTree = "<group>"; };
+		38F5CEE11DB4B98B00F64DF0 /* city.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = city.png; sourceTree = "<group>"; };
+		38F5CEE31DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Engage-Wide-Gradient.jpg"; sourceTree = "<group>"; };
 		D078A42BFB98078E2B1EDE42 /* Pods-Engage.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Engage.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Engage/Pods-Engage.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -460,6 +476,7 @@
 			children = (
 				3874CA611D9F84E800C014F3 /* Engage.entitlements */,
 				3874CA3A1D9E35EA00C014F3 /* Engage-Bridging-Header.h */,
+				38F5CEE51DB4C07800F64DF0 /* Walkthrough */,
 				3874CA7B1D9F882C00C014F3 /* LicensingViewController */,
 				3874CA601D9F840200C014F3 /* NSDate */,
 				3874CA5F1D9F83F500C014F3 /* SWRevealViewController */,
@@ -472,6 +489,7 @@
 				381D03471DA2222F00B270C6 /* User Selection Delegates */,
 				3874CA931DA0642E00C014F3 /* Engagement */,
 				381D039A1DA34A2500B270C6 /* SubGroup */,
+				38F5CEC21DB2E13400F64DF0 /* Sponsors */,
 				38AFE87B1DA101D700B52032 /* Feed */,
 				381D03341DA21CA700B270C6 /* Profile */,
 				381D03481DA225EB00B270C6 /* Messaging */,
@@ -483,8 +501,11 @@
 				3874CA4B1D9E361D00C014F3 /* Images.xcassets */,
 				38CB5DC91DAAD4F100E71612 /* Engage-Logo.jpg */,
 				38CB5DDF1DB09E9300E71612 /* Engage-Wide.jpg */,
+				38F5CEE31DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg */,
 				38CB5DCB1DAAE6BE00E71612 /* Engage-Logo.png */,
 				38AFE87C1DA18B5500B52032 /* Plus-512.png */,
+				38F5CEE11DB4B98B00F64DF0 /* city.png */,
+				38F5CEDB1DB4AFC300F64DF0 /* people.png */,
 				38AFE87D1DA18B5500B52032 /* Nathan.jpg */,
 				3874CA281D9E26A500C014F3 /* Main.storyboard */,
 				3874CA2D1D9E26A500C014F3 /* LaunchScreen.storyboard */,
@@ -645,6 +666,25 @@
 			name = Conference;
 			sourceTree = "<group>";
 		};
+		38F5CEC21DB2E13400F64DF0 /* Sponsors */ = {
+			isa = PBXGroup;
+			children = (
+				38F5CEBE1DB2DDB900F64DF0 /* SponsorsViewController.swift */,
+				38F5CEC01DB2E12F00F64DF0 /* SponsorDetailViewController.swift */,
+			);
+			name = Sponsors;
+			sourceTree = "<group>";
+		};
+		38F5CEE51DB4C07800F64DF0 /* Walkthrough */ = {
+			isa = PBXGroup;
+			children = (
+				38F5CED31DB4974D00F64DF0 /* BWWalkthroughPageViewController.swift */,
+				38F5CED41DB4974D00F64DF0 /* BWWalkthroughViewController.swift */,
+				38F5CED91DB49D0E00F64DF0 /* Walkthrough.storyboard */,
+			);
+			name = Walkthrough;
+			sourceTree = "<group>";
+		};
 		BCCEBE275394AE18B7D19DB6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -735,6 +775,7 @@
 				3874CAA91DA064AA00C014F3 /* DetailPostCell.xib in Resources */,
 				3874CADC1DA064B400C014F3 /* TitleCell.xib in Resources */,
 				38CB5DCA1DAAD4F100E71612 /* Engage-Logo.jpg in Resources */,
+				38F5CEDC1DB4AFC300F64DF0 /* people.png in Resources */,
 				38AFE87E1DA18B5500B52032 /* Plus-512.png in Resources */,
 				3890361E1DA36CAB00DCF82C /* DividerCell.xib in Resources */,
 				3874CAD81DA064B400C014F3 /* DynamicHeightCell.xib in Resources */,
@@ -750,6 +791,7 @@
 				38AFE87F1DA18B5500B52032 /* Nathan.jpg in Resources */,
 				38AFE86E1DA0843000B52032 /* DetailLeftLabelCell.xib in Resources */,
 				3874CADE1DA064B400C014F3 /* ProfileHeaderCell.xib in Resources */,
+				38F5CEE21DB4B98B00F64DF0 /* city.png in Resources */,
 				3874CAD61DA064B400C014F3 /* FeedCell.xib in Resources */,
 				3874CAA81DA064AA00C014F3 /* MapCell.xib in Resources */,
 				38AB6C7D1DA198ED006B5104 /* FeedCellPhoto.xib in Resources */,
@@ -758,6 +800,8 @@
 				38CB5DE01DB09E9300E71612 /* Engage-Wide.jpg in Resources */,
 				3874CA951DA0649400C014F3 /* ImageCell.xib in Resources */,
 				3874CACE1DA064B400C014F3 /* DelegateCellRight.xib in Resources */,
+				38F5CEE41DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg in Resources */,
+				38F5CEDA1DB49D0E00F64DF0 /* Walkthrough.storyboard in Resources */,
 				3874CA2A1D9E26A500C014F3 /* Main.storyboard in Resources */,
 				3874CAD31DA064B400C014F3 /* HeaderCell.xib in Resources */,
 			);
@@ -824,6 +868,7 @@
 				381D033B1DA2221900B270C6 /* MessagesViewController.swift in Sources */,
 				3890366A1DA6C24E00DCF82C /* LocationSearchResultsViewController.swift in Sources */,
 				389036151DA365F200DCF82C /* CreateFormForEventViewController.swift in Sources */,
+				38F5CEBF1DB2DDB900F64DF0 /* SponsorsViewController.swift in Sources */,
 				381D03841DA2F75000B270C6 /* CVDate.swift in Sources */,
 				381D034E1DA22CC300B270C6 /* Event.swift in Sources */,
 				381D03861DA2F75000B270C6 /* CVRange.swift in Sources */,
@@ -878,6 +923,7 @@
 				389036691DA6C24E00DCF82C /* Location.swift in Sources */,
 				381D03721DA2F75000B270C6 /* CVCalendarDayView.swift in Sources */,
 				381D03961DA34A1800B270C6 /* SubGroupDetailViewController.swift in Sources */,
+				38F5CED51DB4974D00F64DF0 /* BWWalkthroughPageViewController.swift in Sources */,
 				381D03701DA2F75000B270C6 /* CVAuxiliaryView.swift in Sources */,
 				381D038F1DA34A0700B270C6 /* EditEngagementGroupViewController.swift in Sources */,
 				3874CA911DA0630200C014F3 /* CreateEngagementViewController.swift in Sources */,
@@ -910,6 +956,7 @@
 				3874CAD11DA064B400C014F3 /* EventPreviewCell.swift in Sources */,
 				381D032E1DA2155A00B270C6 /* Messages.swift in Sources */,
 				381D039C1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift in Sources */,
+				38F5CED61DB4974D00F64DF0 /* BWWalkthroughViewController.swift in Sources */,
 				389036461DA4AA3900DCF82C /* TypingIndicatorView.m in Sources */,
 				3874CA791D9F882800C014F3 /* LicensingItemCell.swift in Sources */,
 				3874CAAE1DA064AA00C014F3 /* TitleCell.swift in Sources */,
@@ -927,6 +974,7 @@
 				3874CA771D9F882800C014F3 /* License.swift in Sources */,
 				381D03771DA2F75000B270C6 /* CVCalendarMonthContentViewController.swift in Sources */,
 				381D032F1DA2155A00B270C6 /* Camera.swift in Sources */,
+				38F5CEC11DB2E12F00F64DF0 /* SponsorDetailViewController.swift in Sources */,
 				381D03271DA20D6400B270C6 /* ProfileViewController.swift in Sources */,
 				381D038A1DA2F75000B270C6 /* CVShape.swift in Sources */,
 				381D03711DA2F75000B270C6 /* CVCalendarContentViewController.swift in Sources */,

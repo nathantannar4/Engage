@@ -98,7 +98,7 @@ final class EditEventViewController: FormViewController {
     private lazy var deleteSection: SectionFormer = {
         let removePhotoRow = CustomRowFormer<TitleCell>(instantiateType: .Nib(nibName: "TitleCell")) {
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.text = "Delete Post"
+            $0.titleLabel.text = "Delete Event"
             $0.titleLabel.textAlignment = .center
             }.onSelected { _ in
                 self.former.deselect(animated: true)

@@ -83,6 +83,9 @@ class RegisterViewController: UITableViewController {
                 print("Success")
                 Profile.sharedInstance.loadUser()
                 
+                self.passwordTextField.activeBorderColor = UIColor.flatGreen()
+                self.passwordTextField.textColor = UIColor.flatGreen()
+                
                 self.passwordAgainTextField.activeBorderColor = UIColor.flatGreen()
                 self.passwordAgainTextField.textColor = UIColor.flatGreen()
                 
@@ -140,7 +143,9 @@ class RegisterViewController: UITableViewController {
             }
             passwordAgainTextField.activeBorderColor = MAIN_COLOR!
             passwordAgainTextField.textColor = MAIN_COLOR
-            passwordAgainTextField.text = ""
+            if passwordAgainTextField.text != "" {
+                passwordAgainTextField.text = ""
+            }
         }
         if textField.placeholder == "Password Again" {
             if passwordTextField.text! == passwordAgainTextField.text! {

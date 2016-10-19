@@ -18,6 +18,7 @@ final class MenuController: FormViewController {
     let groupVC = EngagementGroupDetailsViewController()
     let subGroupsVC = SubGroupsViewController()
     let profileVC = ProfileViewController()
+    let sponsorsVC = SponsorsViewController()
     let messagesVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "messagesVC") as! MessagesViewController
     
     override func viewDidLoad() {
@@ -99,7 +100,7 @@ final class MenuController: FormViewController {
                     navVC = UINavigationController(rootViewController: vc)
                 case 6:
                     if Engagement.sharedInstance.sponsor == true {
-                        navVC = UINavigationController(rootViewController: self!.subGroupsVC)
+                        navVC = UINavigationController(rootViewController: self!.sponsorsVC)
                     } else {
                         if Engagement.sharedInstance.name == "WESST" {
                             let vc = ConferenceViewController()

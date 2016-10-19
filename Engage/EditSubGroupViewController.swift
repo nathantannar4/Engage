@@ -49,49 +49,53 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
             $0.titleLabel.textAlignment = .center
             }.onSelected { _ in
                 self.former.deselect(animated: true)
-                let actionSheetController: UIAlertController = UIAlertController(title: "Delete \(EngagementSubGroup.sharedInstance.name!)", message: "This action cannot be undone", preferredStyle: .actionSheet)
-                actionSheetController.view.tintColor = MAIN_COLOR
-                
-                let cancelAction: UIAlertAction = UIAlertAction(title: "No", style: .cancel) { action -> Void in
-                    //Just dismiss the action sheet
+                let alert = UIAlertController(title: "Delete Subgroup?", message: "All data will be deleted.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.view.tintColor = MAIN_COLOR
+                //Create and add the Cancel action
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
                 }
-                actionSheetController.addAction(cancelAction)
-                
-                let yesAction: UIAlertAction = UIAlertAction(title: "Yes", style: .default) { action -> Void in
-                    
-                    SVProgressHUD.show(withStatus: "Deleting \(EngagementSubGroup.sharedInstance.name!)")
-                    
-                    // Delete subgroup pointer from each user
-                    let userQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_User")
-                    userQuery.whereKey(PF_USER_SUBGROUP, equalTo: EngagementSubGroup.sharedInstance.subgroup!)
-                    userQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
-                        if error == nil {
-                            for user in users! {
-                                print(user)
-                                user.remove(forKey: PF_USER_SUBGROUP)
-                                user.saveInBackground()
-                            }
-                            
-                            // Delete subgroup
-                            EngagementSubGroup.sharedInstance.subgroup!.deleteInBackground { (success: Bool, error: Error?) in
-                                if success {
-                                    SVProgressHUD.showSuccess(withStatus: "Deleted")
-                                    self.navigationController!.popToRootViewController(animated: true)
-                                } else {
-                                    SVProgressHUD.showError(withStatus: "Network Error")
+                alert.addAction(cancelAction)
+                let leave: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+                    let alert = UIAlertController(title: "Are you sure?", message: "This cannot be undone.", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.view.tintColor = MAIN_COLOR
+                    //Create and add the Cancel action
+                    let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                        //Do some stuff
+                    }
+                    alert.addAction(cancelAction)
+                    let leave: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+                        // Delete subgroup pointer from each user
+                        let userQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_User")
+                        userQuery.whereKey(PF_USER_SUBGROUP, equalTo: EngagementSubGroup.sharedInstance.subgroup!)
+                        userQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
+                            if error == nil {
+                                for user in users! {
+                                    print(user)
+                                    user.remove(forKey: PF_USER_SUBGROUP)
+                                    user.saveInBackground()
                                 }
+                                
+                                // Delete subgroup
+                                EngagementSubGroup.sharedInstance.subgroup!.deleteInBackground { (success: Bool, error: Error?) in
+                                    if success {
+                                        SVProgressHUD.showSuccess(withStatus: "Subgroup Deleted")
+                                        self.navigationController!.popToRootViewController(animated: true)
+                                    } else {
+                                        SVProgressHUD.showError(withStatus: "Network Error")
+                                    }
+                                }
+                            } else {
+                                print(error)
+                                SVProgressHUD.showError(withStatus: "Network Error")
                             }
-                        } else {
-                            print(error)
-                            SVProgressHUD.showError(withStatus: "Network Error")
-                        }
-                    })
+                        })
+                    }
+                    alert.addAction(leave)
+                    self.present(alert, animated: true, completion: nil)
+                    
                 }
-                actionSheetController.addAction(yesAction)
-                
-                //Present the AlertController
-                self.present(actionSheetController, animated: true, completion: nil)
-                
+                alert.addAction(leave)
+                self.present(alert, animated: true, completion: nil)
         }
         return SectionFormer(rowFormer: removePhotoRow)
     }()
@@ -232,6 +236,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
     
     private func presentImagePicker() {
         let picker = UIImagePickerController()
+        picker.navigationBar.barTintColor = MAIN_COLOR
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = false
@@ -340,6 +345,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
             EngagementSubGroup.sharedInstance.subgroup![PF_ENGAGEMENTS_ADMINS] = EngagementSubGroup.sharedInstance.admins
             EngagementSubGroup.sharedInstance.subgroup!.saveInBackground(block: { (success: Bool, error: Error?) in
                 UIApplication.shared.endIgnoringInteractionEvents()
+                SVProgressHUD.dismiss()
                 if success {
                     // Returns current user in selectedUsers so they must be removed
                     var inviteUsers = selectedUsers

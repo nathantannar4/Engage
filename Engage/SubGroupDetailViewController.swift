@@ -5,6 +5,7 @@
 //  Created by Tannar, Nathan on 2016-08-19.
 //  Copyright © 2016 NathanTannar. All rights reserved.
 //
+
 import UIKit
 import Parse
 import Former
@@ -91,6 +92,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
             $0.displayImage.file = EngagementSubGroup.sharedInstance.subgroup![PF_SUBGROUP_COVER_PHOTO] as? PFFile
             $0.displayImage.loadInBackground()
+            $0.displayImage.contentMode = UIViewContentMode.scaleAspectFill
             }.configure {
                 $0.rowHeight = 200
             }.onSelected({ _ in
@@ -129,7 +131,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
                 $0.rowHeight = UITableViewAutomaticDimension
             }.onSelected { _ in
                 if EngagementSubGroup.sharedInstance.phone != "" {
-                    if let url = NSURL(string: "tel://\(EngagementSubGroup.sharedInstance.phone!)") {
+                    if let url = URL(string: "tel://\(EngagementSubGroup.sharedInstance.phone!)") {
                         let actionSheetController: UIAlertController = UIAlertController(title: "Would you like to call", message: EngagementSubGroup.sharedInstance.phone!, preferredStyle: .actionSheet)
                         actionSheetController.view.tintColor = MAIN_COLOR
                         
@@ -139,7 +141,8 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
                         actionSheetController.addAction(cancelAction)
                         let single: UIAlertAction = UIAlertAction(title: "Yes", style: .default)
                         { action -> Void in
-                            UIApplication.shared.openURL(url as URL)
+                            //UIApplication.shared.openURL(url as URL)
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         }
                         actionSheetController.addAction(single)
                         
@@ -286,10 +289,6 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
                                                         user.remove(forKey: "subgroup")
                                                         user.saveInBackground(block: { (success: Bool, error: Error?) in
                                                             if error == nil {
-                                                                // Refresh view
-                                                                self.former.removeAll()
-                                                                self.former.reload()
-                                                                self.configure()
                                                                 UIApplication.shared
                                                                     .endIgnoringInteractionEvents()
                                                                 SVProgressHUD.showSuccess(withStatus: "Lefft Group")
@@ -366,7 +365,11 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
                                         }
                                     })
                                     
+                                } else {
+                                    SVProgressHUD.showError(withStatus: "Network Error")
                                 }
+                            } else {
+                                SVProgressHUD.showError(withStatus: "Network Error")
                             }
                         })
                 } else {
@@ -494,6 +497,10 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         emailRow.cellUpdate {
             $0.bodyLabel.text = EngagementSubGroup.sharedInstance.email
         }
+        onlyImageRow.cellUpdate {
+            $0.displayImage.image = EngagementSubGroup.sharedInstance.coverPhoto
+            $0.displayImage.contentMode = UIViewContentMode.scaleAspectFill
+        }
         self.former.reload()
     }
     
@@ -555,6 +562,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
     
     private func presentImagePicker() {
         let picker = UIImagePickerController()
+        picker.navigationBar.barTintColor = MAIN_COLOR
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = false

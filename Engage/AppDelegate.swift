@@ -20,17 +20,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // Configure connection to Parse-Server
-        /*
+        
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
-            ParseMutableClientConfiguration.applicationId = "myAppId";
-            ParseMutableClientConfiguration.clientKey = "myMasterKey";
-            ParseMutableClientConfiguration.server = "http://parseserver-5qrkt-env.us-east-1.elasticbeanstalk.com/parse";
+            ParseMutableClientConfiguration.applicationId = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b";
+            ParseMutableClientConfiguration.clientKey = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq";
+            ParseMutableClientConfiguration.server = "http://nathantannar.me/parse";
         });
         Parse.initialize(with: config) 
-        */
         
         
-        Parse.setApplicationId("G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b", clientKey: "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq")
+        
+        //Parse.setApplicationId("G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b", clientKey: "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq")
         
         // Remove shadow from navbar
         UINavigationBar.appearance().shadowImage = UIImage()

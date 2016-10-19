@@ -92,7 +92,9 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
         while currentDay.month == currentMonth {
             currentDay = currentDay.subtractingDays(1) as NSDate
         }
+        
         currentDay = (currentDay.addingDays(1) as NSDate).atStartOfDay() as NSDate
+        Event.sharedInstance.clear()
         
     }
     
@@ -211,6 +213,8 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     func didSelectDayView(_ dayView: CVCalendarDayView, animationDidFinish: Bool) {
         print("\(dayView.date.commonDescription) is selected!")
         selectedDay = dayView
+        Event.sharedInstance.clear()
+        Event.sharedInstance.start = dayView.date.convertedDate() as NSDate?
         
         // Update table
         if self.former.sectionFormers.count > 0 {
@@ -458,32 +462,37 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
                 self.listFormer.reload()
             }
             var eventRows = [CustomRowFormer<EventFeedCell>]()
+            var loadedEvents = [String]()
             for event in events {
-                eventRows.append(CustomRowFormer<EventFeedCell> (instantiateType: .Nib(nibName: "EventFeedCell")) {
-                    $0.title.text = event.object[PF_EVENTS_TITLE] as? String
-                    $0.info.text = event.object![PF_EVENTS_INFO] as? String
-                    $0.location.text = event.object![PF_EVENTS_LOCATION] as? String
-                    $0.organizer.text = "Organizer: \((event.object![PF_EVENTS_ORGANIZER] as? PFUser)?.value(forKey: PF_USER_FULLNAME) as! String)"
-                    $0.attendence.text = "\((event.object![PF_EVENTS_CONFIRMED] as! [PFUser]).count) Confirmed, \((event.object![PF_EVENTS_MAYBE] as! [PFUser]).count) Maybe"
-                    let startDate = event.object![PF_EVENTS_START] as! NSDate
-                    let endDate = event.object![PF_EVENTS_END] as! NSDate
-                    $0.time.text = "Starts: \(startDate.mediumString!) \nEnds: \(endDate.mediumString!)"
-                    if (event.object![PF_EVENTS_ALL_DAY] as! Bool) {
-                        $0.time.text = "Starts: \(startDate.mediumDateString!) \nEnds: \(endDate.mediumDateString!)"
-                    }
-                    }.configure {
-                        $0.rowHeight = UITableViewAutomaticDimension
-                    }.onSelected { _ in
-                        
-                        self.former.deselect(animated: true)
-                        
-                        let eventDetailVC = EventDetailViewController()
-                        eventDetailVC.event = event.object
-                        Event.sharedInstance.object = event.object
-                        let navVC = UINavigationController(rootViewController: eventDetailVC)
-                        navVC.navigationBar.barTintColor = MAIN_COLOR!
-                        self.present(navVC, animated: true, completion: nil)
+                if !loadedEvents.contains(event.object!.objectId!) {
+                    loadedEvents.append(event.object!.objectId!)
+                    eventRows.append(CustomRowFormer<EventFeedCell> (instantiateType: .Nib(nibName: "EventFeedCell")) {
+                        $0.title.text = event.object[PF_EVENTS_TITLE] as? String
+                        $0.info.text = event.object![PF_EVENTS_INFO] as? String
+                        $0.location.text = event.object![PF_EVENTS_LOCATION] as? String
+                        $0.organizer.text = "Organizer: \((event.object![PF_EVENTS_ORGANIZER] as? PFUser)?.value(forKey: PF_USER_FULLNAME) as! String)"
+                        $0.attendence.text = "\((event.object![PF_EVENTS_CONFIRMED] as! [PFUser]).count) Confirmed, \((event.object![PF_EVENTS_MAYBE] as! [PFUser]).count) Maybe"
+                        let startDate = event.object![PF_EVENTS_START] as! NSDate
+                        let endDate = event.object![PF_EVENTS_END] as! NSDate
+                        $0.time.text = "Starts: \(startDate.mediumString!) \nEnds: \(endDate.mediumString!)"
+                        if (event.object![PF_EVENTS_ALL_DAY] as! Bool) {
+                            $0.time.text = "Starts: \(startDate.mediumDateString!) \nEnds: \(endDate.mediumDateString!)"
+                        }
+                        }.configure {
+                            $0.rowHeight = UITableViewAutomaticDimension
+                        }.onSelected { _ in
+                            
+                            self.former.deselect(animated: true)
+                            
+                            let eventDetailVC = EventDetailViewController()
+                            eventDetailVC.event = event.object
+                            Event.sharedInstance.object = event.object
+                            let navVC = UINavigationController(rootViewController: eventDetailVC)
+                            navVC.navigationBar.barTintColor = MAIN_COLOR!
+                            self.present(navVC, animated: true, completion: nil)
                     })
+
+                }
             }
             if eventRows.count > 0 {
                 self.listFormer.append(sectionFormer: SectionFormer(rowFormers: eventRows).set(headerViewFormer: TableFunctions.createFooter(text: "Events This Month")))

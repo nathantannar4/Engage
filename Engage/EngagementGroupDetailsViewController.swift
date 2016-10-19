@@ -165,6 +165,7 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
         LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
             $0.displayImage.file = Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_COVER_PHOTO] as? PFFile
             $0.displayImage.loadInBackground()
+            $0.displayImage.contentMode = UIViewContentMode.scaleAspectFill
             }.configure {
                 $0.rowHeight = 200
             }.onSelected({ _ in
@@ -187,63 +188,75 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
         }
         actionSheetController.addAction(cancelAction)
         
-        for admin in Engagement.sharedInstance.admins {
-            if admin == PFUser.current()?.objectId! {
-                let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                    // Edit group if admin
-                    self.navigationController?.pushViewController(EditEngagementGroupViewController(), animated: true)
-                }
-                actionSheetController.addAction(editAction)
-                
-                let resignAction: UIAlertAction = UIAlertAction(title: "Resign as Admin", style: .default) { action -> Void in
-                    // leave group
-                    if Engagement.sharedInstance.admins.count > 1 {
-                        UIApplication.shared.beginIgnoringInteractionEvents()
-                        SVProgressHUD.show(withStatus: "Resigning")
-                        
-                            let subGroupQuery = PFQuery(className: "Engagements")
-                            subGroupQuery.whereKey(PF_USER_OBJECTID, equalTo: (Engagement.sharedInstance.engagement?.objectId)!)
-                            subGroupQuery.findObjectsInBackground(block: { (engagements: [PFObject]?, error: Error?) in
-                                UIApplication.shared.endIgnoringInteractionEvents()
-                                if error == nil {
-                                    if let engagement = engagements!.first {
-                                        
-                                        var oldAdmins = engagement[PF_ENGAGEMENTS_ADMINS] as? [String]
-                                        let removeAdminIndex = oldAdmins!.index(of: PFUser.current()!.objectId!)
-                                        if removeAdminIndex != nil {
-                                            oldAdmins?.remove(at: removeAdminIndex!)
-                                            engagement[PF_SUBGROUP_ADMINS] = oldAdmins
-                                            Engagement.sharedInstance.admins = oldAdmins!
-                                        } else {
-                                            print("Admin index nil")
-                                        }
-                                        
-                                        engagement.saveInBackground(block: { (success: Bool, error: Error?) in
-                                            if error == nil {
-                                                // Refresh view
-                                                self.former.removeAll()
-                                                self.former.reload()
-                                                self.configure()
-                                                SVProgressHUD.dismiss()
-                                            } else {
-                                                SVProgressHUD.showError(withStatus: "Error Resigning")
-                                            }
-                                        })
-                                        
-                                    }
-                                }
-                        })
-                    } else {
-                        Utilities.showBanner(title: "Cannot Resign", subtitle: "You are the only admin.", duration: 1.5)
-                        SVProgressHUD.showError(withStatus: "Error Resigning")
-                        
-                    }
-                }
-                actionSheetController.addAction(resignAction)
-                break
+        if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
+            let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
+                // Edit group if admin
+                self.navigationController?.pushViewController(EditEngagementGroupViewController(), animated: true)
             }
-        }
+            actionSheetController.addAction(editAction)
+            
+            let resignAction: UIAlertAction = UIAlertAction(title: "Resign as Admin", style: .default) { action -> Void in
+                // leave group
+                if Engagement.sharedInstance.admins.count > 1 {
+                    UIApplication.shared.beginIgnoringInteractionEvents()
+                    SVProgressHUD.show(withStatus: "Resigning")
+                    
+                    let subGroupQuery = PFQuery(className: "Engagements")
+                    subGroupQuery.whereKey(PF_USER_OBJECTID, equalTo: (Engagement.sharedInstance.engagement?.objectId)!)
+                    subGroupQuery.findObjectsInBackground(block: { (engagements: [PFObject]?, error: Error?) in
+                        UIApplication.shared.endIgnoringInteractionEvents()
+                        if error == nil {
+                            if let engagement = engagements!.first {
+                                
+                                var oldAdmins = engagement[PF_ENGAGEMENTS_ADMINS] as? [String]
+                                let removeAdminIndex = oldAdmins!.index(of: PFUser.current()!.objectId!)
+                                if removeAdminIndex != nil {
+                                    oldAdmins?.remove(at: removeAdminIndex!)
+                                    engagement[PF_SUBGROUP_ADMINS] = oldAdmins
+                                    Engagement.sharedInstance.admins = oldAdmins!
+                                } else {
+                                    print("Admin index nil")
+                                }
+                                
+                                engagement.saveInBackground(block: { (success: Bool, error: Error?) in
+                                    if error == nil {
+                                        SVProgressHUD.showSuccess(withStatus: "Resigned")
+                                    } else {
+                                        SVProgressHUD.showError(withStatus: "Error Resigning")
+                                    }
+                                })
+                                
+                            }
+                        }
+                    })
+                } else {
+                    Utilities.showBanner(title: "Cannot Resign", subtitle: "You are the only admin.", duration: 1.5)
+                    SVProgressHUD.showError(withStatus: "Error Resigning")
+                    
+                }
+            }
+            actionSheetController.addAction(resignAction)
+        } else {
+            
+            let leaveAction: UIAlertAction = UIAlertAction(title: "Leave Group", style: .default) { action -> Void in
+                // leave group
+                let alert = UIAlertController(title: "Are you sure?", message: "All of your posts, messages and events will be deleted. If you are the only admin of a subgroup that subgroup will be deleted. This cannot be undone.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.view.tintColor = MAIN_COLOR
+                //Create and add the Cancel action
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                    //Do some stuff
+                }
+                alert.addAction(cancelAction)
+                let leave: UIAlertAction = UIAlertAction(title: "Leave", style: .default) { action -> Void in
+                    Engagement.sharedInstance.leave(oldUser: PFUser.current()!, completion: self.dismiss(animated: true, completion: nil))
+                }
+                alert.addAction(leave)
+                self.present(alert, animated: true, completion: nil)
                 
+            }
+            actionSheetController.addAction(leaveAction)
+        }
+        
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }

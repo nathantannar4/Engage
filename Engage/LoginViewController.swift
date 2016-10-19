@@ -12,22 +12,48 @@ import Parse
 import SVProgressHUD
 import Former
 
-class LoginViewController: UITableViewController, UITextFieldDelegate {
+class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthroughViewControllerDelegate {
     
     @IBOutlet weak var emailTextField: YoshikoTextField!
     @IBOutlet weak var passwordTextField: YoshikoTextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var logo: UIImageView!
     var firstLoad = true
     
     var validEmail = false
     var validPassword = false
     
+    override func viewDidAppear(_ animated: Bool) {
+        if PFUser.current() == nil {
+            titleLabel.isHidden = false
+            emailTextField.isHidden = false
+            passwordTextField.isHidden = false
+            loginButton.isHidden = false
+            registerButton.isHidden = false
+            logo.isHidden = false
+        } else {
+            emailTextField.isHidden = true
+            passwordTextField.isHidden = true
+            loginButton.isHidden = true
+            registerButton.isHidden = true
+            logo.isHidden = true
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        if !(UserDefaults.standard.value(forKey: "walkthroughPresented") != nil) {
+            
+            showWalkthrough()
+            
+            let dict:[String:Bool] = ["walkthroughPresented":true]
+            UserDefaults.standard.set(dict, forKey: "walkthroughPresented")
+        }
+            
         if PFUser.current() != nil {
             
             // A session token already exists
@@ -158,5 +184,35 @@ class LoginViewController: UITableViewController, UITextFieldDelegate {
     
     func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    func showWalkthrough() {
+        let stb = UIStoryboard(name: "Walkthrough", bundle: nil)
+        let walkthrough = stb.instantiateViewController(withIdentifier: "walk") as! BWWalkthroughViewController
+        let page_zero = stb.instantiateViewController(withIdentifier: "walk0")
+        let page_one = stb.instantiateViewController(withIdentifier: "walk1")
+        let page_two = stb.instantiateViewController(withIdentifier: "walk2")
+        let page_three = stb.instantiateViewController(withIdentifier: "walk3")
+        
+        // Attach the pages to the master
+        walkthrough.delegate = self
+        walkthrough.addViewController(page_one)
+        walkthrough.addViewController(page_two)
+        walkthrough.addViewController(page_three)
+        walkthrough.addViewController(page_zero)
+        
+        self.present(walkthrough, animated: false, completion: nil)
+    }
+    
+    func walkthroughCloseButtonPressed() {
+        self.dismiss(animated: true, completion: {
+            if PFUser.current() != nil {
+                print("User Logged In")
+                // A session token already exists
+                Profile.sharedInstance.user = PFUser.current()
+                Profile.sharedInstance.loadUser()
+                Utilities.userLoggedIn(self)
+            }
+        })
     }
 }
