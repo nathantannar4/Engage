@@ -30,8 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         
-        //Parse.setApplicationId("G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b", clientKey: "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq")
-        
+        //A        
         // Remove shadow from navbar
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)

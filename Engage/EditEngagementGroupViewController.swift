@@ -146,7 +146,7 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
             self?.former.deselect(animated: true)
             self?.presentImagePicker()
         }
-        let sponsorRow = SegmentedRowFormer<FormSegmentedCell>() {
+        _ = SegmentedRowFormer<FormSegmentedCell>() {
             $0.titleLabel.text = "Do you have sponsors?"
             $0.formSegmented().tintColor = MAIN_COLOR
             $0.formSegmented().selectedSegmentIndex = 0
@@ -351,7 +351,7 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
         
         let personalizationSection = SectionFormer(rowFormer: infoRow, colorHexRow, colorListRow, onlyImageRow, selectImageRow).set(headerViewFormer: TableFunctions.createHeader(text: "Personalization"))
         
-        let aboutSection = SectionFormer(rowFormer: urlRow, emailRow, sponsorRow).set(headerViewFormer: TableFunctions.createHeader(text: "About"))
+        let aboutSection = SectionFormer(rowFormer: urlRow, emailRow).set(headerViewFormer: TableFunctions.createHeader(text: "About"))
         
         let securitySection = SectionFormer(rowFormer: hiddenRow, passwordChoiceRow).set(headerViewFormer: TableFunctions.createHeader(text: "Security Settings"))
         

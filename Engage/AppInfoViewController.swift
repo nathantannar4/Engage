@@ -64,7 +64,6 @@ final class AppInfoViewController: FormViewController, BWWalkthroughViewControll
         
         // Create RowFomers
         
-        var aboutTheDevRows = [RowFormer]()
         
         let githubRow = createMenu("View Code on GitHub") { [weak self] in
             self?.former.deselect(animated: true)

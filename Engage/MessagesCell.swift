@@ -60,7 +60,9 @@ class MessagesCell: UITableViewCell {
         timeElapsedLabel.text = dateString
         
         let counter = (message[PF_MESSAGES_COUNTER]! as AnyObject).integerValue
-        counterLabel.text = (counter == 0) ? "" : "\(counter) new"
+        if counter != nil {
+            counterLabel.text = (counter == 0) ? "" : "\(counter!) new"
+        }
     }
     
 }

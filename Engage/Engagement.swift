@@ -339,7 +339,9 @@ final class Engagement {
                     }
                 })
             } else {
+                UIApplication.shared.endIgnoringInteractionEvents()
                 SVProgressHUD.showError(withStatus: "Network Error")
+                print(error)
             }
         }
     }
@@ -349,9 +351,8 @@ final class Engagement {
         // Delete All Data
         UIApplication.shared.beginIgnoringInteractionEvents()
         SVProgressHUD.show(withStatus: "Deleting \(Engagement.sharedInstance.name!)")
-        Engagement.sharedInstance.engagement!.deleteInBackground { (success: Bool, error: Error?) in
+        Engagement.sharedInstance.engagement?.deleteInBackground(block: { (success: Bool, error: Error?) in
             if success {
-                completion
                 
                 let userExtensionQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_User")
                 userExtensionQuery.findObjectsInBackground { (users: [PFObject]?, error: Error?) in
@@ -418,7 +419,6 @@ final class Engagement {
                                         SVProgressHUD.showSuccess(withStatus: "Deleted Subgroups")
                                         completion
                                     } else {
-                                        completion
                                         print(error)
                                     }
                                 })
@@ -427,9 +427,11 @@ final class Engagement {
                     })
                 }
             } else {
+                UIApplication.shared.endIgnoringInteractionEvents()
                 SVProgressHUD.showError(withStatus: "Network Error")
+                print(error)
             }
-        }
+        })
     }
     
     func create(completion: @escaping () -> Void) {
