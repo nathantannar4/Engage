@@ -35,11 +35,21 @@ final class MenuController: FormViewController {
             if Engagement.sharedInstance.subGroupName != "" {
                 if Engagement.sharedInstance.name! == "WESST" {
                     menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "\(Engagement.sharedInstance.subGroupName!)", "Profile", "Messages", "Events", "Engineering Competition", "AGM & Retreat", "Executives Meeting", "Switch Groups"]
+                    if isWESST {
+                        menuItems.popLast()
+                    }
                 } else {
                     menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "\(Engagement.sharedInstance.subGroupName!)", "Profile", "Messages", "Events", "Switch Groups"]
                 }
             } else {
-                menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "Subgroups", "Profile", "Messages", "Events", "Switch Groups"]
+                if Engagement.sharedInstance.name! == "WESST" {
+                    menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "Subgroups", "Profile", "Messages", "Events", "Engineering Competition", "AGM & Retreat", "Executives Meeting", "Switch Groups"]
+                    if isWESST {
+                        menuItems.popLast()
+                    }
+                } else {
+                    menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "Subgroups", "Profile", "Messages", "Events", "Switch Groups"]
+                }
             }
             if Engagement.sharedInstance.sponsor == true {
                 menuItems.insert("Sponsors", at: 6)

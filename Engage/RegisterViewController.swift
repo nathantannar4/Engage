@@ -10,6 +10,7 @@ import UIKit
 import TextFieldEffects
 import Parse
 import SVProgressHUD
+import JSQWebViewController
 
 class RegisterViewController: UITableViewController {
     
@@ -19,6 +20,7 @@ class RegisterViewController: UITableViewController {
     @IBOutlet weak var nameTextField: YoshikoTextField!
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var termsButton: UIButton!
     
     var validEmail = false
     var validPassword = false
@@ -52,6 +54,9 @@ class RegisterViewController: UITableViewController {
         cancelButton.setTitleColor(MAIN_COLOR, for: .normal)
         cancelButton.layer.borderColor = MAIN_COLOR?.cgColor
         cancelButton.layer.borderWidth = 1.0
+        
+        termsButton.setTitleColor(MAIN_COLOR, for: .normal)
+        termsButton.setSubstituteFontName("Avenir Next")
         
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(RegisterViewController.dismissKeyboard))
@@ -94,7 +99,29 @@ class RegisterViewController: UITableViewController {
                 
                 // Add a deley before showing next view for design purposes
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                    Utilities.userLoggedIn(self)
+                    if !isWESST {
+                        Utilities.userLoggedIn(self)
+                    } else {
+                        let engagementsQuery = PFQuery(className: PF_ENGAGEMENTS_CLASS_NAME)
+                        engagementsQuery.whereKey(PF_ENGAGEMENTS_NAME, equalTo: "WESST")
+                        engagementsQuery.findObjectsInBackground { (engagements: [PFObject]?, error: Error?) in
+                            if error == nil {
+                                let engagement = engagements?.first
+                                // Send to Group
+                                Engagement.sharedInstance.engagement = engagement
+                                Engagement.sharedInstance.unpack()
+                                if !Engagement.sharedInstance.members.contains(PFUser.current()!.objectId!) {
+                                    Engagement.sharedInstance.join(newUser: PFUser.current()!)
+                                }
+                                PushNotication.parsePushUserAssign()
+                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                                let containerVC = storyboard.instantiateViewController(withIdentifier: "menuVC") as! SWRevealViewController
+                                containerVC.view.backgroundColor = MAIN_COLOR
+                                self.present(containerVC, animated: false, completion: nil)
+                            }
+                        }
+                    }
+                    self.navigationController?.popToRootViewController(animated: false)
                 }
             } else {
                 SVProgressHUD.showError(withStatus: "Error")
@@ -186,6 +213,32 @@ class RegisterViewController: UITableViewController {
         }
     }
     
+    @IBAction func showTerms(_ sender: AnyObject) {
+        let vc = EULAViewController()
+        vc.view.backgroundColor = self.tableView.backgroundColor
+        let label = UITextView(frame: vc.view.frame)
+        vc.view.addSubview(label)
+        if let filepath = Bundle.main.path(forResource: "EULA", ofType: "html") {
+            do {
+                let str = try NSAttributedString(data: String(contentsOfFile: filepath)
+.data(using: String.Encoding.unicode, allowLossyConversion: true)!, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType], documentAttributes: nil)
+                label.textColor = MAIN_COLOR
+                label.attributedText = str
+                let navVC = UINavigationController(rootViewController: vc)
+                navVC.navigationBar.barTintColor = MAIN_COLOR
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "icn_arrow_down"), style: .plain, target: vc, action: #selector(vc.dismissView(sender:)))
+                self.present(navVC, animated: true, completion: nil)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func dismiss(sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
     // MARK - Other Functions
     
     func isValidEmail(testStr:String) -> Bool {
@@ -201,3 +254,9 @@ class RegisterViewController: UITableViewController {
     }
 }
 
+class EULAViewController: UIViewController {
+    
+    func dismissView(sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
+    }
+}

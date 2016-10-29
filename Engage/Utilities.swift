@@ -23,7 +23,7 @@ class Utilities {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let containerVC = storyboard.instantiateViewController(withIdentifier: "menuVC") as! SWRevealViewController
         containerVC.view.backgroundColor = MAIN_COLOR
-        target.present(containerVC, animated: true, completion: nil)
+        target.present(containerVC, animated: false, completion: nil)
     }
     
     class func showBanner(title: String, subtitle: String, duration: Double) {

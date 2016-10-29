@@ -20,6 +20,7 @@ struct Constants {
 
 /* App Settings */
 var VERSION = "1.0.0"
+var isWESST = false
 
 /* UI */
 // WESST Color UIColor(red: 153.0/255, green:62.0/255.0, blue:123.0/255, alpha: 1)

@@ -20,17 +20,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // Configure connection to Parse-Server
+        //Parse.setApplicationId("G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b", clientKey: "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq")
+        
         
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
-            ParseMutableClientConfiguration.applicationId = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b";
-            ParseMutableClientConfiguration.clientKey = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq";
+            ParseMutableClientConfiguration.applicationId = "nathantannar";
+            ParseMutableClientConfiguration.clientKey = "n47h4n74nn4r";
             ParseMutableClientConfiguration.server = "http://nathantannar.me/parse";
         });
         Parse.initialize(with: config) 
         
         
+        if isWESST {
+            MAIN_COLOR = UIColor(red: 153.0/255, green:62.0/255.0, blue:123.0/255, alpha: 1) as UIColor!
+        }
         
-        //A        
         // Remove shadow from navbar
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)

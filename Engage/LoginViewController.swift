@@ -46,12 +46,18 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        if !(UserDefaults.standard.value(forKey: "walkthroughPresented") != nil) {
+        if !(UserDefaults.standard.value(forKey: "walkthroughPresented") != nil) && !isWESST {
             
             showWalkthrough()
             
             let dict:[String:Bool] = ["walkthroughPresented":true]
             UserDefaults.standard.set(dict, forKey: "walkthroughPresented")
+        }
+        
+        if isWESST {
+            logo.image = UIImage(named: "WESST-Logo.png")
+        } else {
+            logo.image = UIImage(named: "Engage-Logo.png")
         }
             
         if PFUser.current() != nil {
@@ -59,11 +65,37 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
             // A session token already exists
             Profile.sharedInstance.user = PFUser.current()
             Profile.sharedInstance.loadUser()
-            Utilities.userLoggedIn(self)
+            if !isWESST {
+                Utilities.userLoggedIn(self)
+            } else {
+                let engagementsQuery = PFQuery(className: PF_ENGAGEMENTS_CLASS_NAME)
+                engagementsQuery.whereKey(PF_ENGAGEMENTS_NAME, equalTo: "WESST")
+                engagementsQuery.findObjectsInBackground { (engagements: [PFObject]?, error: Error?) in
+                    if error == nil {
+                        let engagement = engagements?.first
+                        // Send to Group
+                        Engagement.sharedInstance.engagement = engagement
+                        Engagement.sharedInstance.unpack()
+                        if !Engagement.sharedInstance.members.contains(PFUser.current()!.objectId!) {
+                            Engagement.sharedInstance.join(newUser: PFUser.current()!)
+                        }
+                        PushNotication.parsePushUserAssign()
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let containerVC = storyboard.instantiateViewController(withIdentifier: "menuVC") as! SWRevealViewController
+                        containerVC.view.backgroundColor = MAIN_COLOR
+                        self.present(containerVC, animated: false, completion: nil)
+                    }
+                }
+            }
         }
         
         // Configure Title
-        titleLabel.text = "Engage"
+        if !isWESST {
+            titleLabel.text = "Engage"
+        } else {
+            titleLabel.text = "Western Engineering Students' Socities Team"
+            titleLabel.adjustsFontSizeToFitWidth = true
+        }
         titleLabel.textColor = MAIN_COLOR!
         
         // Configure Colors
@@ -108,7 +140,28 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
                 // Add a deley before showing next view for design purposes
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                     
-                    Utilities.userLoggedIn(self)
+                    if !isWESST {
+                        Utilities.userLoggedIn(self)
+                    } else {
+                        let engagementsQuery = PFQuery(className: PF_ENGAGEMENTS_CLASS_NAME)
+                        engagementsQuery.whereKey(PF_ENGAGEMENTS_NAME, equalTo: "WESST")
+                        engagementsQuery.findObjectsInBackground { (engagements: [PFObject]?, error: Error?) in
+                            if error == nil {
+                                let engagement = engagements?.first
+                                // Send to Group
+                                Engagement.sharedInstance.engagement = engagement
+                                Engagement.sharedInstance.unpack()
+                                if !Engagement.sharedInstance.members.contains(PFUser.current()!.objectId!) {
+                                    Engagement.sharedInstance.join(newUser: PFUser.current()!)
+                                }
+                                PushNotication.parsePushUserAssign()
+                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                                let containerVC = storyboard.instantiateViewController(withIdentifier: "menuVC") as! SWRevealViewController
+                                containerVC.view.backgroundColor = MAIN_COLOR
+                                self.present(containerVC, animated: false, completion: nil)
+                            }
+                        }
+                    }
                     self.resetForm()
                 }
             } else {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		381C02F41DC1909F00831EE0 /* WESST-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 381C02F31DC1909F00831EE0 /* WESST-Logo.png */; };
 		381D03271DA20D6400B270C6 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03241DA20D6400B270C6 /* ProfileViewController.swift */; };
 		381D03281DA20D6400B270C6 /* PublicProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03251DA20D6400B270C6 /* PublicProfileViewController.swift */; };
 		381D03291DA20D6400B270C6 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03261DA20D6400B270C6 /* EditProfileViewController.swift */; };
@@ -154,6 +155,7 @@
 		38CB5DD81DAC336F00E71612 /* ConferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CB5DD51DAC336F00E71612 /* ConferenceViewController.swift */; };
 		38CB5DD91DAC336F00E71612 /* EditConferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CB5DD61DAC336F00E71612 /* EditConferenceViewController.swift */; };
 		38CB5DE01DB09E9300E71612 /* Engage-Wide.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 38CB5DDF1DB09E9300E71612 /* Engage-Wide.jpg */; };
+		38DEC2001DC2FF4E0095CEA6 /* EULA.html in Resources */ = {isa = PBXBuildFile; fileRef = 38DEC1FF1DC2FF4E0095CEA6 /* EULA.html */; };
 		38F5CEBF1DB2DDB900F64DF0 /* SponsorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F5CEBE1DB2DDB900F64DF0 /* SponsorsViewController.swift */; };
 		38F5CEC11DB2E12F00F64DF0 /* SponsorDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F5CEC01DB2E12F00F64DF0 /* SponsorDetailViewController.swift */; };
 		38F5CED51DB4974D00F64DF0 /* BWWalkthroughPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F5CED31DB4974D00F64DF0 /* BWWalkthroughPageViewController.swift */; };
@@ -168,6 +170,7 @@
 /* Begin PBXFileReference section */
 		09C4FBD64CE6919FED248A6D /* Pods_Engage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Engage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B335058B75F5D766BE032F1 /* Pods-Engage.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Engage.release.xcconfig"; path = "Pods/Target Support Files/Pods-Engage/Pods-Engage.release.xcconfig"; sourceTree = "<group>"; };
+		381C02F31DC1909F00831EE0 /* WESST-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "WESST-Logo.png"; sourceTree = "<group>"; };
 		381D03241DA20D6400B270C6 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		381D03251DA20D6400B270C6 /* PublicProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicProfileViewController.swift; sourceTree = "<group>"; };
 		381D03261DA20D6400B270C6 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
@@ -327,6 +330,7 @@
 		38CB5DD51DAC336F00E71612 /* ConferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConferenceViewController.swift; sourceTree = "<group>"; };
 		38CB5DD61DAC336F00E71612 /* EditConferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditConferenceViewController.swift; sourceTree = "<group>"; };
 		38CB5DDF1DB09E9300E71612 /* Engage-Wide.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Engage-Wide.jpg"; sourceTree = "<group>"; };
+		38DEC1FF1DC2FF4E0095CEA6 /* EULA.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = EULA.html; sourceTree = "<group>"; };
 		38F5CEBE1DB2DDB900F64DF0 /* SponsorsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorsViewController.swift; sourceTree = "<group>"; };
 		38F5CEC01DB2E12F00F64DF0 /* SponsorDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorDetailViewController.swift; sourceTree = "<group>"; };
 		38F5CED31DB4974D00F64DF0 /* BWWalkthroughPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BWWalkthroughPageViewController.swift; sourceTree = "<group>"; };
@@ -503,6 +507,7 @@
 				38CB5DDF1DB09E9300E71612 /* Engage-Wide.jpg */,
 				38F5CEE31DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg */,
 				38CB5DCB1DAAE6BE00E71612 /* Engage-Logo.png */,
+				381C02F31DC1909F00831EE0 /* WESST-Logo.png */,
 				38AFE87C1DA18B5500B52032 /* Plus-512.png */,
 				38F5CEE11DB4B98B00F64DF0 /* city.png */,
 				38F5CEDB1DB4AFC300F64DF0 /* people.png */,
@@ -535,6 +540,7 @@
 		3874CA7B1D9F882C00C014F3 /* LicensingViewController */ = {
 			isa = PBXGroup;
 			children = (
+				38DEC1FF1DC2FF4E0095CEA6 /* EULA.html */,
 				3874CA721D9F882800C014F3 /* License.swift */,
 				3874CA731D9F882800C014F3 /* LicensingItem.swift */,
 				3874CA741D9F882800C014F3 /* LicensingItemCell.swift */,
@@ -778,6 +784,7 @@
 				38F5CEDC1DB4AFC300F64DF0 /* people.png in Resources */,
 				38AFE87E1DA18B5500B52032 /* Plus-512.png in Resources */,
 				3890361E1DA36CAB00DCF82C /* DividerCell.xib in Resources */,
+				381C02F41DC1909F00831EE0 /* WESST-Logo.png in Resources */,
 				3874CAD81DA064B400C014F3 /* DynamicHeightCell.xib in Resources */,
 				3874CA4C1D9E361D00C014F3 /* Images.xcassets in Resources */,
 				3874CACD1DA064B400C014F3 /* DelegateCellLeft.xib in Resources */,
@@ -789,6 +796,7 @@
 				3890360D1DA3635300DCF82C /* ProfileImageDetailCell.xib in Resources */,
 				3890360C1DA3635300DCF82C /* ProfileImageCell.xib in Resources */,
 				38AFE87F1DA18B5500B52032 /* Nathan.jpg in Resources */,
+				38DEC2001DC2FF4E0095CEA6 /* EULA.html in Resources */,
 				38AFE86E1DA0843000B52032 /* DetailLeftLabelCell.xib in Resources */,
 				3874CADE1DA064B400C014F3 /* ProfileHeaderCell.xib in Resources */,
 				38F5CEE21DB4B98B00F64DF0 /* city.png in Resources */,
