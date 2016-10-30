@@ -443,14 +443,26 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="78" id="5A8-RS-fVb">
-                                        <rect key="frame" x="0.0" y="499" width="375" height="78"/>
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="PoF-i5-v4a">
+                                        <rect key="frame" x="0.0" y="499" width="375" height="66"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PoF-i5-v4a" id="gZ7-Ca-Wv0">
+                                            <frame key="frameInset" width="375" height="66"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="62" id="5A8-RS-fVb">
+                                        <rect key="frame" x="0.0" y="565" width="375" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5A8-RS-fVb" id="pKc-6U-DP3">
-                                            <frame key="frameInset" width="375" height="78"/>
+                                            <frame key="frameInset" width="375" height="62"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aCj-OD-Ix8">
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="19" id="EYm-rh-qi8"/>
+                                                    </constraints>
                                                     <state key="normal" title="End-User License Agreement">
                                                         <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     </state>
@@ -458,12 +470,20 @@
                                                         <action selector="showTerms:" destination="B8u-te-ZYs" eventType="touchUpInside" id="DAe-vz-DQk"/>
                                                     </connections>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By registering you agree to the" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CUP-ih-fnf">
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="14"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
-                                                <constraint firstItem="aCj-OD-Ix8" firstAttribute="leading" secondItem="pKc-6U-DP3" secondAttribute="leadingMargin" id="88Y-XD-Vll"/>
-                                                <constraint firstItem="aCj-OD-Ix8" firstAttribute="centerY" secondItem="pKc-6U-DP3" secondAttribute="centerY" id="UUm-bh-pbb"/>
-                                                <constraint firstItem="aCj-OD-Ix8" firstAttribute="trailing" secondItem="pKc-6U-DP3" secondAttribute="trailingMargin" id="kfz-Z0-1Ah"/>
+                                                <constraint firstItem="CUP-ih-fnf" firstAttribute="leading" secondItem="pKc-6U-DP3" secondAttribute="leadingMargin" id="3GI-65-gIc"/>
+                                                <constraint firstItem="aCj-OD-Ix8" firstAttribute="top" secondItem="CUP-ih-fnf" secondAttribute="bottom" constant="2" id="K98-y4-aUr"/>
+                                                <constraint firstItem="CUP-ih-fnf" firstAttribute="trailing" secondItem="aCj-OD-Ix8" secondAttribute="trailing" id="Mau-YL-LF8"/>
+                                                <constraint firstItem="CUP-ih-fnf" firstAttribute="trailing" secondItem="pKc-6U-DP3" secondAttribute="trailingMargin" id="Usd-3V-6qv"/>
+                                                <constraint firstItem="CUP-ih-fnf" firstAttribute="top" secondItem="pKc-6U-DP3" secondAttribute="topMargin" constant="3" id="X95-lO-P45"/>
+                                                <constraint firstItem="CUP-ih-fnf" firstAttribute="leading" secondItem="aCj-OD-Ix8" secondAttribute="leading" id="cdw-z7-sX6"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>

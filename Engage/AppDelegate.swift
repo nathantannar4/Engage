@@ -24,9 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
-            ParseMutableClientConfiguration.applicationId = "nathantannar";
-            ParseMutableClientConfiguration.clientKey = "n47h4n74nn4r";
-            ParseMutableClientConfiguration.server = "http://nathantannar.me/parse";
+            ParseMutableClientConfiguration.applicationId = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b";
+            ParseMutableClientConfiguration.clientKey = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq";
+            ParseMutableClientConfiguration.server = "http://nathantannar.me:1337/parse";
         });
         Parse.initialize(with: config) 
         

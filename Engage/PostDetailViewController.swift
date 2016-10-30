@@ -278,19 +278,5 @@ class PostDetailViewController: FormViewController {
             self.former.reload()
         }
     }
-
-    
-    func textFieldShouldReturn(formerInputField: UITextField!) -> Bool {
-        
-        formerInputField.resignFirstResponder()  //if desired
-        addComment(sender: self)
-        return true
-    }
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        
-    }
 }
 
