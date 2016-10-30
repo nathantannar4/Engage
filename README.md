@@ -1,8 +1,6 @@
-# Engage
-
 # ![pageres](Engage-Wide copy.jpg)
 
-[![Build Status](https://travis-ci.org/sindresorhus/pageres.svg?branch=master)](https://travis-ci.org/sindresorhus/pageres) [![Coverage Status](https://coveralls.io/repos/sindresorhus/pageres/badge.svg?branch=master)](https://coveralls.io/r/sindresorhus/pageres?branch=master) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
+# Engage
 
 Create your own social network!
 
@@ -16,5 +14,5 @@ Create your own social network!
 
 ## Team
 
-[![Nathan Tannar](http://gravatar.com/avatar/d36a92237c75c5337c17b60d90686bf9?s=144)](https://sindresorhus.com)
+[![Nathan Tannar](https://scontent-sea1-1.xx.fbcdn.net/t31.0-8/13323424_10204685401974485_5893019079235446860_o.jpg)](https://nathantannar.me)
 
