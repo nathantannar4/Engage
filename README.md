@@ -14,5 +14,5 @@ Create your own social network!
 
 ## Team
 
-[![Nathan Tannar](Nathan.jpg)](https://nathantannar.me)
+[![Nathan Tannar](Engage/Nathan.jpg)](https://nathantannar.me)
 
