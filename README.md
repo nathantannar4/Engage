@@ -14,5 +14,5 @@ Create your own social network!
 
 ## Team
 
-[![Nathan Tannar](https://scontent-sea1-1.xx.fbcdn.net/t31.0-8/13323424_10204685401974485_5893019079235446860_o.jpg)](https://nathantannar.me)
+[![Nathan Tannar][(https://scontent-sea1-1.xx.fbcdn.net/t31.0-8/13323424_10204685401974485_5893019079235446860_o.jpg)](https://nathantannar.me)
 
