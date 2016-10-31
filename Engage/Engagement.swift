@@ -346,6 +346,121 @@ final class Engagement {
         }
     }
     
+    func remove(oldUser: PFUser, completion: Void) {
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        SVProgressHUD.show(withStatus: "Removing")
+        let index = members.index(of: oldUser.objectId!)
+        members.remove(at: index!)
+        memberCount = memberCount! - 1
+        engagement![PF_ENGAGEMENTS_MEMBERS] = members
+        engagement![PF_ENGAGEMENTS_MEMBER_COUNT] = memberCount
+        engagement!.saveInBackground { (success: Bool, error: Error?) in
+            UIApplication.shared.endIgnoringInteractionEvents()
+            if success {
+                let index = Profile.sharedInstance.engagements.index(of: Engagement.sharedInstance.engagement!.objectId!)
+                let user = PFUser.current()!
+                var engagements = user[PF_USER_ENGAGEMENTS] as? [PFObject]
+                engagements?.remove(at: index!)
+                user[PF_USER_ENGAGEMENTS] = engagements
+                user.saveInBackground()
+                Profile.sharedInstance.engagements.remove(at: index!)
+                
+                completion
+                
+                // Delete created objects
+                
+                let postQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Posts")
+                postQuery.whereKey(PF_POST_USER, equalTo: PFUser.current()!)
+                postQuery.findObjectsInBackground(block: { (posts: [PFObject]?, error: Error?) in
+                    if error == nil {
+                        for post in posts! {
+                            post.deleteInBackground()
+                        }
+                    } else {
+                        print(error)
+                        Utilities.showBanner(title: "Network Error", subtitle: "Posts were not deleted from the group.", duration: 1.5)
+                    }
+                })
+                let eventQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Events")
+                eventQuery.whereKey(PF_EVENTS_ORGANIZER, equalTo: PFUser.current()!)
+                eventQuery.findObjectsInBackground(block: { (events: [PFObject]?, error: Error?) in
+                    if error == nil {
+                        for event in events! {
+                            event.deleteInBackground()
+                        }
+                    } else {
+                        print(error)
+                        Utilities.showBanner(title: "Network Error", subtitle: "Events were not deleted from the group.", duration: 1.5)
+                    }
+                })
+                let messageQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Messages")
+                messageQuery.whereKey("groupId", contains: PFUser.current()!.objectId!)
+                messageQuery.findObjectsInBackground(block: { (messages: [PFObject]?, error: Error?) in
+                    if error == nil {
+                        for message in messages! {
+                            message.deleteInBackground()
+                        }
+                    } else {
+                        print(error)
+                        Utilities.showBanner(title: "Network Error", subtitle: "Messages were not deleted from the group.", duration: 1.5)
+                    }
+                })
+                let subGroupQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_User")
+                subGroupQuery.whereKey("user", equalTo: PFUser.current()!)
+                subGroupQuery.includeKey("subgroup")
+                subGroupQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
+                    let userExtensionQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_User")
+                    userExtensionQuery.whereKey("user", equalTo: PFUser.current()!)
+                    userExtensionQuery.findObjectsInBackground { (users: [PFObject]?, error: Error?) in
+                        if error == nil {
+                            if let user = users?.first {
+                                user.deleteInBackground()
+                            }
+                        } else {
+                            print(error)
+                        }
+                    }
+                    if error == nil {
+                        if let user = users!.first {
+                            let oldSubgroup = user["subgroup"] as? PFObject
+                            if oldSubgroup != nil {
+                                
+                                var oldMembers = oldSubgroup![PF_SUBGROUP_MEMBERS] as? [String]
+                                let removeMemberIndex = oldMembers!.index(of: PFUser.current()!.objectId!)
+                                if removeMemberIndex != nil {
+                                    oldMembers?.remove(at: removeMemberIndex!)
+                                    oldSubgroup![PF_SUBGROUP_MEMBERS] = oldMembers
+                                }
+                                
+                                var oldAdmins = oldSubgroup![PF_SUBGROUP_ADMINS] as? [String]
+                                let removeAdminIndex = oldAdmins!.index(of: PFUser.current()!.objectId!)
+                                if removeAdminIndex != nil {
+                                    oldAdmins?.remove(at: removeAdminIndex!)
+                                    oldSubgroup![PF_SUBGROUP_ADMINS] = oldAdmins
+                                    if oldAdmins?.count == 0 {
+                                        oldSubgroup!.deleteInBackground()
+                                    } else {
+                                        oldSubgroup!.saveInBackground()
+                                    }
+                                } else {
+                                    oldSubgroup!.saveInBackground()
+                                }
+                                
+                                
+                            } else {
+                                print("Old sub group was nil")
+                            }
+                        }
+                    }
+                })
+            } else {
+                UIApplication.shared.endIgnoringInteractionEvents()
+                SVProgressHUD.showError(withStatus: "Network Error")
+                print(error)
+            }
+        }
+    }
+    
     func delete(completion: Void) {
     
         // Delete All Data

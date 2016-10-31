@@ -154,7 +154,20 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
             let removeAction: UIAlertAction = UIAlertAction(title: "Remove from Group", style: .default) { action -> Void in
                 // Remove User
-                
+                let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                alert.view.tintColor = MAIN_COLOR
+                //Create and add the Cancel action
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                    //Do some stuff
+                }
+                alert.addAction(cancelAction)
+                let leave: UIAlertAction = UIAlertAction(title: "Remove", style: .default) { action -> Void in
+                    Engagement.sharedInstance.remove(oldUser: self.user! as! PFUser, completion: {
+                        SVProgressHUD.showSuccess(withStatus: "User Removed")
+                    }())
+                }
+                alert.addAction(leave)
+                self.present(alert, animated: true, completion: nil)
             }
             actionSheetController.addAction(removeAction)
         }
