@@ -358,6 +358,7 @@ final class Engagement {
                 userExtensionQuery.findObjectsInBackground { (users: [PFObject]?, error: Error?) in
                     if error == nil {
                         for user in users! {
+                            print("Will delete: \(user)")
                             user.deleteInBackground()
                         }
                         SVProgressHUD.showSuccess(withStatus: "Deleted User Info")
@@ -409,7 +410,7 @@ final class Engagement {
                                     print(error)
                                 }
                                 
-                                let subGroupQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_User")
+                                let subGroupQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_SubGroups")
                                 subGroupQuery.findObjectsInBackground(block: { (subgroups: [PFObject]?, error: Error?) in
                                     UIApplication.shared.endIgnoringInteractionEvents()
                                     if error == nil {

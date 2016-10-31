@@ -24,7 +24,7 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
         NotificationCenter.default.addObserver(self, selector: #selector(MessagesViewController.loadMessages), name: NSNotification.Name(rawValue: "reloadMessages"), object: nil)
         
         let groupButton = UIBarButtonItem(image: UIImage(named: "Conference"), style: .plain, target: self, action: #selector(showGroups))
-        let composeButton = UIBarButtonItem(image: UIImage(named: "Compose"), style: .plain, target: self, action: #selector(compose))
+        let composeButton = UIBarButtonItem(image: UIImage(named: "icn_editing"), style: .plain, target: self, action: #selector(compose))
         
         navigationItem.rightBarButtonItems = [composeButton, groupButton]
         

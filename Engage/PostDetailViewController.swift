@@ -10,6 +10,7 @@ import UIKit
 import Parse
 import Former
 import Agrume
+import SVProgressHUD
 
 class PostDetailViewController: FormViewController {
     
@@ -179,9 +180,6 @@ class PostDetailViewController: FormViewController {
             }
         }
         
-        let postSection = SectionFormer(rowFormer: detailPostRow)
-        self.former.append(sectionFormer: postSection)
-        
         if  self.post!["hasImage"] as? Bool == true {
             let imageToBeLoaded = self.post!["image"] as? PFFile
             if imageToBeLoaded != nil {
@@ -206,8 +204,75 @@ class PostDetailViewController: FormViewController {
                 }
             }
         }
+        
+        let reportRow = LabelRowFormer<FormLabelCell>() {
+            $0.titleLabel.textColor = MAIN_COLOR
+            $0.titleLabel.font = .systemFont(ofSize: 10)
+            $0.accessoryType = .detailButton
+            }.configure {
+                $0.rowHeight = 30
+                $0.text = "Flag Post"
+            }.onSelected { _ in
+                self.former.deselect(animated: true)
+                let actionSheetController: UIAlertController = UIAlertController(title: "Flag Post As", message: nil, preferredStyle: .actionSheet)
+                actionSheetController.view.tintColor = MAIN_COLOR
+                
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                    //Just dismiss the action sheet
+                }
+                actionSheetController.addAction(cancelAction)
+                
+                let inappropriateAction: UIAlertAction = UIAlertAction(title: "Inappropriate Content", style: .default) { action -> Void in
+                    let flagObject = PFObject(className: "Flagged_Posts")
+                    flagObject["post"] = self.post
+                    flagObject["reason"] = "Inappropriate Content"
+                    flagObject["by_user"] = PFUser.current()!
+                    flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                        if error == nil {
+                            SVProgressHUD.showSuccess(withStatus: "Post Flagged")
+                        } else {
+                            SVProgressHUD.showError(withStatus: "Network Error")
+                        }
+                    })
+                }
+                actionSheetController.addAction(inappropriateAction)
+                
+                let offensiveAction: UIAlertAction = UIAlertAction(title: "Offensive Content", style: .default) { action -> Void in
+                    let flagObject = PFObject(className: "Flagged_Posts")
+                    flagObject["post"] = self.post
+                    flagObject["reason"] = "Offensive Content"
+                    flagObject["by_user"] = PFUser.current()!
+                    flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                        if error == nil {
+                            SVProgressHUD.showSuccess(withStatus: "Post Flagged")
+                        } else {
+                            SVProgressHUD.showError(withStatus: "Network Error")
+                        }
+                    })
+                }
+                actionSheetController.addAction(offensiveAction)
+                
+                let spamAction: UIAlertAction = UIAlertAction(title: "Spam", style: .default) { action -> Void in
+                    let flagObject = PFObject(className: "Flagged_Posts")
+                    flagObject["post"] = self.post
+                    flagObject["reason"] = "Spam"
+                    flagObject["by_user"] = PFUser.current()!
+                    flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                        if error == nil {
+                            SVProgressHUD.showSuccess(withStatus: "Post Flagged")
+                        } else {
+                            SVProgressHUD.showError(withStatus: "Network Error")
+                        }
+                    })
+                }
+                actionSheetController.addAction(spamAction)
+                
+                //Present the AlertController
+                self.present(actionSheetController, animated: true, completion: nil)
+        }
 
-        self.former.reload()
+        let postSection = SectionFormer(rowFormer: detailPostRow, reportRow)
+        self.former.append(sectionFormer: postSection)
         
         if self.post![PF_POST_TO_OBJECT] != nil {
             self.former.insertUpdate(rowFormer: self.createMenu("View \((self.post![PF_POST_TO_OBJECT] as! PFObject).value(forKey: PF_SUBGROUP_NAME) as! String)") {

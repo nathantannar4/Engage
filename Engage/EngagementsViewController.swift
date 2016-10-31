@@ -30,6 +30,19 @@ final class EngagementsViewController: FormViewController {
         self.refreshControl.addTarget(self, action: #selector(EngagementsViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(refreshControl)
         
+        if PFUser.current() != nil {
+            PFUser.current()?.fetchInBackground(block: { (user: PFObject?, error: Error?) in
+                if error == nil {
+                    Profile.sharedInstance.user = PFUser.current()
+                    Profile.sharedInstance.loadUser()
+                } else {
+                    SVProgressHUD.showError(withStatus: "Could not download most recent profile")
+                }
+            })
+        } else {
+            self.dismiss(animated: false, completion: nil)
+        }
+        
         SVProgressHUD.show(withStatus: "Loading")
         queryEngagements()
     }

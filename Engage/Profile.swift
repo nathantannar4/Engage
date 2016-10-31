@@ -23,6 +23,8 @@ final class Profile {
     var engagements = [String]()
     var userExtended: PFObject?
     var customFields = [String]()
+    var blockedUsers = [String]()
+    
     
     func clear() {
         user = nil
@@ -34,6 +36,7 @@ final class Profile {
         engagements.removeAll()
         customFields.removeAll()
         userExtended = nil
+        blockedUsers.removeAll()
     }
     
     func loadUser() {
@@ -53,6 +56,8 @@ final class Profile {
             name = user[PF_USER_FULLNAME] as? String
             if (user[PF_USER_PHONE] != nil) {
                 phoneNumber = user[PF_USER_PHONE] as? String
+            } else {
+                phoneNumber = ""
             }
             var currentGroupIDs = [String]()
             if PFUser.current()?.value(forKey: PF_USER_ENGAGEMENTS) != nil {
@@ -61,6 +66,12 @@ final class Profile {
                 }
             }
             engagements = currentGroupIDs
+            
+            if user[PF_USER_BLOCKED] != nil {
+                blockedUsers = user[PF_USER_BLOCKED] as! [String]
+            } else {
+                blockedUsers = []
+            }
             
             if Engagement.sharedInstance.engagement != nil {
                 let userExtendedQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_User")
@@ -96,10 +107,11 @@ final class Profile {
             UIApplication.shared.beginIgnoringInteractionEvents()
             SVProgressHUD.show(withStatus: "Saving")
             
-            let user = PFUser.current()!
+            let user = Profile.sharedInstance.user!
             user[PF_USER_FULLNAME] = fullName!
             user[PF_USER_FULLNAME_LOWER] = fullName!.lowercased()
             user[PF_USER_PHONE] = Profile.sharedInstance.phoneNumber
+            user[PF_USER_BLOCKED] = Profile.sharedInstance.blockedUsers
             user.saveInBackground(block: { (succeeded: Bool, error: Error?) -> Void in
                 UIApplication.shared.endIgnoringInteractionEvents()
                 

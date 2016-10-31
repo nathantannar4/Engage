@@ -95,7 +95,7 @@ final class AppInfoViewController: FormViewController, BWWalkthroughViewControll
             self?.former.deselect(animated: true)
             let licensingViewController = LicensingViewController()
             
-            licensingViewController.title = "Acknowledgments"
+            licensingViewController.title = ""
             
             let parseItem = LicensingItem(
                 title: "Parse",

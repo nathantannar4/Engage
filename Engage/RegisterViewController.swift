@@ -79,6 +79,7 @@ class RegisterViewController: UITableViewController {
         user.email = emailTextField.text!
         user.password = passwordTextField.text!
         user[PF_USER_FULLNAME] = nameTextField.text!
+        user[PF_USER_BLOCKED] = []
         
         // Save new user
         user.signUpInBackground { (succeeded, error) -> Void in

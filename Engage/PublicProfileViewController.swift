@@ -24,10 +24,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
         if PFUser.current()!.objectId! != user!.objectId! {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message", style: .plain, target: self, action: #selector(messageButtonPressed))
             addButton()
             buttonToImage()
         }
@@ -48,6 +45,122 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         chatVC.outgoingColor = MAIN_COLOR
         
         self.navigationController?.pushViewController(chatVC, animated: true)
+    }
+    
+    func infoButtonPressed(sender: AnyObject) {
+        
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheetController.view.tintColor = MAIN_COLOR
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+            //Just dismiss the action sheet
+        }
+        actionSheetController.addAction(cancelAction)
+        
+        let reportAction: UIAlertAction = UIAlertAction(title: "Report", style: .default) { action -> Void in
+            // Report User
+            let actionSheetController: UIAlertController = UIAlertController(title: "Report User As", message: nil, preferredStyle: .actionSheet)
+            actionSheetController.view.tintColor = MAIN_COLOR
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                //Just dismiss the action sheet
+            }
+            actionSheetController.addAction(cancelAction)
+            
+            let abusiveAction: UIAlertAction = UIAlertAction(title: "Abusive Messages", style: .default) { action -> Void in
+                let flagObject = PFObject(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Reported_Users")
+                flagObject["user"] = self.user
+                flagObject["reason"] = "Abusive Messages"
+                flagObject["by_user"] = PFUser.current()!
+                flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                    if error == nil {
+                        SVProgressHUD.showSuccess(withStatus: "User Reported")
+                    } else {
+                        SVProgressHUD.showError(withStatus: "Network Error")
+                    }
+                })
+            }
+            actionSheetController.addAction(abusiveAction)
+            
+            let spamAction: UIAlertAction = UIAlertAction(title: "Spam", style: .default) { action -> Void in
+                let flagObject = PFObject(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Reported_Users")
+                flagObject["user"] = self.user
+                flagObject["reason"] = "Spam"
+                flagObject["by_user"] = PFUser.current()!
+                flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                    if error == nil {
+                        SVProgressHUD.showSuccess(withStatus: "User Reported")
+                    } else {
+                        SVProgressHUD.showError(withStatus: "Network Error")
+                    }
+                })
+            }
+            actionSheetController.addAction(spamAction)
+            
+            let invalidAction: UIAlertAction = UIAlertAction(title: "Invalid Member", style: .default) { action -> Void in
+                let flagObject = PFObject(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Reported_Users")
+                flagObject["user"] = self.user
+                flagObject["reason"] = "Invalid Member"
+                flagObject["by_user"] = PFUser.current()!
+                flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                    if error == nil {
+                        SVProgressHUD.showSuccess(withStatus: "User Reported")
+                    } else {
+                        SVProgressHUD.showError(withStatus: "Network Error")
+                    }
+                })
+            }
+            actionSheetController.addAction(invalidAction)
+            
+            //Present the AlertController
+            self.present(actionSheetController, animated: true, completion: nil)
+        }
+        actionSheetController.addAction(reportAction)
+        
+        if Profile.sharedInstance.blockedUsers.contains(self.user!.objectId!) {
+            let blockAction: UIAlertAction = UIAlertAction(title: "Unblock", style: .default) { action -> Void in
+                // Unblock User
+                let index = Profile.sharedInstance.blockedUsers.index(of: self.user!.objectId!)
+                Profile.sharedInstance.blockedUsers.remove(at: index!)
+                let user = Profile.sharedInstance.user!
+                user[PF_USER_BLOCKED] = Profile.sharedInstance.blockedUsers
+                user.saveInBackground(block: { (succeeded: Bool, error: Error?) -> Void in
+                    if error == nil {
+                        SVProgressHUD.showSuccess(withStatus: "User Unblocked")
+                    } else {
+                        SVProgressHUD.showError(withStatus: "Network Error")
+                    }
+                })
+            }
+            actionSheetController.addAction(blockAction)
+        } else {
+            let blockAction: UIAlertAction = UIAlertAction(title: "Block", style: .default) { action -> Void in
+                // Block User
+                Profile.sharedInstance.blockedUsers.append(self.user!.objectId!)
+                let user = Profile.sharedInstance.user!
+                user[PF_USER_BLOCKED] = Profile.sharedInstance.blockedUsers
+                user.saveInBackground(block: { (succeeded: Bool, error: Error?) -> Void in
+                    if error == nil {
+                        SVProgressHUD.showSuccess(withStatus: "User Blocked")
+                    } else {
+                        SVProgressHUD.showError(withStatus: "Network Error")
+                    }
+                })
+            }
+            actionSheetController.addAction(blockAction)
+        }
+        
+        
+        if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
+            let removeAction: UIAlertAction = UIAlertAction(title: "Remove from Group", style: .default) { action -> Void in
+                // Remove User
+                
+            }
+            actionSheetController.addAction(removeAction)
+        }
+        
+        //Present the AlertController
+        self.present(actionSheetController, animated: true, completion: nil)
     }
     
     private lazy var zeroRow: LabelRowFormer<ImageCell> = {
@@ -385,7 +498,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         button.setImage(tintedImage, for: .normal)
         button.setTitle("", for: .normal)
         if PFUser.current()!.value(forKey: PF_USER_FULLNAME) as? String != user![PF_USER_FULLNAME] as? String {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message", style: .plain, target: self, action: #selector(messageButtonPressed))
+            navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(named: "icn_editing"), style: .plain, target: self, action: #selector(messageButtonPressed)), UIBarButtonItem(image: UIImage(named: "Info.png"), style: .plain, target: self, action: #selector(infoButtonPressed))]
         }
     }
     
