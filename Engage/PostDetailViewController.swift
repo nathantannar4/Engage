@@ -208,7 +208,6 @@ class PostDetailViewController: FormViewController {
         let reportRow = LabelRowFormer<FormLabelCell>() {
             $0.titleLabel.textColor = MAIN_COLOR
             $0.titleLabel.font = .systemFont(ofSize: 10)
-            $0.accessoryType = .detailButton
             }.configure {
                 $0.rowHeight = 30
                 $0.text = "Flag Post"

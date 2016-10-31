@@ -141,7 +141,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
                 user[PF_USER_BLOCKED] = Profile.sharedInstance.blockedUsers
                 user.saveInBackground(block: { (succeeded: Bool, error: Error?) -> Void in
                     if error == nil {
-                        SVProgressHUD.showSuccess(withStatus: "User Blocked")
+                        SVProgressHUD.showSuccess(withStatus: "User Blocked, their posts and messages will not appear")
                     } else {
                         SVProgressHUD.showError(withStatus: "Network Error")
                     }

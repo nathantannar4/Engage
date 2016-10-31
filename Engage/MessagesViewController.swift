@@ -64,6 +64,9 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
     
     func loadMessages() {
         let query = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_\(PF_MESSAGES_CLASS_NAME)")
+        let blockedUserQuery = PFUser.query()
+        blockedUserQuery?.whereKey(PF_USER_OBJECTID, containedIn: Profile.sharedInstance.blockedUsers)
+        query.whereKey(PF_MESSAGES_LASTUSER, doesNotMatch: blockedUserQuery!)
         query.whereKey(PF_MESSAGES_USER, equalTo: PFUser.current()!)
         query.includeKey(PF_MESSAGES_LASTUSER)
         query.order(byDescending: PF_MESSAGES_UPDATEDACTION)

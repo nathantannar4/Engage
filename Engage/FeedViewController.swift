@@ -182,12 +182,16 @@ class FeedViewController: FormViewController, UIImagePickerControllerDelegate, U
         
         SVProgressHUD.show(withStatus: "Loading")
         let query = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Posts")
+        let blockedUserQuery = PFUser.query()
+        blockedUserQuery?.whereKey(PF_USER_OBJECTID, containedIn: Profile.sharedInstance.blockedUsers)
+        query.whereKey(PF_POST_USER, doesNotMatch: blockedUserQuery!)
         query.limit = 10
         query.skip = self.querySkip
         query.order(byDescending: "createdAt")
         query.includeKey(PF_POST_USER)
         query.includeKey(PF_POST_TO_OBJECT)
         query.includeKey(PF_POST_TO_USER)
+        query.whereKey(PF_POST_USER, doesNotMatch: blockedUserQuery!)
         query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) in
             UIApplication.shared.endIgnoringInteractionEvents()
             SVProgressHUD.dismiss()
