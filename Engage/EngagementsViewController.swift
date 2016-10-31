@@ -122,26 +122,37 @@ final class EngagementsViewController: FormViewController {
                     }
                     self.engagementsCount = (engagements?.count)!
                     for engagement in engagements! {
-                        myRows.append(CustomRowFormer<DetailLeftLabelCell>(instantiateType: .Nib(nibName: "DetailLeftLabelCell")) {
-                            $0.accessoryType = .disclosureIndicator
-                            $0.titleLabel.text = engagement[PF_ENGAGEMENTS_NAME] as! String?
-                            $0.titleLabel.textColor = UIColor.black
-                            if (engagement[PF_ENGAGEMENTS_MEMBER_COUNT] as! Int) > 1 {
-                                $0.detailLabel.text = "\(engagement[PF_ENGAGEMENTS_MEMBER_COUNT] as! Int) Members"
-                            } else {
-                                $0.detailLabel.text = "\(engagement[PF_ENGAGEMENTS_MEMBER_COUNT] as! Int) Member"
-                            }
-                            $0.detailLabel.textColor = UIColor.gray
-                            }.configure {
-                                $0.rowHeight = 60
-                            }.onSelected { [weak self] _ in
-                                self?.former.deselect(animated: true)
-                                
-                                // Send to Group
-                                Engagement.sharedInstance.engagement = engagement
-                                Engagement.sharedInstance.unpack()
-                                Utilities.showEngagement(self!)
-                        })
+                        if !((engagement[PF_ENGAGEMENTS_MEMBERS] as! [String]).contains(PFUser.current()!.objectId!)) {
+                            let index = Profile.sharedInstance.engagements.index(of: engagement.objectId!)
+                            let user = PFUser.current()!
+                            var currentEngagements = user[PF_USER_ENGAGEMENTS] as? [PFObject]
+                            currentEngagements?.remove(at: index!)
+                            user[PF_USER_ENGAGEMENTS] = currentEngagements
+                            user.saveInBackground()
+                            Profile.sharedInstance.engagements.remove(at: index!)
+                        } else {
+                            myRows.append(CustomRowFormer<DetailLeftLabelCell>(instantiateType: .Nib(nibName: "DetailLeftLabelCell")) {
+                                $0.accessoryType = .disclosureIndicator
+                                $0.titleLabel.text = engagement[PF_ENGAGEMENTS_NAME] as! String?
+                                $0.titleLabel.textColor = UIColor.black
+                                if (engagement[PF_ENGAGEMENTS_MEMBER_COUNT] as! Int) > 1 {
+                                    $0.detailLabel.text = "\(engagement[PF_ENGAGEMENTS_MEMBER_COUNT] as! Int) Members"
+                                } else {
+                                    $0.detailLabel.text = "\(engagement[PF_ENGAGEMENTS_MEMBER_COUNT] as! Int) Member"
+                                }
+                                $0.detailLabel.textColor = UIColor.gray
+                                }.configure {
+                                    $0.rowHeight = 60
+                                }.onSelected { [weak self] _ in
+                                    self?.former.deselect(animated: true)
+                                    
+                                    // Send to Group
+                                    Engagement.sharedInstance.engagement = engagement
+                                    Engagement.sharedInstance.unpack()
+                                    Utilities.showEngagement(self!)
+                            })
+
+                        }
                     }
                     let findRow = self.createMenu("Find Groups") { [weak self] in
                         self?.former.deselect(animated: true)
