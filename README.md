@@ -28,8 +28,8 @@ This app has been a personal project of mine and I thank you for your support!
 
 ## Team
 
-[![Nathan Tannar](Engage/Nathan.jpg =300x300)](https://nathantannar.me)
-## Nathan Tannar
+[![](<img src="Engage/Nathan.jpg" data-canonical-src="Engage/Nathan.jpg" width="300" height="300" />)](https://nathantannar.me)
+### Nathan Tannar
 ### Computer Science Undergraduate Student at SFU
 https://nathantannar.me
 
