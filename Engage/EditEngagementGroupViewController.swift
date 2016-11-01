@@ -410,7 +410,7 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
                 }
                 actionSheetController.addAction(action)
             }
-            
+            actionSheetController.popoverPresentationController?.sourceView = self.view
             //Present the AlertController
             self.present(actionSheetController, animated: true, completion: nil)
         }
@@ -443,12 +443,12 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
                 }
                 actionSheetController.addAction(action)
             }
-            
+            actionSheetController.popoverPresentationController?.sourceView = self.view
             //Present the AlertController
             self.present(actionSheetController, animated: true, completion: nil)
         }
         actionSheetController.addAction(remove)
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }

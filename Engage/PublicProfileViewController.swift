@@ -111,7 +111,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
                 })
             }
             actionSheetController.addAction(invalidAction)
-            
+            actionSheetController.popoverPresentationController?.sourceView = self.view
             //Present the AlertController
             self.present(actionSheetController, animated: true, completion: nil)
         }
@@ -171,7 +171,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
             }
             actionSheetController.addAction(removeAction)
         }
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }
@@ -224,7 +224,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
                             UIApplication.shared.open(url as URL)
                         }
                         actionSheetController.addAction(single)
-                        
+                        actionSheetController.popoverPresentationController?.sourceView = self.view
                         //Present the AlertController
                         self.present(actionSheetController, animated: true, completion: nil)
                     }

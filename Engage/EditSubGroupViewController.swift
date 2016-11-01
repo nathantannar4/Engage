@@ -273,7 +273,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
                 }
                 actionSheetController.addAction(action)
             }
-            
+            actionSheetController.popoverPresentationController?.sourceView = self.view
             //Present the AlertController
             self.present(actionSheetController, animated: true, completion: nil)
         }
@@ -305,12 +305,12 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
                 }
                 actionSheetController.addAction(action)
             }
-            
+            actionSheetController.popoverPresentationController?.sourceView = self.view
             //Present the AlertController
             self.present(actionSheetController, animated: true, completion: nil)
         }
         actionSheetController.addAction(remove)
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }

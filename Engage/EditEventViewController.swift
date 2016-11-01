@@ -121,7 +121,7 @@ final class EditEventViewController: FormViewController {
                     }
                 }
                 actionSheetController.addAction(yesAction)
-                
+                actionSheetController.popoverPresentationController?.sourceView = self.view
                 //Present the AlertController
                 self.present(actionSheetController, animated: true, completion: nil)
 

@@ -291,7 +291,7 @@ class ConferenceViewController: FormViewController  {
                 break
             }
         }
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }

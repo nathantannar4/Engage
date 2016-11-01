@@ -228,7 +228,7 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
             Camera.shouldStartVideoLibrary(target: self, canEdit: true)
         }
         actionSheetController.addAction(chooseVideoAction)
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }

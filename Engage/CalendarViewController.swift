@@ -446,7 +446,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
             self.present(navVC, animated: true, completion: nil)
         }
         actionSheetController.addAction(advanced)
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
         */

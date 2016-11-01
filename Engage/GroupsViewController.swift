@@ -90,7 +90,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
             //TextField configuration
             //textField.textColor = UIColor(red: 153.0/255, green:62.0/255.0, blue:123.0/255, alpha: 1)
         }
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }

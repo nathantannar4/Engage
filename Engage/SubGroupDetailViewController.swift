@@ -145,7 +145,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         }
                         actionSheetController.addAction(single)
-                        
+                        actionSheetController.popoverPresentationController?.sourceView = self.view
                         //Present the AlertController
                         self.present(actionSheetController, animated: true, completion: nil)
                     }
@@ -381,7 +381,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             }
             actionSheetController.addAction(resignAction)
         }
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }
@@ -473,7 +473,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
 
             }
         actionSheetController.addAction(advanced)
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }

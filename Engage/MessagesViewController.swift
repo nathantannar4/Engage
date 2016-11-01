@@ -145,7 +145,7 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
             self.present(navVC, animated: true, completion: nil)
         }
         actionSheetController.addAction(multiple)
-        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
         self.present(actionSheetController, animated: true, completion: nil)
     }
