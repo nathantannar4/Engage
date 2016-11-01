@@ -20,6 +20,16 @@ class Utilities {
     
     class func showEngagement(_ target: AnyObject) {
         PushNotication.parsePushUserAssign()
+        /*
+        let appToolbarController = AppToolbarController(rootViewController: FeedViewController())
+        let leftViewController = MenuController()
+            //AppPageTabBarController(viewControllers: [RedViewController(), BlueViewController()], selectedIndex: 1)
+        let rightViewController = RightViewController()
+        
+        let baseVC = AppNavigationDrawerController(rootViewController: AppMenuController(rootViewController:appToolbarController), leftViewController: leftViewController, rightViewController: rightViewController)
+        */
+        
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let containerVC = storyboard.instantiateViewController(withIdentifier: "menuVC") as! SWRevealViewController
         containerVC.view.backgroundColor = MAIN_COLOR

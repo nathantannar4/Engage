@@ -11,7 +11,7 @@ import Former
 import Parse
 import Agrume
 
-final class MenuController: FormViewController {
+final class SWMenuController: FormViewController {
     
     var menuItems = [String]()
     let feedVC = FeedViewController()
