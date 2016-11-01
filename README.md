@@ -28,7 +28,7 @@ This app has been a personal project of mine and I thank you for your support!
 
 ## Team
 
-<img src="https://github.com/nathantannar4/Engage/Engage/Nathan.jpg" data-canonical-src="https://github.com/nathantannar4/Engage/Engage/Nathan.jpg" width="300" height="300" />
+<img src="https://github.com/nathantannar4/Engage/blob/master/Engage/Nathan.jpg" data-canonical-src="https://github.com/nathantannar4/Engage/blob/master/Engage/Nathan.jpg" width="300" height="300" />
 ### Nathan Tannar
 ### Computer Science Undergraduate Student at SFU
 https://nathantannar.me
