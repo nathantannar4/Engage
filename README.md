@@ -4,7 +4,7 @@
 
 Create your own social network!
 
-> Engage is an iOS exclusive app that allows you to create your own social networking space! Specifically designed to help clubs, organizations and student societies to improve the communication and organization. 
+> Engage is currently an iOS exclusive app that allows you to create your own social networking space! Designed specifically to help clubs, organizations and student societies to improve the communication and organization. 
 
 ## Some of the core features include:
 - Complete Customization: Make your group unique with a wide variety of customization options!
@@ -21,14 +21,15 @@ This app has been a personal project of mine and I thank you for your support!
 ## To-Do List
 
 - [x] Release on App Store
-- [] Create a marketing web page
-- [] Start a Kickstarter to fund improvements and an Android version
-- [] Enhance UI
-- [] Enhance group messaging using the SlackTextViewController
+- [ ] Create a marketing web page
+- [ ] Start a Kickstarter to fund improvements and an Android version
+- [ ] Enhance UI
+- [ ] Enhance group messaging using the SlackTextViewController
 
 ## Team
 
-[![Nathan Tannar](Engage/Nathan.jpg)](https://nathantannar.me)
+[![Nathan Tannar](Engage/Nathan.jpg =300x300)](https://nathantannar.me)
+## Nathan Tannar
 ### Computer Science Undergraduate Student at SFU
 https://nathantannar.me
 
