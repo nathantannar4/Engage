@@ -1,8 +1,8 @@
 # ![pageres](Engage-Wide copy.jpg)
 
-# Engage <a href="https://appsto.re/ca/TmlJfb.i"><img src="https://github.com/nathantannar4/Engage/blob/master/app-store-badge.svg" alt=""></a>
+# Engage 
 
-Create your own social network!
+Create your own social network! <a href="https://appsto.re/ca/TmlJfb.i">Download Link</a>
 
 > Engage is currently an iOS exclusive app that allows you to create your own social networking space! Designed specifically to help clubs, organizations and student societies to improve the communication and organization. 
 
