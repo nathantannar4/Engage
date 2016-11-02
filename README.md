@@ -1,6 +1,6 @@
 # ![pageres](Engage-Wide copy.jpg)
 
-# Engage <a href="https://appsto.re/ca/TmlJfb.i"><img src="app-store-badge.svg" alt=""></a>
+# Engage <a href="https://appsto.re/ca/TmlJfb.i"><img src="https://github.com/nathantannar4/Engage/blob/master/app-store-badge.svg" alt=""></a>
 
 Create your own social network!
 
