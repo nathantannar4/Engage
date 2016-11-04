@@ -263,7 +263,7 @@ final class EngagementsViewController: FormViewController {
                 }
                 self.former.append(sectionFormer: self.reloadSection.set(footerViewFormer: TableFunctions.createFooter(text: "Engage - Version: \(VERSION)")))
                 self.former.reload()
-                print(error)
+                print(error.debugDescription)
                 SVProgressHUD.showError(withStatus: "You appear to be offline")
             }
         }

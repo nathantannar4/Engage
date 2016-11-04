@@ -63,13 +63,13 @@ class Messages {
                         Error?) -> Void in
                         if (error != nil) {
                             print("Messages.createMessageItem save error.")
-                            print(error)
+                            print(error.debugDescription)
                         }
                     })
                 }
             } else {
                 print("Messages.createMessageItem save error.")
-                print(error)
+                print(error.debugDescription)
             }
         }
     }
@@ -78,7 +78,7 @@ class Messages {
         message.deleteInBackground { (succeeded: Bool, error: Error?) -> Void in
             if error != nil {
                 print("UpdateMessageCounter save error.")
-                print(error)
+                print(error.debugDescription)
             }
         }
     }
@@ -99,7 +99,7 @@ class Messages {
                         message.saveInBackground(block: { (succeeded: Bool, error: Error?) -> Void in
                             if error != nil {
                                 print("UpdateMessageCounter save error.")
-                                print(error)
+                                print(error.debugDescription)
                             }
                         })
                     } else {
@@ -109,14 +109,14 @@ class Messages {
                             Error?) -> Void in
                             if error != nil {
                                 print("UpdateMessageCounter save error.")
-                                print(error)
+                                print(error.debugDescription)
                             }
                         })
                     }
                 }
             } else {
                 print("UpdateMessageCounter save error.")
-                print(error)
+                print(error.debugDescription)
             }
         }
     }
@@ -132,13 +132,13 @@ class Messages {
                     message.saveInBackground(block: { (succeeded: Bool, error: Error?) -> Void in
                         if error != nil {
                             print("ClearMessageCounter save error.")
-                            print(error)
+                            print(error.debugDescription)
                         }
                     })
                 }
             } else {
                 print("ClearMessageCounter save error.")
-                print(error)
+                print(error.debugDescription)
             }
         }
     }

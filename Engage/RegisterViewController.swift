@@ -129,7 +129,7 @@ class RegisterViewController: UITableViewController {
                 }
             } else {
                 SVProgressHUD.showError(withStatus: "Error")
-                print(error)
+                print(error.debugDescription)
             }
         }
     }

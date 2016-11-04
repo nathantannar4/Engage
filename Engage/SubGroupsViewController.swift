@@ -113,7 +113,7 @@ class SubGroupsViewController: FormViewController {
                 self.former.reload()
                 SVProgressHUD.dismiss()
             } else {
-                print(error)
+                print(error.debugDescription)
                 SVProgressHUD.showError(withStatus: "Network Error")
             }
         }

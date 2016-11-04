@@ -85,7 +85,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
                                     }
                                 }
                             } else {
-                                print(error)
+                                print(error.debugDescription)
                                 SVProgressHUD.showError(withStatus: "Network Error")
                             }
                         })

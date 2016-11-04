@@ -87,7 +87,7 @@ class MessageViewController: SLKTextViewController {
                 }
             } else {
                 print("Network error")
-                print(error)
+                print(error.debugDescription)
                 SVProgressHUD.showError(withStatus: "Network Error")
             }
         }

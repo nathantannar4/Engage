@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,19 +19,24 @@
                         <viewControllerLayoutGuide type="bottom" id="VXm-Ru-t4o"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Xnf-dR-UXp">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iPhoneScreen" translatesAutoresizingMaskIntoConstraints="NO" id="xp9-Wt-8vn"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iPhoneScreen" translatesAutoresizingMaskIntoConstraints="NO" id="xp9-Wt-8vn">
+                                <rect key="frame" x="31" y="435" width="313" height="232"/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Engage-Logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="uX1-mf-tOc">
+                                <rect key="frame" x="144" y="497" width="87" height="108"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="108" id="yaY-5r-CRO"/>
                                 </constraints>
                             </imageView>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="JJV-op-rSU">
+                                <rect key="frame" x="168" y="28" width="39" height="37"/>
                                 <color key="tintColor" red="0.15686274510000001" green="0.50196078430000002" blue="0.72941176470000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </pageControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ad-hv-8C6" userLabel="Prev">
+                                <rect key="frame" x="16" y="575" width="65" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="65" id="ERB-sE-K9v"/>
                                 </constraints>
@@ -41,12 +49,13 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4oX-Xj-2Xl">
+                                <rect key="frame" x="116" y="605" width="143" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="qg7-vZ-HAa"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="22"/>
                                 <state key="normal" title="Get Started">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -54,6 +63,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IEr-zB-euS" userLabel="Next">
+                                <rect key="frame" x="309" y="575" width="50" height="50"/>
                                 <state key="normal" image="rightarrow">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -102,15 +112,17 @@
                         <viewControllerLayoutGuide type="bottom" id="Qmb-H6-Z3E"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="AvX-wc-16a">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Engage is a platform that allows you to create your own social networking space!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PP2-XY-TIE">
+                                <rect key="frame" x="16" y="143" width="343" height="94"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Perfect for student societies, clubs and other organizations." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kYO-pU-FKg">
+                                <rect key="frame" x="16" y="266" width="343" height="108"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="108" id="1dF-3B-Yvv"/>
                                 </constraints>
@@ -152,39 +164,47 @@
                         <viewControllerLayoutGuide type="bottom" id="Q0s-D3-K13"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ilO-KC-33e">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="city.png" translatesAutoresizingMaskIntoConstraints="NO" id="x5j-ZT-3pa"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="city.png" translatesAutoresizingMaskIntoConstraints="NO" id="x5j-ZT-3pa">
+                                <rect key="frame" x="0.0" y="432" width="375" height="235"/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud1" translatesAutoresizingMaskIntoConstraints="NO" id="1wJ-L3-W5O">
+                                <rect key="frame" x="38" y="83" width="61" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="61" id="0WU-Xt-YsU"/>
                                     <constraint firstAttribute="height" constant="38" id="saM-9h-bXJ"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud3" translatesAutoresizingMaskIntoConstraints="NO" id="6EQ-LL-hcU">
+                                <rect key="frame" x="276" y="107" width="61" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="61" id="gt8-ld-VtB"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud3" translatesAutoresizingMaskIntoConstraints="NO" id="IYj-3y-brX">
+                                <rect key="frame" x="98" y="152" width="61" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="Ln2-2I-O9o"/>
                                     <constraint firstAttribute="width" constant="61" id="cAV-3Z-TKV"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud3" translatesAutoresizingMaskIntoConstraints="NO" id="Zgg-Jt-s8W">
+                                <rect key="frame" x="210" y="144" width="61" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="61" id="NDZ-fJ-kDr"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud1" translatesAutoresizingMaskIntoConstraints="NO" id="pFs-hw-LEh">
+                                <rect key="frame" x="167" y="61" width="60" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="Zx2-R9-tdg"/>
                                     <constraint firstAttribute="width" constant="60" id="fbK-Rm-Wgi"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Engage-Wide-Gradient.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="qOp-9r-ifY">
+                                <rect key="frame" x="-46" y="227" width="383" height="173"/>
                                 <color key="backgroundColor" red="0.15686274510000001" green="0.50196078430000002" blue="0.72941176470000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="173" id="iYu-bs-oVS"/>
@@ -228,10 +248,11 @@
                         <viewControllerLayoutGuide type="bottom" id="Deg-VZ-J6w"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="9My-yD-6bv">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thank you for your support!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rgV-JW-K1R">
+                                <rect key="frame" x="16" y="297" width="343" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="31" id="ibZ-rb-IrU"/>
                                 </constraints>
@@ -240,6 +261,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="- Nathan Tannar" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4fX-2m-qhx">
+                                <rect key="frame" x="16" y="336" width="343" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="Tyk-sN-oYv"/>
                                 </constraints>
@@ -248,6 +270,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Engage has been self developed in Vancouver, Canada" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7z5-9n-yGw">
+                                <rect key="frame" x="16" y="142" width="343" height="88"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="88" id="5jZ-WH-Ke8"/>
                                 </constraints>
@@ -255,7 +278,9 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="city.png" translatesAutoresizingMaskIntoConstraints="NO" id="HIH-cM-CGx"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="city.png" translatesAutoresizingMaskIntoConstraints="NO" id="HIH-cM-CGx">
+                                <rect key="frame" x="0.0" y="432" width="375" height="235"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.15686274510000001" green="0.50196078430000002" blue="0.72941176470000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -288,17 +313,23 @@
                         <viewControllerLayoutGuide type="bottom" id="bbg-ej-M6o"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="pGR-jM-79V">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud3" translatesAutoresizingMaskIntoConstraints="NO" id="rT0-0Y-i5n"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud3" translatesAutoresizingMaskIntoConstraints="NO" id="rT0-0Y-i5n">
+                                <rect key="frame" x="295" y="85" width="64" height="35"/>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Engage!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qxv-dP-RGe">
+                                <rect key="frame" x="16" y="167" width="343" height="244"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="38"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud1" translatesAutoresizingMaskIntoConstraints="NO" id="mlV-I5-hhj"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud1" translatesAutoresizingMaskIntoConstraints="NO" id="mlV-I5-hhj">
+                                <rect key="frame" x="16" y="62" width="64" height="38"/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud3" translatesAutoresizingMaskIntoConstraints="NO" id="dwh-CU-Z9n">
+                                <rect key="frame" x="158" y="111" width="61" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="61" id="20d-N6-Q6p"/>
                                 </constraints>

@@ -41,7 +41,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
                 self.tableView.reloadData()
             } else {
                 print("Network error")
-                print(error)
+                print(error.debugDescription)
                 SVProgressHUD.showError(withStatus: "Network Error")
             }
             self.refreshControl!.endRefreshing()
@@ -77,7 +77,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
                             SVProgressHUD.showSuccess(withStatus: "Group Chat Created")
                         } else {
                             print("Network error")
-                            print(error)
+                            print(error.debugDescription)
                             SVProgressHUD.showError(withStatus: "Network Error")
                         }
                     })

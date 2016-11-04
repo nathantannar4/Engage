@@ -166,7 +166,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
                 }
             } else {
                 SVProgressHUD.showError(withStatus: "Invalid Login")
-                print(error)
+                print(error.debugDescription)
                 
             }
         }

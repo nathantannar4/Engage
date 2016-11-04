@@ -552,7 +552,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
                     self.tableView.scrollToRow(at: IndexPath(row: self.querySkip, section: 1), at: UITableViewScrollPosition.bottom, animated: false)
                 }
             } else {
-                print(error)
+                print(error.debugDescription)
                 SVProgressHUD.showError(withStatus: "Network Error")
             }
         }

@@ -202,6 +202,7 @@ final class Engagement {
                 if PFUser.current()?.value(forKey: PF_USER_ENGAGEMENTS) != nil {
                     var currentEngagements = PFUser.current()?.value(forKey: PF_USER_ENGAGEMENTS) as? [PFObject]
                     currentEngagements?.append(self.engagement!)
+                    Profile.sharedInstance.engagements.append(self.engagement!.objectId!)
                     user[PF_USER_ENGAGEMENTS] = currentEngagements
                 } else {
                     user[PF_USER_ENGAGEMENTS] = [self.engagement!]
@@ -262,7 +263,7 @@ final class Engagement {
                             post.deleteInBackground()
                         }
                     } else {
-                        print(error)
+                        print(error.debugDescription)
                         Utilities.showBanner(title: "Network Error", subtitle: "Your posts were not deleted from the group.", duration: 1.5)
                     }
                 })
@@ -274,7 +275,7 @@ final class Engagement {
                             event.deleteInBackground()
                         }
                     } else {
-                        print(error)
+                        print(error.debugDescription)
                         Utilities.showBanner(title: "Network Error", subtitle: "Your events were not deleted from the group.", duration: 1.5)
                     }
                 })
@@ -286,7 +287,7 @@ final class Engagement {
                             message.deleteInBackground()
                         }
                     } else {
-                        print(error)
+                        print(error.debugDescription)
                         Utilities.showBanner(title: "Network Error", subtitle: "Your messages were not deleted from the group.", duration: 1.5)
                     }
                 })
@@ -302,7 +303,7 @@ final class Engagement {
                                 user.deleteInBackground()
                             }
                         } else {
-                            print(error)
+                            print(error.debugDescription)
                         }
                     }
                     if error == nil {
@@ -341,7 +342,7 @@ final class Engagement {
             } else {
                 UIApplication.shared.endIgnoringInteractionEvents()
                 SVProgressHUD.showError(withStatus: "Network Error")
-                print(error)
+                print(error.debugDescription)
             }
         }
     }
@@ -371,7 +372,7 @@ final class Engagement {
                             post.deleteInBackground()
                         }
                     } else {
-                        print(error)
+                        print(error.debugDescription)
                         Utilities.showBanner(title: "Network Error", subtitle: "Posts were not deleted from the group.", duration: 1.5)
                     }
                 })
@@ -383,7 +384,7 @@ final class Engagement {
                             event.deleteInBackground()
                         }
                     } else {
-                        print(error)
+                        print(error.debugDescription)
                         Utilities.showBanner(title: "Network Error", subtitle: "Events were not deleted from the group.", duration: 1.5)
                     }
                 })
@@ -395,7 +396,7 @@ final class Engagement {
                             message.deleteInBackground()
                         }
                     } else {
-                        print(error)
+                        print(error.debugDescription)
                         Utilities.showBanner(title: "Network Error", subtitle: "Messages were not deleted from the group.", duration: 1.5)
                     }
                 })
@@ -411,7 +412,7 @@ final class Engagement {
                                 user.deleteInBackground()
                             }
                         } else {
-                            print(error)
+                            print(error.debugDescription)
                         }
                     }
                     if error == nil {
@@ -450,7 +451,7 @@ final class Engagement {
             } else {
                 UIApplication.shared.endIgnoringInteractionEvents()
                 SVProgressHUD.showError(withStatus: "Network Error")
-                print(error)
+                print(error.debugDescription)
             }
         }
     }
@@ -472,7 +473,7 @@ final class Engagement {
                         }
                         SVProgressHUD.showSuccess(withStatus: "Deleted User Info")
                     } else {
-                        print(error)
+                        print(error.debugDescription)
                     }
                     
                     let postQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Posts")
@@ -483,7 +484,7 @@ final class Engagement {
                             }
                             SVProgressHUD.showSuccess(withStatus: "Deleted Posts")
                         } else {
-                            print(error)
+                            print(error.debugDescription)
                         }
                         
                         let eventQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Events")
@@ -494,7 +495,7 @@ final class Engagement {
                                 }
                                 SVProgressHUD.showSuccess(withStatus: "Deleted Events")
                             } else {
-                                print(error)
+                                print(error.debugDescription)
                             }
                             
                             let groupsQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Groups")
@@ -504,7 +505,7 @@ final class Engagement {
                                         group.deleteInBackground()
                                     }
                                 } else {
-                                    print(error)
+                                    print(error.debugDescription)
                                 }
                             })
                             
@@ -516,7 +517,7 @@ final class Engagement {
                                     }
                                     SVProgressHUD.showSuccess(withStatus: "Deleted Messages")
                                 } else {
-                                    print(error)
+                                    print(error.debugDescription)
                                 }
                                 
                                 let subGroupQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_SubGroups")
@@ -529,7 +530,7 @@ final class Engagement {
                                         SVProgressHUD.showSuccess(withStatus: "Deleted Subgroups")
                                         completion
                                     } else {
-                                        print(error)
+                                        print(error.debugDescription)
                                     }
                                 })
                             })
@@ -539,7 +540,7 @@ final class Engagement {
             } else {
                 UIApplication.shared.endIgnoringInteractionEvents()
                 SVProgressHUD.showError(withStatus: "Network Error")
-                print(error)
+                print(error.debugDescription)
             }
         })
     }

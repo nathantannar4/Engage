@@ -151,7 +151,6 @@ final class EngagementSubGroup {
                 if error == nil {
                     if let user = users!.first {
                         let oldSubgroup = user["subgroup"] as? PFObject
-                        print(oldSubgroup)
                         if oldSubgroup != nil {
                             
                             let oldAdmins = oldSubgroup![PF_SUBGROUP_ADMINS] as? [String]
@@ -219,7 +218,7 @@ final class EngagementSubGroup {
                                             
                                         } else {
                                             SVProgressHUD.showError(withStatus: "Network Error")
-                                            print(error)
+                                            print(error.debugDescription)
                                         }
                                     }
                             }

@@ -21,8 +21,7 @@ class ProfileViewController: FormViewController  {
         
         // Setup UI and Table Properties
         let editButton   = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonPressed))
-        let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutButtonPressed))
-        navigationItem.rightBarButtonItems = [logoutButton, editButton]
+        navigationItem.rightBarButtonItem = editButton
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         tableView.contentInset.top = 0
@@ -162,13 +161,5 @@ class ProfileViewController: FormViewController  {
     
     func editButtonPressed(sender: UIBarButtonItem) {
         self.navigationController?.pushViewController(EditProfileViewController(), animated: true)
-    }
-    
-    func logoutButtonPressed(sender: UIBarButtonItem) {
-        PFUser.logOut()
-        Profile.sharedInstance.clear()
-        PushNotication.parsePushUserResign()
-        Utilities.postNotification(NOTIFICATION_USER_LOGGED_OUT)
-        self.dismiss(animated: true, completion: nil)
     }
 }
