@@ -20,8 +20,12 @@ class ProfileViewController: FormViewController  {
         super.viewDidLoad()
         
         // Setup UI and Table Properties
-        let editButton   = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonPressed))
+        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonPressed))
         navigationItem.rightBarButtonItem = editButton
+        if isWESST {
+            let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutButtonPressed))
+            navigationItem.rightBarButtonItems = [editButton, logoutButton]
+        }
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         tableView.contentInset.top = 0
@@ -161,5 +165,11 @@ class ProfileViewController: FormViewController  {
     
     func editButtonPressed(sender: UIBarButtonItem) {
         self.navigationController?.pushViewController(EditProfileViewController(), animated: true)
+    }
+    
+    func logoutButtonPressed(sender: UIBarButtonItem) {
+        PFUser.logOut()
+        PushNotication.parsePushUserResign()
+        self.dismiss(animated: true, completion: nil)
     }
 }

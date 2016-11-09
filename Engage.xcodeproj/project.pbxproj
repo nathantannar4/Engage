@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3803965C1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803965B1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift */; };
 		381C02F41DC1909F00831EE0 /* WESST-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 381C02F31DC1909F00831EE0 /* WESST-Logo.png */; };
 		381D03271DA20D6400B270C6 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03241DA20D6400B270C6 /* ProfileViewController.swift */; };
 		381D03281DA20D6400B270C6 /* PublicProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03251DA20D6400B270C6 /* PublicProfileViewController.swift */; };
@@ -170,6 +171,7 @@
 /* Begin PBXFileReference section */
 		09C4FBD64CE6919FED248A6D /* Pods_Engage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Engage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B335058B75F5D766BE032F1 /* Pods-Engage.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Engage.release.xcconfig"; path = "Pods/Target Support Files/Pods-Engage/Pods-Engage.release.xcconfig"; sourceTree = "<group>"; };
+		3803965B1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminFunctionsViewController.swift; sourceTree = "<group>"; };
 		381C02F31DC1909F00831EE0 /* WESST-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "WESST-Logo.png"; sourceTree = "<group>"; };
 		381D03241DA20D6400B270C6 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		381D03251DA20D6400B270C6 /* PublicProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicProfileViewController.swift; sourceTree = "<group>"; };
@@ -573,6 +575,7 @@
 				3874CA8D1DA0630200C014F3 /* FindEngagementsViewController.swift */,
 				3874CA8E1DA0630200C014F3 /* CreateEngagementViewController.swift */,
 				381D039B1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift */,
+				3803965B1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift */,
 				381D038E1DA34A0700B270C6 /* EditEngagementGroupViewController.swift */,
 			);
 			name = Engagement;
@@ -949,6 +952,7 @@
 				3890361F1DA36CAB00DCF82C /* DividerCell.swift in Sources */,
 				381D03761DA2F75000B270C6 /* CVCalendarMenuViewDelegate.swift in Sources */,
 				389036181DA365F200DCF82C /* EventDetailViewController.swift in Sources */,
+				3803965C1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift in Sources */,
 				3874CA7A1D9F882800C014F3 /* LicensingViewController.swift in Sources */,
 				381D03441DA2222A00B270C6 /* SelectUsersFromSubGroupViewController.swift in Sources */,
 				381D03951DA34A1800B270C6 /* SubGroupsViewController.swift in Sources */,

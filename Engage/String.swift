@@ -33,5 +33,4 @@ extension String {
         dateFormatter.dateStyle = .full
         return dateFormatter.string(from: date as Date)
     }
-
 }

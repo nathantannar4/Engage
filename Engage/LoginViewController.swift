@@ -56,6 +56,11 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
         
         if isWESST {
             logo.image = UIImage(named: "WESST-Logo.png")
+            if !(UserDefaults.standard.value(forKey: "newServer") != nil) {
+                let dict:[String:Bool] = ["newServer":true]
+                UserDefaults.standard.set(dict, forKey: "newServer")
+                PFUser.logOut()
+            }
         } else {
             logo.image = UIImage(named: "Engage-Logo.png")
         }

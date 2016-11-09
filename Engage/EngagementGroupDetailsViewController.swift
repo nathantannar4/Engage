@@ -195,6 +195,12 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             }
             actionSheetController.addAction(editAction)
             
+            let functionsAction: UIAlertAction = UIAlertAction(title: "Admin Functions", style: .default) { action -> Void in
+                // Edit group if admin
+                self.navigationController?.pushViewController(AdminFunctionsViewController(), animated: true)
+            }
+            actionSheetController.addAction(functionsAction)
+            
             let resignAction: UIAlertAction = UIAlertAction(title: "Resign as Admin", style: .default) { action -> Void in
                 // leave group
                 if Engagement.sharedInstance.admins.count > 1 {
@@ -236,7 +242,7 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
                 }
             }
             actionSheetController.addAction(resignAction)
-        } else {
+        } else if !isWESST {
             
             let leaveAction: UIAlertAction = UIAlertAction(title: "Leave Group", style: .default) { action -> Void in
                 // leave group

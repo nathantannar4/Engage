@@ -8,6 +8,7 @@
 
 import Foundation
 import Parse
+import SwiftHTTP
 
 class PushNotication {
     
@@ -32,26 +33,23 @@ class PushNotication {
     }
     
     class func sendPushNotificationMessage(_ groupId: String, text: String) {
-        /*
-        let query = PFQuery(className: "\(Engagement.sharedInstance.name!.stringByReplacingOccurrencesOfString(" ", withString: "_"))_\(PF_MESSAGES_CLASS_NAME)")
-        query.whereKey(PF_MESSAGES_GROUPID, equalTo: groupId)
-        query.whereKey(PF_MESSAGES_USER, notEqualTo: PFUser.currentUser()!)
-        query.includeKey(PF_MESSAGES_USER)
-        query.limit = 1000
         
-        let installationQuery = PFInstallation.query()
-        installationQuery!.whereKey(PF_INSTALLATION_USER, matchesKey: PF_MESSAGES_USER, inQuery: query)
-        
-        let push = PFPush()
-        push.setQuery(installationQuery)
-        push.setMessage(text)
-        push.sendPushInBackgroundWithBlock { (succeeded: Bool, error: NSError?) -> Void in
-            if error != nil {
-                print("sendPushNotification error")
-            } else {
-                print("Push Sent")
+        var userIDs = groupId
+    
+        while userIDs.characters.count >= 10 {
+            let index = userIDs.index(userIDs.startIndex, offsetBy: 10)
+            let sendToID = userIDs.substring(to: index)
+            if PFUser.current()!.objectId! != sendToID {
+                print("Will send PUSH to \(sendToID)")
+                PFCloud.callFunction(inBackground: "pushToUser", withParameters: ["user": sendToID, "message": text], block: { (object, error) in
+                    if error == nil {
+                        print("##### PUSH OK")
+                    } else {
+                        print("##### ERROR: \(error)")
+                    }
+                })
             }
+            userIDs = userIDs.substring(from: index)
         }
-         */
     }
 }

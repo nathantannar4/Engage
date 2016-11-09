@@ -27,7 +27,7 @@ PODS:
     - FontAwesomeKit/Core
   - FontAwesomeKit/Zocial (2.2.0):
     - FontAwesomeKit/Core
-  - Former (1.5.0)
+  - Former (1.5.1)
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
@@ -39,6 +39,7 @@ PODS:
     - Parse (~> 1.9)
   - SlackTextViewController (1.9.5)
   - SVProgressHUD (2.0.3)
+  - SwiftHTTP (2.0.2)
   - TextFieldEffects (1.3.0)
   - XLPagerTabStrip (6.0.0)
 
@@ -57,6 +58,7 @@ DEPENDENCIES:
   - ParseUI
   - SlackTextViewController
   - SVProgressHUD
+  - SwiftHTTP (~> 2.0.0)
   - TextFieldEffects
   - XLPagerTabStrip
 
@@ -68,7 +70,7 @@ SPEC CHECKSUMS:
   CVCalendar: ec1a06a508f99d8e5067258754f811a8a1433a3f
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   FontAwesomeKit: 025fd4dd1017fe4e3f8d47b03e024deedbb33cd4
-  Former: 8f9f41e51eceb75e47b4275147795ec477b121ec
+  Former: 0b48a812c0d93b092b908d1b0574d0fd95c6b6f9
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JSQWebViewController: 0461aa42612b221571556df61d9c09f080cb2eef
@@ -76,9 +78,10 @@ SPEC CHECKSUMS:
   ParseUI: af2eba584799da4a9fbdac0e178662d7438b502e
   SlackTextViewController: fbcdadbb8090673f604484ff5b6eb8d77baed42a
   SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
+  SwiftHTTP: faa1a5f7670568ffc9361898229dbe84a6088468
   TextFieldEffects: ef594746f17997c813e07633f8ae5acaf9b04f27
   XLPagerTabStrip: c46e802a8dcac29edbcea573de8fe920e052455b
 
-PODFILE CHECKSUM: ca1518c38e05d8b0f03963e5bd0d78a2f8806a51
+PODFILE CHECKSUM: 9052fe5a49abf6342fcbfbb9e32ac3267ebbde77
 
 COCOAPODS: 1.0.1
