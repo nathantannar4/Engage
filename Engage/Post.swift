@@ -38,6 +38,64 @@ final class Post {
         Post.new.toObject = nil
     }
     
+    class func flagPost(target: UIViewController, object: PFObject) {
+        let actionSheetController: UIAlertController = UIAlertController(title: "Flag Post As", message: nil, preferredStyle: .actionSheet)
+        actionSheetController.view.tintColor = MAIN_COLOR
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+            //Just dismiss the action sheet
+        }
+        actionSheetController.addAction(cancelAction)
+        
+        let inappropriateAction: UIAlertAction = UIAlertAction(title: "Inappropriate Content", style: .default) { action -> Void in
+            let flagObject = PFObject(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Flagged_Posts")
+            flagObject["post"] = object
+            flagObject["reason"] = "Inappropriate Content"
+            flagObject["by_user"] = PFUser.current()!
+            flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                if error == nil {
+                    SVProgressHUD.showSuccess(withStatus: "Post Flagged")
+                } else {
+                    SVProgressHUD.showError(withStatus: "Network Error")
+                }
+            })
+        }
+        actionSheetController.addAction(inappropriateAction)
+        
+        let offensiveAction: UIAlertAction = UIAlertAction(title: "Offensive Content", style: .default) { action -> Void in
+            let flagObject = PFObject(className: "Flagged_Posts")
+            flagObject["post"] = object
+            flagObject["reason"] = "Offensive Content"
+            flagObject["by_user"] = PFUser.current()!
+            flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                if error == nil {
+                    SVProgressHUD.showSuccess(withStatus: "Post Flagged")
+                } else {
+                    SVProgressHUD.showError(withStatus: "Network Error")
+                }
+            })
+        }
+        actionSheetController.addAction(offensiveAction)
+        
+        let spamAction: UIAlertAction = UIAlertAction(title: "Spam", style: .default) { action -> Void in
+            let flagObject = PFObject(className: "Flagged_Posts")
+            flagObject["post"] = object
+            flagObject["reason"] = "Spam"
+            flagObject["by_user"] = PFUser.current()!
+            flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                if error == nil {
+                    SVProgressHUD.showSuccess(withStatus: "Post Flagged")
+                } else {
+                    SVProgressHUD.showError(withStatus: "Network Error")
+                }
+            })
+        }
+        actionSheetController.addAction(spamAction)
+        actionSheetController.popoverPresentationController?.sourceView = target.view
+        //Present the AlertController
+        target.present(actionSheetController, animated: true, completion: nil)
+    }
+    
     func createPost(object: PFObject?, completion: @escaping () -> Void) {
         if Post.new.info != "" {
             SVProgressHUD.show(withStatus: "Posting")

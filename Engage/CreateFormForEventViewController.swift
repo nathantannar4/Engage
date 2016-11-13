@@ -10,6 +10,7 @@ import UIKit
 import Former
 import Parse
 import SVProgressHUD
+import BRYXBanner
 
 final class CreateFormForEventViewController: FormViewController {
     

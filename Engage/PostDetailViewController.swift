@@ -11,6 +11,7 @@ import Parse
 import Former
 import Agrume
 import SVProgressHUD
+import Material
 
 class PostDetailViewController: FormViewController {
     
@@ -27,11 +28,12 @@ class PostDetailViewController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Configure UI
-        title = ""
+        prepareToolbar()
+        appMenuController.menu.views.first?.isHidden = true
         tableView.contentInset.top = 0
         tableView.contentInset.bottom = 50
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Post Comment", style: .plain, target: self, action: #selector(addComment))
+        
+        postUser = post?.object(forKey: "user") as? PFUser
         
         comments = post?.object(forKey: "comments") as? [String]
         commentsUser = post?.object(forKey: "commentsUser") as? [PFUser]
@@ -61,6 +63,25 @@ class PostDetailViewController: FormViewController {
         configure()
     }
     
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = ""
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let backButton = IconButton(image: Icon.cm.arrowBack)
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        let commentButton = IconButton(image: UIImage(named: "comment")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: UIColor.white)
+        commentButton.addTarget(self, action: #selector(addComment), for: .touchUpInside)
+        appToolbarController.prepareToolbarCustom(left: [backButton], right: [commentButton])
+    }
+    
+    @objc private func handleBackButton() {
+        appToolbarController.pull(from: self)
+    }
+    
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
         return LabelRowFormer<FormLabelCell>() {
             $0.titleLabel.textColor = MAIN_COLOR
@@ -73,7 +94,7 @@ class PostDetailViewController: FormViewController {
         }
     }
     
-    func addComment(sender: AnyObject?) {
+    @objc private func addComment() {
         
         if (Comment.new.comment != "" && Comment.new.comment != nil) {
             post?.add(Comment.new.comment!, forKey: "comments")
@@ -213,61 +234,7 @@ class PostDetailViewController: FormViewController {
                 $0.text = "Flag Post"
             }.onSelected { _ in
                 self.former.deselect(animated: true)
-                let actionSheetController: UIAlertController = UIAlertController(title: "Flag Post As", message: nil, preferredStyle: .actionSheet)
-                actionSheetController.view.tintColor = MAIN_COLOR
-                
-                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-                    //Just dismiss the action sheet
-                }
-                actionSheetController.addAction(cancelAction)
-                
-                let inappropriateAction: UIAlertAction = UIAlertAction(title: "Inappropriate Content", style: .default) { action -> Void in
-                    let flagObject = PFObject(className: "Flagged_Posts")
-                    flagObject["post"] = self.post
-                    flagObject["reason"] = "Inappropriate Content"
-                    flagObject["by_user"] = PFUser.current()!
-                    flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
-                        if error == nil {
-                            SVProgressHUD.showSuccess(withStatus: "Post Flagged")
-                        } else {
-                            SVProgressHUD.showError(withStatus: "Network Error")
-                        }
-                    })
-                }
-                actionSheetController.addAction(inappropriateAction)
-                
-                let offensiveAction: UIAlertAction = UIAlertAction(title: "Offensive Content", style: .default) { action -> Void in
-                    let flagObject = PFObject(className: "Flagged_Posts")
-                    flagObject["post"] = self.post
-                    flagObject["reason"] = "Offensive Content"
-                    flagObject["by_user"] = PFUser.current()!
-                    flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
-                        if error == nil {
-                            SVProgressHUD.showSuccess(withStatus: "Post Flagged")
-                        } else {
-                            SVProgressHUD.showError(withStatus: "Network Error")
-                        }
-                    })
-                }
-                actionSheetController.addAction(offensiveAction)
-                
-                let spamAction: UIAlertAction = UIAlertAction(title: "Spam", style: .default) { action -> Void in
-                    let flagObject = PFObject(className: "Flagged_Posts")
-                    flagObject["post"] = self.post
-                    flagObject["reason"] = "Spam"
-                    flagObject["by_user"] = PFUser.current()!
-                    flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
-                        if error == nil {
-                            SVProgressHUD.showSuccess(withStatus: "Post Flagged")
-                        } else {
-                            SVProgressHUD.showError(withStatus: "Network Error")
-                        }
-                    })
-                }
-                actionSheetController.addAction(spamAction)
-                actionSheetController.popoverPresentationController?.sourceView = self.view
-                //Present the AlertController
-                self.present(actionSheetController, animated: true, completion: nil)
+                Post.flagPost(target: self, object: self.post!)
         }
 
         let postSection = SectionFormer(rowFormer: detailPostRow, reportRow)

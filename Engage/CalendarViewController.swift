@@ -10,8 +10,11 @@ import UIKit
 import Former
 import Parse
 import SVProgressHUD
+import Material
 
-class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
+class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate, MenuDelegate {
+    
+    internal var addButton: FabButton!
     
     private let listView: UITableView = {
         let listView = UITableView(frame: CGRect.zero, style: .grouped)
@@ -78,15 +81,11 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(named: "Plus"), style: .plain, target: self, action: #selector(createEvent)), UIBarButtonItem(image: UIImage(named: "Feed"), style: .plain, target: self, action: #selector(switchView))]
-        
         self.menuView.backgroundColor = MAIN_COLOR
         self.tableView.separatorStyle = .none
         
         self.setup()
         self.listView.isHidden = true
-        
-        self.navigationItem.title = CVDate(date: NSDate() as Date).globalDescription
         
         let currentMonth = currentDay.month
         while currentDay.month == currentMonth {
@@ -95,13 +94,21 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
         
         currentDay = (currentDay.addingDays(1) as NSDate).atStartOfDay() as NSDate
         Event.sharedInstance.clear()
-        
+        prepareAddButton()
+        prepareMenuController()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if self.revealViewController().frontViewPosition.rawValue == 4 {
-            self.revealViewController().revealToggle(self)
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
         }
+        tc.toolbar.title = "Events"
+        tc.toolbar.detail = CVDate(date: NSDate() as Date).globalDescription
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let moreButton = IconButton(image: Icon.cm.shuffle)
+        moreButton.tintColor = UIColor.white
+        moreButton.addTarget(self, action: #selector(switchView), for: .touchUpInside)
+        appToolbarController.prepareToolbarMenu(right: [moreButton])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -110,18 +117,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     
     override func viewWillAppear(_ animated: Bool) {
         refreshMonth()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
+        prepareToolbar()
     }
     
     func refreshMonth() {
@@ -256,7 +252,10 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     }
     
     func presentedDateUpdated(_ date: CVDate) {
-        self.navigationItem.title = date.globalDescription
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.detail = date.globalDescription
     }
     
     func topMarker(shouldDisplayOnDayView dayView: CVCalendarDayView) -> Bool {
@@ -416,43 +415,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
         }
     }
     
-    // MARK: - IB Actions
-    
-    func createEvent(sender: UIBarButtonItem) {
-        
-        let navVC = UINavigationController(rootViewController: CreateSimpleEventViewController())
-        navVC.navigationBar.barTintColor = MAIN_COLOR!
-        self.present(navVC, animated: true, completion: nil)
-        
-        /*
-        let actionSheetController: UIAlertController = UIAlertController(title: "Create Event", message: nil, preferredStyle: .actionSheet)
-        actionSheetController.view.tintColor = MAIN_COLOR
-        
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-            //Just dismiss the action sheet
-        }
-        actionSheetController.addAction(cancelAction)
-        
-        let simple: UIAlertAction = UIAlertAction(title: "Simple", style: .default) { action -> Void in
-            let navVC = UINavigationController(rootViewController: CreateSimpleEventViewController())
-         navVC.navigationBar.barTintColor = MAIN_COLOR!
-            self.present(navVC, animated: true, completion: nil)
-        }
-        actionSheetController.addAction(simple)
-        
-        let advanced: UIAlertAction = UIAlertAction(title: "Advanced", style: .default) { action -> Void in
-            let navVC = UINavigationController(rootViewController: CreateAdvancedEventViewController())
-         navVC.navigationBar.barTintColor = MAIN_COLOR!
-            self.present(navVC, animated: true, completion: nil)
-        }
-        actionSheetController.addAction(advanced)
-        actionSheetController.popoverPresentationController?.sourceView = self.view
-        //Present the AlertController
-        self.present(actionSheetController, animated: true, completion: nil)
-        */
-    }
-    
-    func switchView(sender: AnyObject?) {
+    func switchView() {
         
         if self.previewView {
             
@@ -551,5 +514,29 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
         currentDay = currentDay.subtractingMonths(1) as NSDate
         refreshMonth()
         print("Showing Month: \(components.month)")
+    }
+    
+    // Menu Controller
+    // Handle the menu toggle event.
+    internal func handleToggleMenu(button: Button) {
+        let navVC = UINavigationController(rootViewController: CreateSimpleEventViewController())
+        navVC.navigationBar.barTintColor = MAIN_COLOR!
+        self.present(navVC, animated: true, completion: nil)
+    }
+    
+    private func prepareAddButton() {
+        addButton = FabButton(image: Icon.cm.add)
+        addButton.tintColor = UIColor.white
+        addButton.backgroundColor = MAIN_COLOR
+        addButton.addTarget(self, action: #selector(handleToggleMenu), for: .touchUpInside)
+    }
+    
+    private func prepareMenuController() {
+        guard let mc = menuController as? AppMenuController else {
+            return
+        }
+        
+        mc.menu.delegate = self
+        mc.menu.views = [addButton]
     }
 }

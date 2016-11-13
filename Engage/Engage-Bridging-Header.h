@@ -3,7 +3,6 @@
 //
 
 #import "NSDate+Utilities.h"
-#import "SWRevealViewController.h"
 
 #import "MessageTableViewCell.h"
 #import "MessageTextView.h"

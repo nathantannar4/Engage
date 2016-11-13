@@ -56,6 +56,8 @@ final class EngagementsViewController: FormViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        UIApplication.shared.isStatusBarHidden = false
+        UIApplication.shared.statusBarStyle = .lightContent
         Engagement.sharedInstance.clear()
         MAIN_COLOR = UIColor.flatSkyBlueColorDark()
         refresh(self)

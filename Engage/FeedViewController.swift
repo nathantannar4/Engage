@@ -2,213 +2,147 @@
 //  FeedViewController.swift
 //  Engage
 //
-//  Created by Nathan Tannar on 2016-06-12.
+//  Created by Nathan Tannar on 2016-06-19.
 //  Copyright © 2016 NathanTannar. All rights reserved.
 //
 
 import UIKit
-import Former
-import Parse
-import Agrume
+import Material
+import DZNEmptyDataSet
 import SVProgressHUD
-import Photos
+import Parse
+import ParseUI
+import Former
 
-class FeedViewController: FormViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class FeedViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, MenuDelegate {
     
-    var refreshControl: UIRefreshControl!
-    var editorViewable = false
-    var querySkip = 0
-    let button = UIButton(type: .custom)
-    var rowCounter = 0
+    internal var querySkip = 0
+    internal var addButton: FabButton!
+    internal var sendButtonItem: MenuItem!
+    internal var posts = [PFObject]()
+    internal var postImages = [String: UIImage]()
     
-    
-    override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Configure UI
-        title = "Activity Feed"
-        tableView.contentInset.top = 0
-        tableView.contentInset.bottom = 50
-        refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(FeedViewController.refresh(sender:)), for: UIControlEvents.valueChanged)
-        tableView.addSubview(refreshControl)
-        addButton()
-        buttonToImage()
-        self.navigationController?.navigationBar.barTintColor = MAIN_COLOR!
-        
-        
-        
-        Profile.sharedInstance.user = PFUser.current()
-        Profile.sharedInstance.loadUser()
-        Post.new.clear()
-        
-        let zeroRow = LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")).configure {
-            $0.rowHeight = 0
-        }
-        
-        let zeroSection = SectionFormer(rowFormer: zeroRow)
-        self.former.append(sectionFormer: zeroSection)
-        self.former.reload()
-        
-        insertPosts()
+        self.tableView.emptyDataSetSource = self;
+        self.tableView.emptyDataSetDelegate = self
+        self.tableView.backgroundColor = Color.grey.lighten3
+        self.tableView.separatorStyle = .none
+        self.tableView.contentInset.top = 10
+        self.tableView.contentInset.bottom = 100
+        self.tableView.estimatedRowHeight = 180
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.addTarget(self, action: #selector(FeedViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        self.tableView.addSubview(self.refreshControl!)
+
+        loadPosts()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        SVProgressHUD.dismiss()
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        appMenuController.menu.views.first?.isHidden = true
+        prepareToolbar()
+        prepareAddButton()
+        prepareSendButton()
+        prepareMenuController()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if self.revealViewController().frontViewPosition.rawValue == 4 {
-            self.revealViewController().revealToggle(self)
-        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        button.backgroundColor = MAIN_COLOR
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
-    }
-    
-    func refresh(sender:AnyObject)
-    {
-        // Updating your data here...
-        UIApplication.shared.beginIgnoringInteractionEvents()
-        former.removeAllUpdate(rowAnimation: .fade)
-        self.refreshControl?.endRefreshing()
-        rowCounter = 0
+    func handleRefresh(_ refreshControl: UIRefreshControl) {
         querySkip = 0
-        let zeroRow = LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")).configure {
-            $0.rowHeight = 0
-        }
-        
-        let zeroSection = SectionFormer(rowFormer: zeroRow)
-        self.former.append(sectionFormer: zeroSection)
-        self.former.reload()
-        insertPosts()
-        Post.new.clear()
-        buttonToImage()
-        imageRow.cellUpdate {
-            $0.iconView.image = nil
-        }
+        loadPosts()
+        refreshControl.endRefreshing()
     }
     
-    func cancelButtonPressed(sender: UIBarButtonItem) {
-        Post.new.clear()
-        self.former.remove(section: 0)
-        self.former.reload()
-        
-        imageRow.cellUpdate {
-            $0.iconView.image = nil
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
         }
-        buttonToImage()
+        tc.toolbar.title = "Activity Feed"
+        tc.toolbar.titleLabel.textColor = UIColor.white
+        tc.toolbar.detail = "All Posts"
+        tc.toolbar.detailLabel.textColor = UIColor.white
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        tc.toolbar.tintColor = UIColor.white
+        appToolbarController.prepareToolbarMenu(right: [])
+        appToolbarController.prepareBellButton()
     }
     
-    func postButtonPressed(sender: UIBarButtonItem) {
-        
-        if !editorViewable {
-            buttonToText()
-            Post.new.clear()
-            tableViewScrollToTop(animated: true)
-            let infoRow = TextViewRowFormer<FormTextViewCell>() { [weak self] in
-                $0.textView.textColor = .formerSubColor()
-                $0.textView.font = .systemFont(ofSize: 15)
-                $0.textView.inputAccessoryView = self?.formerInputAccessoryView
-                }.configure {
-                    $0.placeholder = "What's new?"
-                    $0.text = Post.new.info
-                }.onTextChanged {
-                    Post.new.info = $0
-            }
-            
-            let newPostSection = SectionFormer(rowFormer: infoRow, imageRow).set(headerViewFormer: TableFunctions.createHeader(text: "Create Post"))
-            
-            self.former.insert(sectionFormer: newPostSection, toSection: 0)
-                .onCellSelected { [weak self] _ in
-                    self?.formerInputAccessoryView.update()
-            }
-            self.former.reload()
-            
-        } else if Post.new.info != ""{
-            Post.new.createPost(object: nil, completion: {
-                self.former.remove(section: 0)
-                self.former.reload()
-                self.buttonToImage()
-                self.imageRow.cellUpdate {
-                    $0.iconView.image = nil
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        return NSAttributedString(string: Engagement.sharedInstance.name!)
+    }
+    
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return Color.grey.lighten3
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.posts.count
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let content = self.posts[indexPath.row].value(forKey: PF_POST_INFO) as! String
+        var height: CGFloat = 20.0
+        if (self.posts[indexPath.row].value(forKey: PF_POST_HAS_IMAGE) as! Bool) {
+            height += 453.0
+        } else {
+            height += 153.0
+        }
+        if content.characters.count > 45 {
+            height += 20.0
+            if content.characters.count > 90 {
+                height += 20.0
+                if content.characters.count > 135 {
+                    height += 20.0
                 }
-                self.refresh(sender: self)
-            })
+            }
+        }
+        return height
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset
+        let bounds = scrollView.bounds
+        let size = scrollView.contentSize
+        let inset = scrollView.contentInset
+        let y = offset.y + bounds.size.height - inset.bottom
+        let h = size.height
+        if(y > h) {
+            if self.posts.count >= (10 + querySkip) {
+                print("load more rows")
+                querySkip += 10
+                loadPosts()
+            }
         }
     }
     
-    // MARK: Private
-    
-    private lazy var formerInputAccessoryView: FormerInputAccessoryView = FormerInputAccessoryView(former: self.former)
-    
-    private lazy var imageRow: LabelRowFormer<ProfileImageCell> = {
-        LabelRowFormer<ProfileImageCell>(instantiateType: .Nib(nibName: "ProfileImageCell")) {
-            $0.iconView.image = Post.new.image
-            }.configure {
-                $0.text = "Add image to post"
-                $0.rowHeight = 60
-            }.onSelected { [weak self] _ in
-                self?.former.deselect(animated: true)
-                self?.presentImagePicker()
-        }
-    }()
-    
-    private lazy var loadMoreSection: SectionFormer = {
-        let loadMoreRow = CustomRowFormer<TitleCell>(instantiateType: .Nib(nibName: "TitleCell")) {
-            $0.titleLabel.text = "Load More"
-            $0.titleLabel.textAlignment = .center
-            $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
-            }.onSelected { [weak self] _ in
-                self?.former.deselect(animated: true)
-                self!.querySkip += 10
-                self!.insertPosts()
-        }
-        return SectionFormer(rowFormer: loadMoreRow)
-    }()
-    
-    private func insertPosts() {
-        
-        SVProgressHUD.show(withStatus: "Loading")
+    private func loadPosts() {
+        print("loadingData")
         let query = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Posts")
-        let blockedUserQuery = PFUser.query()
-        blockedUserQuery?.whereKey(PF_USER_OBJECTID, containedIn: Profile.sharedInstance.blockedUsers)
-        query.whereKey(PF_POST_USER, doesNotMatch: blockedUserQuery!)
         query.limit = 10
         query.skip = self.querySkip
         query.order(byDescending: "createdAt")
         query.includeKey(PF_POST_USER)
         query.includeKey(PF_POST_TO_OBJECT)
         query.includeKey(PF_POST_TO_USER)
-        query.whereKey(PF_POST_USER, doesNotMatch: blockedUserQuery!)
-        query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) in
-            UIApplication.shared.endIgnoringInteractionEvents()
-            SVProgressHUD.dismiss()
-            if error == nil && (posts?.count)! > 0 {
-                for post in posts! {
-                    if (post[PF_POST_HAS_IMAGE] as? Bool) == true {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, nav: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 0), rowAnimation: .fade)
-                        self.rowCounter += 1
-                    } else {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, nav: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 0), rowAnimation: .fade)
-                        self.rowCounter += 1
-                    }
-                }
+        query.findObjectsInBackground { (loadedPosts: [PFObject]?, error: Error?) in
+            print("finishedLoadingData")
+            if error == nil {
                 if self.querySkip == 0 {
-                    self.former.insertUpdate(sectionFormer: self.loadMoreSection.set(footerViewFormer: TableFunctions.createFooter(text: "Engage - Version: \(VERSION)")), toSection: 1)
-                } else {
-                    self.tableView.scrollToRow(at: IndexPath(row: self.querySkip, section: 0), at: UITableViewScrollPosition.bottom, animated: false)
+                    self.posts.removeAll()
+                }
+                if loadedPosts != nil && (loadedPosts?.count)! > 0 {
+                    for post in loadedPosts! {
+                        self.posts.append(post)
+                    }
+                    if loadedPosts!.count != 10 {
+                        self.querySkip -= (10 - loadedPosts!.count)
+                    }
+                    self.tableView.reloadData()
                 }
             } else {
                 print(error.debugDescription)
@@ -217,17 +151,242 @@ class FeedViewController: FormViewController, UIImagePickerControllerDelegate, U
         }
     }
     
-    // MARK: - UITableView functions
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = PostDetailViewController()
+        vc.post = self.posts[indexPath.row]
+        appToolbarController.push(from: self, to: vc)
+    }
     
-    func tableViewScrollToTop(animated: Bool) {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let numberOfSections = self.tableView.numberOfSections
-        let numberOfRows = self.tableView.numberOfRows(inSection: numberOfSections-1)
+        let cell = UITableViewCell()
+        let card = PresenterCard()
+        let postObject = self.posts[indexPath.row]
+        let user = postObject.value(forKey: PF_POST_USER) as! PFUser
         
-        if numberOfRows > 0 {
-            let indexPath = NSIndexPath(row: 0, section: 0) as IndexPath
-            self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
+        // Toolbar
+        //***********
+        let userImageView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        let userImage = PFImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        userImage.image = UIImage(named: "profile_blank")
+        userImage.file = user[PF_USER_PICTURE] as? PFFile
+        userImage.loadInBackground()
+        userImage.layer.borderWidth = 1
+        userImage.layer.masksToBounds = true
+        userImage.layer.borderColor = MAIN_COLOR?.cgColor
+        userImage.layer.cornerRadius = userImage.frame.height/2
+        userImageView.addSubview(userImage)
+        
+        // More Button
+        let moreButton = IconButtonWithObject(image: Icon.cm.moreVertical, tintColor: Color.gray)
+        moreButton.object = postObject
+        moreButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)
+        
+        let toolbar = Toolbar(leftViews: [userImageView, UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 0))], rightViews: [moreButton], centerViews: [])
+        
+        // User Label
+        toolbar.title = user.value(forKey: PF_USER_FULLNAME) as? String
+        toolbar.titleLabel.textAlignment = .left
+        toolbar.detail = "..."
+        let customQuery = PFQuery(className: "WESST_User")
+        customQuery.whereKey("user", equalTo: user)
+        customQuery.includeKey("subgroup")
+        customQuery.cachePolicy = .cacheElseNetwork
+        customQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
+            if error == nil {
+                if let user = users!.first {
+                    let subgroup = user["subgroup"] as? PFObject
+                    if subgroup != nil {
+                        toolbar.detail = subgroup!.value(forKey: PF_SUBGROUP_NAME) as? String
+                    } else {
+                        toolbar.detail = ""
+                    }
+                }
+            }
+        })
+        toolbar.detailLabel.textAlignment = .left
+        toolbar.detailLabel.textColor = Color.gray
+        
+        // Content
+        //***********
+        let contentView = UILabel()
+        contentView.numberOfLines = 0
+        contentView.text = postObject.value(forKey: PF_POST_INFO) as? String
+        contentView.font = RobotoFont.regular(with: 15)
+        
+        // Bottom Bar
+        //***********
+        // Date Label
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        let dateLabel = UILabel()
+        dateLabel.font = RobotoFont.regular(with: 13)
+        dateLabel.textColor = Color.gray
+        dateLabel.text = dateFormatter.string(from: self.posts[indexPath.row].createdAt!)
+        dateLabel.textAlignment = .right
+        
+        // Like Button
+        let likeButton = IconButtonWithObject(image: UIImage(named: "like")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: Color.gray)
+        likeButton.object = self.posts[indexPath.row]
+        if self.posts[indexPath.row].value(forKey: PF_POST_LIKES) != nil {
+            if ((self.posts[indexPath.row].value(forKey: PF_POST_LIKES) as! [String]).contains(PFUser.current()!.objectId!)) {
+                likeButton.tintColor = MAIN_COLOR
+            }
+        } else {
+            likeButton.tintColor = Color.gray
         }
+        likeButton.titleColor = Color.gray
+        let likes = (postObject.value(forKey: PF_POST_LIKES) as? [String])?.count
+        if likes != nil {
+            likeButton.setTitle(" \(likes!)", for: .normal)
+        }
+        likeButton.addTarget(self, action: #selector(handleLike(sender:)), for: .touchUpInside)
+        
+        // Comment Button
+        let commentButton = IconButton(image: UIImage(named: "comment")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: Color.gray)
+        commentButton.titleColor = Color.gray
+        commentButton.setTitle(" \(postObject.value(forKey: PF_POST_REPLIES) as! Int)", for: .normal)
+        
+        // Bottom Bar
+        let bottomBar = Bar()
+        bottomBar.leftViews = [likeButton, commentButton]
+        bottomBar.rightViews = [dateLabel]
+        
+        // Image View
+        if (postObject.value(forKey: PF_POST_HAS_IMAGE) as! Bool) {
+            if self.postImages[postObject.objectId!] == nil {
+                let imageFile = self.posts[indexPath.row].value(forKey: PF_POST_IMAGE) as! PFFile
+                imageFile.getDataInBackground(block: { (data: Data?, error: Error?) in
+                    if error == nil {
+                        let presenterView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+                        var image = UIImage(data: data!)
+                        self.postImages[postObject.objectId!] = image
+                        image = image?.resize(toHeight: 300)
+                        presenterView.image = image
+                        presenterView.contentMode = .scaleAspectFit
+                        presenterView.layer.masksToBounds = true
+                        card.presenterView = presenterView
+                        card.presenterViewEdgeInsetsPreset = .wideRectangle3
+                    }
+                })
+            } else {
+                let presenterView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+                var image = self.postImages[postObject.objectId!]
+                image = image?.resize(toHeight: 300)
+                presenterView.image = image
+                presenterView.contentMode = .scaleAspectFit
+                presenterView.layer.masksToBounds = true
+                card.presenterView = presenterView
+                card.presenterViewEdgeInsetsPreset = .wideRectangle3
+            }
+        }
+        
+        // Configure Card
+        card.toolbar = toolbar
+        card.toolbarEdgeInsetsPreset = .square3
+        card.toolbarEdgeInsets.bottom = 0
+        card.toolbarEdgeInsets.right = 8
+        card.contentView = contentView
+        card.contentViewEdgeInsetsPreset = .wideRectangle3
+        card.bottomBar = bottomBar
+        card.bottomBarEdgeInsetsPreset = .wideRectangle3
+        card.bottomBarEdgeInsets.left = 0
+        
+        // Configure Cell
+        cell.contentView.layout(card).horizontally(left: 10, right: 10).center()
+        cell.selectionStyle = .none
+        cell.backgroundColor = Color.grey.lighten3
+        
+        return cell
+    }
+    
+    func handleMore(sender: IconButtonWithObject) {
+        let post = sender.object!
+        let postUser = post.object(forKey: "user") as! PFUser
+        if postUser.objectId! != PFUser.current()!.objectId! {
+            Post.flagPost(target: self, object: post)
+        } else {
+            let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            actionSheetController.view.tintColor = MAIN_COLOR
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                //Just dismiss the action sheet
+            }
+            actionSheetController.addAction(cancelAction)
+            
+            let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
+                let vc = EditPostViewController()
+                vc.post = sender.object!
+                vc.image = self.postImages[sender.object!.objectId!]
+                let navVC = UINavigationController(rootViewController: vc)
+                navVC.navigationBar.barTintColor = MAIN_COLOR!
+                appToolbarController.show(navVC, sender: self)
+            }
+            actionSheetController.addAction(editAction)
+            
+            let deleteAction: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+                let alert = UIAlertController(title: "Are you sure?", message: "This cannot be undone.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.view.tintColor = MAIN_COLOR
+                //Create and add the Cancel action
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                    //Do some stuff
+                }
+                
+                alert.addAction(cancelAction)
+                let delete: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+                    sender.object!.deleteInBackground(block: { (success: Bool, error: Error?) in
+                        if success {
+                            SVProgressHUD.showSuccess(withStatus: "Post Deleted")
+                            let index = self.posts.index(of: sender.object!)
+                            if index != nil {
+                                self.posts.remove(at: index!)
+                                self.tableView.reloadData()
+                            } else {
+                                print("Index Nil")
+                            }
+                        } else {
+                            SVProgressHUD.showError(withStatus: "Network Error")
+                        }
+                    })
+                }
+                alert.addAction(delete)
+                self.present(alert, animated: true, completion: nil)
+            }
+            actionSheetController.addAction(deleteAction)
+            
+            actionSheetController.popoverPresentationController?.sourceView = self.view
+            //Present the AlertController
+            self.present(actionSheetController, animated: true, completion: nil)
+        }
+    }
+    
+    func handleComment(sender: IconButtonWithObject) {
+        
+    }
+    
+    func handleLike(sender: IconButtonWithObject) {
+        var likes = sender.object.value(forKey: PF_POST_LIKES) as? [String]
+        if likes == nil {
+            likes = [String]()
+        }
+        if likes!.contains(PFUser.current()!.objectId!) {
+            print("unlike \(sender.object.objectId!)")
+            let index = likes?.index(of: PFUser.current()!.objectId!)
+            if index != nil {
+                likes?.remove(at: index!)
+                sender.object[PF_POST_LIKES] = likes
+                sender.object.saveInBackground()
+                sender.tintColor = Color.gray
+            }
+        } else {
+            print("like \(sender.object.objectId!)")
+            likes?.append(PFUser.current()!.objectId!)
+            sender.object[PF_POST_LIKES] = likes
+            sender.object.saveInBackground()
+            sender.tintColor = MAIN_COLOR
+        }
+        sender.setTitle(" \(likes!.count)", for: .normal)
     }
     
     // MARK: - UIImagePickerDelegate
@@ -246,41 +405,88 @@ class FeedViewController: FormViewController, UIImagePickerControllerDelegate, U
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             Post.new.image = image
             Post.new.hasImage = true
-            imageRow.cellUpdate {
-                $0.iconView.image = image
-            }
+            //imageRow.cellUpdate {
+            //    $0.iconView.image = image
+            //}
         } else{
             print("Something went wrong")
             SVProgressHUD.showError(withStatus: "An Error Occurred")
         }
     }
     
-    func addButton() {
-        button.frame = CGRect(x: self.view.frame.width - 100, y: self.view.frame.height - 175, width: 65, height: 65)
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.backgroundColor = MAIN_COLOR
-        buttonToImage()
-        button.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
-        button.layer.shadowColor = UIColor.gray.cgColor
-        button.layer.shadowOpacity = 1.0
-        button.layer.shadowOffset = CGSize(width: 2, height: 2)
-        button.layer.shadowRadius = 4
-        view.addSubview(button)
+    // Menu Controller
+    // Handle the menu toggle event.
+    internal func handleToggleMenu(button: Button) {
+        guard let mc = menuController as? AppMenuController else {
+            return
+        }
+        
+        if mc.menu.isOpened {
+            print("closeMenu")
+            addButton.backgroundColor = MAIN_COLOR
+            addButton.tintColor = UIColor.white
+            mc.closeMenu { (view) in
+                (view as? MenuItem)?.hideTitleLabel()
+            }
+        } else {
+            print("openMenu")
+            addButton.backgroundColor = Color.red.base
+            addButton.tintColor = UIColor.white
+            mc.openMenu { (view) in
+                (view as? MenuItem)?.hideTitleLabel()
+            }
+        }
     }
     
-    func buttonToImage() {
-        editorViewable = false
-        let tintedImage = Images.resizeImage(image: UIImage(named:"Plus-512.png")!, width: 60, height: 60)!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        button.tintColor = UIColor.white
-        button.setImage(tintedImage, for: .normal)
-        button.setTitle("", for: .normal)
-        self.navigationItem.rightBarButtonItem = nil
+    private func prepareAddButton() {
+        addButton = FabButton(image: Icon.cm.add)
+        addButton.tintColor = UIColor.white
+        addButton.backgroundColor = MAIN_COLOR
+        addButton.addTarget(self, action: #selector(handleToggleMenu), for: .touchUpInside)
     }
     
-    func buttonToText() {
-        editorViewable = true
-        button.setImage(UIImage(), for: .normal)
-        button.setTitle("Post", for: .normal)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
+    private func prepareSendButton() {
+        sendButtonItem = MenuItem()
+        sendButtonItem.tintColor = UIColor.white
+        sendButtonItem.button.image = Icon.check
+        sendButtonItem.button.backgroundColor = Color.green.base
+        sendButtonItem.button.depthPreset = .depth1
     }
+    
+    private func prepareMenuController() {
+        guard let mc = menuController as? AppMenuController else {
+            return
+        }
+        
+        mc.menu.delegate = self
+        mc.menu.views = [addButton, sendButtonItem]
+    }
+    
+    func menu(menu: Menu, tappedAt point: CGPoint, isOutside: Bool) {
+        guard isOutside else {
+            return
+        }
+        
+        guard let mc = menuController as? AppMenuController else {
+            print("isMc")
+            return
+        }
+        
+        mc.closeMenu { (view) in
+            (view as? MenuItem)?.hideTitleLabel()
+        }
+    }
+}
+
+extension String {
+    func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
+        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName: font], context: nil)
+        
+        return boundingBox.height
+    }
+}
+
+class IconButtonWithObject: IconButton {
+    var object: PFObject!
 }

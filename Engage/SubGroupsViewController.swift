@@ -11,6 +11,7 @@ import Former
 import Parse
 import Agrume
 import SVProgressHUD
+import Material
 
 class SubGroupsViewController: FormViewController {
         var firstLoad = true
@@ -23,36 +24,13 @@ class SubGroupsViewController: FormViewController {
         // Configure UI
         tableView.contentInset.top = 0
         tableView.contentInset.bottom = 50
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Plus"), style: .plain, target: self, action: #selector(createSubGroup))
-        
         configure()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if self.revealViewController().frontViewPosition.rawValue == 4 {
-            self.revealViewController().revealToggle(self)
-        }
-        
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
-        
-        if Engagement.sharedInstance.subGroupName != "" {
-            title = Engagement.sharedInstance.subGroupName
-        } else {
-            title = "Subgroups"
-        }
-        
+        prepareToolbar()
         EngagementSubGroup.sharedInstance.clear()
+        appMenuController.menu.views.first?.isHidden = true
         if firstLoad {
             SVProgressHUD.show(withStatus: "Loading")
             firstLoad = false
@@ -60,6 +38,23 @@ class SubGroupsViewController: FormViewController {
             SVProgressHUD.show(withStatus: "Refreshing")
             self.refresh(sender: self)
         }
+    }
+    
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        if Engagement.sharedInstance.subGroupName != "" {
+            tc.toolbar.title = Engagement.sharedInstance.subGroupName
+        } else {
+            tc.toolbar.title = "Subgroups"
+        }
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let addButton = IconButton(image: Icon.cm.add)
+        addButton.tintColor = UIColor.white
+        addButton.addTarget(self, action: #selector(createSubGroup), for: .touchUpInside)
+        appToolbarController.prepareToolbarMenu(right: [addButton])
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
@@ -101,8 +96,7 @@ class SubGroupsViewController: FormViewController {
                         EngagementSubGroup.sharedInstance.clear()
                         EngagementSubGroup.sharedInstance.subgroup = subGroup
                         EngagementSubGroup.sharedInstance.unpack()
-                        let subGroupVC = SubGroupDetailViewController()
-                        self!.navigationController?.pushViewController(subGroupVC, animated: true)
+                        appToolbarController.push(from: self!, to: SubGroupDetailViewController())
                     })
                 }
                 if Engagement.sharedInstance.subGroupName != "" {
@@ -121,9 +115,9 @@ class SubGroupsViewController: FormViewController {
     
     // MARK: User Actions
     
-    func createSubGroup(sender: UIBarButtonItem) {
+    func createSubGroup() {
         let navVC = UINavigationController(rootViewController: CreateSubGroupViewController())
         navVC.navigationBar.barTintColor = MAIN_COLOR!
-        self.present(navVC, animated: true, completion: nil)
+        appToolbarController.present(navVC, animated: true, completion: nil)
     }
 }

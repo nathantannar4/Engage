@@ -28,18 +28,6 @@ final class AppInfoViewController: FormViewController, BWWalkthroughViewControll
         configure()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
-    }
-    
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
         return LabelRowFormer<FormLabelCell>() {
             $0.titleLabel.textColor = MAIN_COLOR
@@ -147,9 +135,22 @@ final class AppInfoViewController: FormViewController, BWWalkthroughViewControll
                 license: License.mit(owner: "Raul Riera (https://github.com/raulriera/TextFieldEffects)", years: "2016")
             )
             
+            let materialItem = LicensingItem(
+                title: "Material",
+                license: License.mit(owner: "Cosmic Mind (https://github.com/CosmicMind/Material)", years: "2016")
+            )
             
+            let calendarItem = LicensingItem(
+                title: "CVCalendar",
+                license: License.mit(owner: "Eugene Mozharovsky (https://github.com/Mozharovsky/CVCalendar)", years: "2016")
+            )
             
-            licensingViewController.items = [parseItem, formerItem, messagesItem, webItem, bannerItem, agrumeItem, progressItem, walkthroughItem, colorItem, textItem]
+            let emptyDataItem = LicensingItem(
+                title: "DZNEmptyDataSet",
+                license: License.mit(owner: "Ignacio Romero Zurbuchen (https://github.com/dzenbot/DZNEmptyDataSet)", years: "2016")
+            )
+            
+            licensingViewController.items = [parseItem, formerItem, messagesItem, webItem, bannerItem, agrumeItem, progressItem, walkthroughItem, colorItem, textItem, materialItem, calendarItem, emptyDataItem]
             self?.navigationController?.pushViewController(licensingViewController, animated: true)
         }
         

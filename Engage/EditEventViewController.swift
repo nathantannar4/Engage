@@ -10,6 +10,7 @@ import UIKit
 import Former
 import Parse
 import SVProgressHUD
+import Material
 
 final class EditEventViewController: FormViewController {
     
@@ -22,7 +23,7 @@ final class EditEventViewController: FormViewController {
         title = "Edit Event"
         tableView.contentInset.top = 10
         tableView.contentInset.bottom = 50
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(saveButtonPressed))
         
         Event.sharedInstance.unpack()
         configure()
@@ -114,6 +115,9 @@ final class EditEventViewController: FormViewController {
                     Event.sharedInstance.object!.deleteInBackground { (success: Bool, error: Error?) in
                         if success {
                             SVProgressHUD.showSuccess(withStatus: "Event Deleted")
+                            for user in (Event.sharedInstance.object![PF_EVENTS_INVITE_TO] as! [PFUser]) {
+                                PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(PFUser.current()?.value(forKey: PF_USER_FULLNAME) as! String) canceled their event: \(Event.sharedInstance.title!)")
+                            }
                             self.dismiss(animated: true, completion: nil)
                         } else {
                             SVProgressHUD.showError(withStatus: "Network Error")

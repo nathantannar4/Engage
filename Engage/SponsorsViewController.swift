@@ -31,23 +31,17 @@ class SponsorsViewController: FormViewController {
         configure()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if self.revealViewController().frontViewPosition.rawValue == 4 {
-            self.revealViewController().revealToggle(self)
-        }
-        
+    override func viewDidAppear(_ animated: Bool) {
+        prepareToolbar()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
         }
+        tc.toolbar.title = "Sponsors"
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in

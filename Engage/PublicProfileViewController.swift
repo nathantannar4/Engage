@@ -12,6 +12,8 @@ import Former
 import Agrume
 import SVProgressHUD
 import MessageUI
+import BRYXBanner
+import Material
 
 class PublicProfileViewController: FormViewController, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
     
@@ -24,30 +26,32 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if PFUser.current()!.objectId! != user!.objectId! {
-            addButton()
-            buttonToImage()
-        }
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(closeButtonPressed))
+        let infoButton = UIBarButtonItem(image: UIImage(named: "Info")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(infoButtonPressed))
+        infoButton.tintColor = UIColor.white
+        let messageButton = UIBarButtonItem(image: UIImage(named: "Compose")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(messageButtonPressed))
+        messageButton.tintColor = UIColor.white
+        navigationItem.rightBarButtonItems = [messageButton, infoButton]
+    
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         configure()
-        
-        let zeroSection = SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: "Posts to \(user?[PF_USER_FULLNAME] as! String)"))
-        self.former.append(sectionFormer: zeroSection)
-        self.former.reload()
     }
     
-    func messageButtonPressed(sender: AnyObject) {
+    @objc private func messageButtonPressed() {
         let user1 = PFUser.current()!
         let user2 = user! as? PFUser
         let chatVC = ChatViewController()
         chatVC.groupId = Messages.startPrivateChat(user1: user1, user2: user2!)
         chatVC.outgoingColor = MAIN_COLOR
-        
-        self.navigationController?.pushViewController(chatVC, animated: true)
+        appToolbarController.push(from: MessagesViewController(), to: chatVC)
     }
     
-    func infoButtonPressed(sender: AnyObject) {
+    @objc private func closeButtonPressed() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func infoButtonPressed() {
         
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheetController.view.tintColor = MAIN_COLOR
@@ -247,7 +251,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
                     mailComposeViewController.setToRecipients([email!])
                     mailComposeViewController.setMessageBody("", isHTML: false)
                     mailComposeViewController.view.tintColor = MAIN_COLOR
-                    
+                    mailComposeViewController.navigationBar.barTintColor = MAIN_COLOR
                     if MFMailComposeViewController.canSendMail() {
                         self.present(mailComposeViewController, animated: true, completion: nil)
                     } else {
@@ -296,7 +300,9 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
 
         
         // Add profile info rows to table
-        self.former.append(sectionFormer: SectionFormer(rowFormer: headerRow, phoneRow, emailRow))
+        let zeroSection = SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: "Posts to \(user?[PF_USER_FULLNAME] as! String)"))
+        
+        self.former.append(sectionFormer: SectionFormer(rowFormer: headerRow, phoneRow, emailRow), zeroSection)
         self.former.reload()
         
         if PFUser.current()!.objectId! != user!.objectId! {
@@ -310,10 +316,6 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
     }
     
     // MARK: - User actions
-    
-    func editButtonPressed(sender: UIBarButtonItem) {
-        self.navigationController?.pushViewController(EditProfileViewController(), animated: true)
-    }
     
     func logoutButtonPressed(sender: UIBarButtonItem) {
         PFUser.logOut()
@@ -347,10 +349,10 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
             if error == nil {
                 for post in posts! {
                     if (post[PF_POST_HAS_IMAGE] as? Bool) == true {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, nav: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
+                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, view: self), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
                         self.rowCounter += 1
                     } else {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, nav: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
+                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, view: self), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
                         self.rowCounter += 1
                     }
                 }
@@ -414,7 +416,6 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         self.former.reload()
         loadPosts()
         Post.new.clear()
-        buttonToImage()
         imageRow.cellUpdate {
             $0.iconView.image = nil
         }
@@ -423,7 +424,6 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
     func postButtonPressed() {
         if !editorViewable {
             Post.new.clear()
-            buttonToText()
             let infoRow = TextViewRowFormer<FormTextViewCell>() { [weak self] in
                 $0.textView.textColor = .formerSubColor()
                 $0.textView.font = .systemFont(ofSize: 15)
@@ -445,7 +445,6 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
             
         } else if Post.new.info != ""{
             Post.new.createPost(object: user!, completion: {
-                self.buttonToImage()
                 self.imageRow.cellUpdate {
                     $0.iconView.image = nil
                 }
@@ -462,7 +461,6 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         imageRow.cellUpdate {
             $0.iconView.image = nil
         }
-        buttonToImage()
     }
     
     private lazy var loadMoreSection: SectionFormer = {
@@ -490,35 +488,4 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
                 self?.presentImagePicker()
         }
     }()
-    
-    func addButton() {
-        button.frame = CGRect(x: self.view.frame.width - 100, y: self.view.frame.height - 175, width: 65, height: 65)
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.backgroundColor = MAIN_COLOR
-        buttonToImage()
-        button.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
-        button.layer.shadowColor = UIColor.gray.cgColor
-        button.layer.shadowOpacity = 1.0
-        button.layer.shadowOffset = CGSize(width: 2, height: 2)
-        button.layer.shadowRadius = 4
-        view.addSubview(button)
-    }
-    
-    func buttonToImage() {
-        editorViewable = false
-        let tintedImage = Images.resizeImage(image: UIImage(named:"Plus-512.png")!, width: 60, height: 60)!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        button.tintColor = UIColor.white
-        button.setImage(tintedImage, for: .normal)
-        button.setTitle("", for: .normal)
-        if PFUser.current()!.value(forKey: PF_USER_FULLNAME) as? String != user![PF_USER_FULLNAME] as? String {
-            navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(named: "icn_editing"), style: .plain, target: self, action: #selector(messageButtonPressed)), UIBarButtonItem(image: UIImage(named: "Info.png"), style: .plain, target: self, action: #selector(infoButtonPressed))]
-        }
-    }
-    
-    func buttonToText() {
-        editorViewable = true
-        button.setImage(UIImage(), for: .normal)
-        button.setTitle("Post", for: .normal)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
-    }
 }

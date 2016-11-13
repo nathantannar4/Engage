@@ -23,8 +23,11 @@ struct Constants {
 */
 
 /* App Settings */
-var VERSION = "1.0.1"
-var isWESST = false
+var VERSION = "1.0.2"
+var isWESST = true
+
+var appToolbarController = AppToolbarController()
+var appMenuController = AppMenuController()
 
 /* UI */
 // WESST Color UIColor(red: 153.0/255, green:62.0/255.0, blue:123.0/255, alpha: 1)

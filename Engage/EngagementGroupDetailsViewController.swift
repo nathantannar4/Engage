@@ -13,58 +13,28 @@ import Agrume
 import SVProgressHUD
 import JSQWebViewController
 import MessageUI
+import Material
 
 class EngagementGroupDetailsViewController: FormViewController, MFMailComposeViewControllerDelegate  {
     
-    var firstLoad = true
-    var positionIDs = [String]()
-    var querySkip = 0
-    var rowCounter = 0
-    var button = UIButton()
-    var editorViewable = false
-    var membersRow: RowFormer!
+    internal var firstLoad = true
+    internal var positionIDs = [String]()
+    internal var querySkip = 0
+    internal var rowCounter = 0
+    internal var membersRow: RowFormer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Setup UI and Table Properties
-        tableView.contentInset.top = 0
-        tableView.contentInset.bottom = 60
-        title = Engagement.sharedInstance.name!
-        
-        
-        if Engagement.sharedInstance.members.contains((PFUser.current()?.objectId)!) {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Settings"), style: .plain, target: self, action: #selector(settingsButtonPressed))
-        }
-        
-        for position in Engagement.sharedInstance.positions {
-            if Engagement.sharedInstance.engagement![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
-                positionIDs.append(Engagement.sharedInstance.engagement![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
-            } else {
-                positionIDs.append("")
-            }
-        }
-        
+        getPositions()
         configure()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if self.revealViewController().frontViewPosition.rawValue == 4 {
-            self.revealViewController().revealToggle(self)
-        }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
+        prepareToolbar()
         if !firstLoad {
             Engagement.sharedInstance.unpack()
-            positionIDs.removeAll()
-            for position in Engagement.sharedInstance.positions {
-                if Engagement.sharedInstance.engagement![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
-                    positionIDs.append(Engagement.sharedInstance.engagement![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
-                } else {
-                    positionIDs.append("")
-                }
-            }
+            getPositions()
             self.former.removeAll()
             configure()
         } else {
@@ -72,17 +42,21 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
         }
+        tc.toolbar.title = "\(Engagement.sharedInstance.name!)"
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        tc.toolbar.tintColor = UIColor.white
+        let moreButton = IconButton(image: Icon.cm.moreVertical)
+        moreButton.tintColor = UIColor.white
+        moreButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+        appToolbarController.prepareToolbarMenu(right: [moreButton])
     }
+    
+    // MARK: - Table Rows
     
     private func configure() {
         
@@ -97,7 +71,6 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
         }
-        
         let urlRow = CustomRowFormer<DynamicHeightCell>(instantiateType: .Nib(nibName: "DynamicHeightCell")) {
             $0.selectionStyle = .none
             $0.title = "Website"
@@ -117,7 +90,6 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
                     self.present(nav, animated: true, completion: nil)
                 }
         }
-        
         let emailRow = CustomRowFormer<DynamicHeightCell>(instantiateType: .Nib(nibName: "DynamicHeightCell")) {
             $0.selectionStyle = .none
             $0.title = "Email"
@@ -138,14 +110,13 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
                     mailComposeViewController.mailComposeDelegate = self
                     mailComposeViewController.setToRecipients([Engagement.sharedInstance.email!])
                     mailComposeViewController.setMessageBody("", isHTML: false)
-                    
+                    mailComposeViewController.view.tintColor = MAIN_COLOR
+                    mailComposeViewController.navigationBar.barTintColor = MAIN_COLOR
                     if MFMailComposeViewController.canSendMail() {
-                        mailComposeViewController.view.tintColor = MAIN_COLOR
-                        self.present(mailComposeViewController, animated: true, completion: nil)
+                        self.present(mailComposeViewController, animated: true, completion: { UIApplication.shared.statusBarStyle = .lightContent })
                     }
                 }
         }
-        
         membersRow = createMenu("\(Engagement.sharedInstance.members.count) Members") { [weak self] in
             self?.former.deselect(animated: true)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -153,13 +124,11 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             vc.positionIDs = (self?.positionIDs)!
             vc.searchMembers = Engagement.sharedInstance.members
             vc.adminMembers = Engagement.sharedInstance.admins
-            self?.navigationController?.pushViewController(vc, animated: true)
+            appToolbarController.push(from: self!, to: vc)
         }
         self.former.append(sectionFormer: SectionFormer(rowFormer: onlyImageRow, infoRow, urlRow, emailRow, membersRow))
         self.former.reload()
     }
-    
-    // MARK: - Table Rows
     
     private lazy var onlyImageRow: LabelRowFormer<ImageCell> = {
         LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
@@ -176,11 +145,11 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             })
     }()
     
-    // MARK: - User actions
+    // MARK: - User Actions
     
     func settingsButtonPressed(sender: UIBarButtonItem) {
         
-        let actionSheetController: UIAlertController = UIAlertController(title: "Settings", message: nil, preferredStyle: .actionSheet)
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheetController.view.tintColor = MAIN_COLOR
         
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
@@ -190,14 +159,12 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
         
         if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
             let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                // Edit group if admin
-                self.navigationController?.pushViewController(EditEngagementGroupViewController(), animated: true)
+                appToolbarController.push(from: self, to: EditEngagementGroupViewController())
             }
             actionSheetController.addAction(editAction)
             
             let functionsAction: UIAlertAction = UIAlertAction(title: "Admin Functions", style: .default) { action -> Void in
-                // Edit group if admin
-                self.navigationController?.pushViewController(AdminFunctionsViewController(), animated: true)
+                appToolbarController.push(from: self, to: AdminFunctionsViewController())
             }
             actionSheetController.addAction(functionsAction)
             
@@ -269,6 +236,19 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
         self.present(actionSheetController, animated: true, completion: nil)
     }
     
+    // MARK: - Utility Functions
+    
+    private func getPositions() {
+        positionIDs.removeAll()
+        for position in Engagement.sharedInstance.positions {
+            if Engagement.sharedInstance.engagement![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
+                positionIDs.append(Engagement.sharedInstance.engagement![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
+            } else {
+                positionIDs.append("")
+            }
+        }
+    }
+    
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
         return LabelRowFormer<FormLabelCell>() {
             $0.titleLabel.textColor = MAIN_COLOR
@@ -280,6 +260,8 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
                 onSelected?()
         }
     }
+    
+    // MARK: - Delegate Methods
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         self.dismiss(animated: true, completion: nil)

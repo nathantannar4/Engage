@@ -9,6 +9,7 @@
 import UIKit
 import Parse
 import SVProgressHUD
+import BRYXBanner
 
 final class Conference {
     

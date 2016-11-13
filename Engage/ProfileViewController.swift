@@ -11,6 +11,7 @@ import Parse
 import Former
 import Agrume
 import SVProgressHUD
+import Material
 
 class ProfileViewController: FormViewController  {
     
@@ -19,15 +20,7 @@ class ProfileViewController: FormViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Setup UI and Table Properties
-        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonPressed))
-        navigationItem.rightBarButtonItem = editButton
-        if isWESST {
-            let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutButtonPressed))
-            navigationItem.rightBarButtonItems = [editButton, logoutButton]
-        }
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         tableView.contentInset.top = 0
         tableView.contentInset.bottom = 60
         
@@ -35,22 +28,27 @@ class ProfileViewController: FormViewController  {
         Profile.sharedInstance.loadUser()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if self.revealViewController().frontViewPosition.rawValue == 4 {
-            self.revealViewController().revealToggle(self)
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = "Profile"
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let editButton = IconButton(image: Icon.cm.edit)
+        editButton.tintColor = UIColor.white
+        editButton.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
+        if isWESST {
+            let logoutButton = IconButton(image: UIImage(named: "Logout")?.withRenderingMode(.alwaysTemplate), tintColor: UIColor.white)
+            logoutButton.addTarget(self, action: #selector(logoutButtonPressed), for: .touchUpInside)
+            appToolbarController.prepareToolbarMenu(right: [logoutButton, editButton])
+        } else {
+            appToolbarController.prepareToolbarMenu(right: [editButton])
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
+        prepareToolbar()
         former.removeAll()
         configure()
     }
@@ -163,13 +161,26 @@ class ProfileViewController: FormViewController  {
     
     // MARK: - User actions
     
-    func editButtonPressed(sender: UIBarButtonItem) {
-        self.navigationController?.pushViewController(EditProfileViewController(), animated: true)
+    func editButtonPressed() {
+        appToolbarController.push(from: self, to: EditProfileViewController())
     }
     
-    func logoutButtonPressed(sender: UIBarButtonItem) {
-        PFUser.logOut()
-        PushNotication.parsePushUserResign()
-        self.dismiss(animated: true, completion: nil)
+    func logoutButtonPressed() {
+        let alert = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        alert.view.tintColor = MAIN_COLOR
+        
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+            //Do some stuff
+        }
+        alert.addAction(cancelAction)
+        
+        let logout: UIAlertAction = UIAlertAction(title: "Logout", style: .default) { action -> Void in
+            self.present(alert, animated: true, completion: nil)
+            PFUser.logOut()
+            PushNotication.parsePushUserResign()
+            self.dismiss(animated: true, completion: nil)
+        }
+        alert.addAction(logout)
     }
 }

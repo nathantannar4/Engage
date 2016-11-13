@@ -6,6 +6,7 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
+  - BRYXBanner (0.7.1)
   - BWWalkthrough (1.1.0)
   - ChameleonFramework/Default (2.1.0)
   - ChameleonFramework/Swift (2.1.0):
@@ -32,6 +33,9 @@ PODS:
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JSQWebViewController (5.0.0)
+  - Material (2.3.7):
+    - Material/Core (= 2.3.7)
+  - Material/Core (2.3.7)
   - Parse (1.14.2):
     - Bolts/Tasks (~> 1.8)
   - ParseUI (1.2.0):
@@ -39,13 +43,13 @@ PODS:
     - Parse (~> 1.9)
   - SlackTextViewController (1.9.5)
   - SVProgressHUD (2.0.3)
-  - SwiftHTTP (2.0.2)
   - TextFieldEffects (1.3.0)
   - XLPagerTabStrip (6.0.0)
 
 DEPENDENCIES:
   - Agrume
   - Bolts
+  - BRYXBanner
   - BWWalkthrough
   - ChameleonFramework/Swift
   - CVCalendar
@@ -54,17 +58,18 @@ DEPENDENCIES:
   - Former
   - JSQMessagesViewController
   - JSQWebViewController
+  - Material
   - Parse
   - ParseUI
   - SlackTextViewController
   - SVProgressHUD
-  - SwiftHTTP (~> 2.0.0)
   - TextFieldEffects
   - XLPagerTabStrip
 
 SPEC CHECKSUMS:
   Agrume: 5698c55f02bb9bd60b6a32fea6ac0e8057ccb927
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  BRYXBanner: 34eabf9c6c009f187948ca78a4f3bba3767d0f04
   BWWalkthrough: 0c27ad2773a25c8f4fb9004bc7d6685deb35fecc
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   CVCalendar: ec1a06a508f99d8e5067258754f811a8a1433a3f
@@ -74,14 +79,14 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JSQWebViewController: 0461aa42612b221571556df61d9c09f080cb2eef
+  Material: b0aa466c72931f6dc3854a059e086455f4103a28
   Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
   ParseUI: af2eba584799da4a9fbdac0e178662d7438b502e
   SlackTextViewController: fbcdadbb8090673f604484ff5b6eb8d77baed42a
   SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
-  SwiftHTTP: faa1a5f7670568ffc9361898229dbe84a6088468
   TextFieldEffects: ef594746f17997c813e07633f8ae5acaf9b04f27
   XLPagerTabStrip: c46e802a8dcac29edbcea573de8fe920e052455b
 
-PODFILE CHECKSUM: 9052fe5a49abf6342fcbfbb9e32ac3267ebbde77
+PODFILE CHECKSUM: 4885990da4af12b916492d35491a84484d1eb313
 
 COCOAPODS: 1.0.1

@@ -9,6 +9,7 @@
 import UIKit
 import Parse
 import UserNotifications
+import Material
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,10 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        // Configure connection to Parse-Server
-        //Parse.setApplicationId("G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b", clientKey: "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq")
-        
-        
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
             ParseMutableClientConfiguration.applicationId = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b";
             ParseMutableClientConfiguration.clientKey = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq";
@@ -30,20 +27,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         });
         Parse.initialize(with: config) 
         
-        
         if isWESST {
             MAIN_COLOR = UIColor(red: 153.0/255, green:62.0/255.0, blue:123.0/255, alpha: 1) as UIColor!
         }
         
-        // Remove shadow from navbar
-        UINavigationBar.appearance().shadowImage = UIImage()
-        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
         UIApplication.shared.statusBarStyle = .lightContent
         
         // Change navbar color
         let navbar = UINavigationBar.appearance()
         navbar.barTintColor = MAIN_COLOR
-        navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName: UIFont(name: "Avenir Next", size: 22)!]
+        navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName: RobotoFont.medium(with: 17)]
         navbar.tintColor = UIColor.white
         navbar.isTranslucent = false
         
@@ -76,7 +69,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     internal func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        
+        UIApplication.shared.applicationIconBadgeNumber += 1
+        let notificationMessage =  userInfo["alert"] as! String
+        Utilities.showBanner(title: "", subtitle: notificationMessage, duration: 2.0)
         print("Recieved Remote Notification")
         print(userInfo)
     }
@@ -97,12 +92,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
-
+    
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
 

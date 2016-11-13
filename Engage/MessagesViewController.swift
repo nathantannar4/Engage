@@ -8,10 +8,14 @@
 
 import UIKit
 import Parse
+import Material
 
-class MessagesViewController: UITableViewController, UIActionSheetDelegate, SelectSingleViewControllerDelegate, SelectMultipleViewControllerDelegate  {
+class MessagesViewController: UITableViewController, UIActionSheetDelegate, SelectSingleViewControllerDelegate, SelectMultipleViewControllerDelegate, MenuDelegate  {
     
     var messages = [PFObject]()
+    internal var addButton: FabButton!
+    internal var singleButtonItem: MenuItem!
+    internal var groupButtonItem: MenuItem!
     
     @IBOutlet var composeButton: UIBarButtonItem!
     @IBOutlet var emptyView: UIView!
@@ -23,11 +27,6 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
         
         NotificationCenter.default.addObserver(self, selector: #selector(MessagesViewController.loadMessages), name: NSNotification.Name(rawValue: "reloadMessages"), object: nil)
         
-        let groupButton = UIBarButtonItem(image: UIImage(named: "Conference"), style: .plain, target: self, action: #selector(showGroups))
-        let composeButton = UIBarButtonItem(image: UIImage(named: "icn_editing"), style: .plain, target: self, action: #selector(compose))
-        
-        navigationItem.rightBarButtonItems = [composeButton, groupButton]
-        
         self.refreshControl = UIRefreshControl()
         self.refreshControl!.addTarget(self, action: #selector(MessagesViewController.loadMessages), for: UIControlEvents.valueChanged)
         self.tableView?.addSubview(self.refreshControl!)
@@ -35,28 +34,34 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
         self.emptyView?.isHidden = true
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if self.revealViewController().frontViewPosition.rawValue == 4 {
-            self.revealViewController().revealToggle(self)
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
         }
+        tc.toolbar.title = "Messages"
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let groupButton = IconButton(image: UIImage(named: "Group")?.withRenderingMode(.alwaysTemplate))
+        groupButton.tintColor = UIColor.white
+        groupButton.title = "Groups"
+        groupButton.titleLabel?.font = RobotoFont.regular(with: 14.0)
+        groupButton.addTarget(self, action: #selector(showGroups), for: .touchUpInside)
+        appToolbarController.prepareToolbarMenu(right: [groupButton])
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        appMenuController.menu.views.first?.isHidden = false
+        prepareToolbar()
+        prepareAddButton()
+        prepareSingleButton()
+        prepareGroupButton()
+        prepareMenuController()
         self.loadMessages()
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
     }
     
-    func showGroups(sender: AnyObject?) {
-        self.navigationController?.pushViewController(GroupsViewController(), animated: true)
+    func showGroups() {
+        appToolbarController.push(from: self, to: GroupsViewController())
     }
     
     
@@ -106,9 +111,8 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
     func openChat(groupId: String, title: String) {
         let messageVC = ChatViewController()
         messageVC.groupId = groupId
-        messageVC.title = title
-        self.navigationController?.pushViewController(messageVC, animated: true)
-        
+        messageVC.groupName = title
+        appToolbarController.push(from: self, to: messageVC)
     }
     
     func cleanup() {
@@ -116,38 +120,6 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
         self.tableView.reloadData()
         self.updateTabCounter()
         self.updateEmptyView()
-    }
-    
-    @IBAction func compose(sender: UIBarButtonItem) {
-        //Create the AlertController
-        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        actionSheetController.view.tintColor = MAIN_COLOR
-        
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-            //Just dismiss the action sheet
-        }
-        actionSheetController.addAction(cancelAction)
-        let single: UIAlertAction = UIAlertAction(title: "Single Recipient", style: .default)
-        { action -> Void in
-            let vc = SelectSingleViewController()
-            vc.delegate = self
-            let navVC = UINavigationController(rootViewController: vc)
-            navVC.navigationBar.barTintColor = MAIN_COLOR!
-            self.present(navVC, animated: true, completion: nil)
-        }
-        actionSheetController.addAction(single)
-        let multiple: UIAlertAction = UIAlertAction(title: "Multiple Recipients", style: .default)
-        { action -> Void in
-            let vc = SelectMultipleViewController()
-            vc.delegate = self
-            let navVC = UINavigationController(rootViewController: vc)
-            navVC.navigationBar.barTintColor = MAIN_COLOR!
-            self.present(navVC, animated: true, completion: nil)
-        }
-        actionSheetController.addAction(multiple)
-        actionSheetController.popoverPresentationController?.sourceView = self.view
-        //Present the AlertController
-        self.present(actionSheetController, animated: true, completion: nil)
     }
 
     // MARK: - SelectSingleDelegate
@@ -191,7 +163,7 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
         self.messages.remove(at: indexPath.row)
         self.tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.fade)
         self.updateEmptyView()
-        //self.updateTabCounter()
+        self.updateTabCounter()
     }
     
     // MARK: - UITableViewDelegate
@@ -202,5 +174,98 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
         let message = self.messages[indexPath.row] as PFObject
         self.openChat(groupId: message[PF_MESSAGES_GROUPID] as! String, title: message[PF_MESSAGES_DESCRIPTION] as! String)
     }
-
+    
+    // Menu Controller
+    // Handle the menu toggle event.
+    internal func handleToggleMenu(button: Button) {
+        guard let mc = menuController as? AppMenuController else {
+            return
+        }
+        
+        if mc.menu.isOpened {
+            print("closeMenu")
+            addButton.backgroundColor = MAIN_COLOR
+            addButton.tintColor = UIColor.white
+            mc.closeMenu { (view) in
+                (view as? MenuItem)?.hideTitleLabel()
+            }
+        } else {
+            print("openMenu")
+            addButton.backgroundColor = Color.red.base
+            addButton.tintColor = UIColor.white
+            mc.openMenu { (view) in
+                (view as? MenuItem)?.showTitleLabel()
+            }
+        }
+    }
+    
+    internal func handleSingleButton(button: Button) {
+        let vc = SelectSingleViewController()
+        vc.delegate = self
+        let navVC = UINavigationController(rootViewController: vc)
+        navVC.navigationBar.barTintColor = MAIN_COLOR!
+        self.present(navVC, animated: true, completion: { self.closeMenu() })
+    }
+    
+    internal func handleGroupButton(button: Button) {
+        let vc = SelectMultipleViewController()
+        vc.delegate = self
+        let navVC = UINavigationController(rootViewController: vc)
+        navVC.navigationBar.barTintColor = MAIN_COLOR!
+        self.present(navVC, animated: true, completion: { self.closeMenu() })
+    }
+    
+    private func closeMenu() {
+        guard let mc = menuController as? AppMenuController else {
+            print("isMc")
+            return
+        }
+        
+        mc.closeMenu { (view) in
+            (view as? MenuItem)?.hideTitleLabel()
+        }
+    }
+    
+    private func prepareAddButton() {
+        addButton = FabButton(image: Icon.cm.add)
+        addButton.tintColor = UIColor.white
+        addButton.backgroundColor = MAIN_COLOR
+        addButton.addTarget(self, action: #selector(handleToggleMenu), for: .touchUpInside)
+    }
+    
+    private func prepareSingleButton() {
+        singleButtonItem = MenuItem()
+        singleButtonItem.tintColor = UIColor.white
+        singleButtonItem.title = "Single Recipient"
+        singleButtonItem.button.image = UIImage(named: "Profile")?.withRenderingMode(.alwaysTemplate)
+        singleButtonItem.button.backgroundColor = MAIN_COLOR
+        singleButtonItem.button.depthPreset = .depth1
+        singleButtonItem.button.addTarget(self, action: #selector(handleSingleButton), for: .touchUpInside)
+    }
+    
+    private func prepareGroupButton() {
+        groupButtonItem = MenuItem()
+        groupButtonItem.tintColor = UIColor.white
+        groupButtonItem.title = "Multiple Recipients"
+        groupButtonItem.button.image = UIImage(named: "Group")?.withRenderingMode(.alwaysTemplate)
+        groupButtonItem.button.backgroundColor = MAIN_COLOR
+        groupButtonItem.button.depthPreset = .depth1
+        groupButtonItem.button.addTarget(self, action: #selector(handleGroupButton), for: .touchUpInside)
+    }
+    
+    private func prepareMenuController() {
+        guard let mc = menuController as? AppMenuController else {
+            return
+        }
+        
+        mc.menu.delegate = self
+        mc.menu.views = [addButton, groupButtonItem, singleButtonItem]
+    }
+    
+    func menu(menu: Menu, tappedAt point: CGPoint, isOutside: Bool) {
+        guard isOutside else {
+            return
+        }
+        closeMenu()
+    }
 }

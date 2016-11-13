@@ -11,6 +11,7 @@ import Parse
 import Former
 import Agrume
 import SVProgressHUD
+import Material
 
 class EditPostViewController: FormViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -20,13 +21,18 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(saveButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         
         configure()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         SVProgressHUD.dismiss()
+    }
+    
+    func cancelButtonPressed(sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     func saveButtonPressed(sender: UIBarButtonItem) {
@@ -76,9 +82,17 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
     private lazy var imageRow: LabelRowFormer<ImageCell> = {
         LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
             $0.displayImage.image = self.image
-            $0.displayImage.backgroundColor = MAIN_COLOR
+            let label = UILabel(frame: CGRect(x: 0, y: 150.0, width: $0.displayImage.frame.width / 5, height: 20.0))
+            label.backgroundColor = MAIN_COLOR
+            label.textColor = UIColor.white
+            label.font = RobotoFont.regular(with: 16.0)
+            label.center = CGPoint(x: $0.displayImage.frame.width/5, y: 150)
+            label.textAlignment = .center
+            label.text = "Tap to Change Image"
+            $0.displayImage.addSubview(label)
+            $0.displayImage.contentMode = .scaleAspectFit
             }.configure {
-                $0.rowHeight = 200
+                $0.rowHeight = 300
             }.onSelected { [weak self] _ in
                 self?.former.deselect(animated: true)
                 self?.presentImagePicker()

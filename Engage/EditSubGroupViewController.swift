@@ -11,6 +11,7 @@ import Parse
 import Former
 import Agrume
 import SVProgressHUD
+import Material
 
 class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDelegate, SelectSingleFromSubGroupDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -21,13 +22,32 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Configure UI
-        title = "Edit"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
         self.tableView.contentInset.top = 10
         self.tableView.contentInset.bottom = 100
         
+        prepareToolbar()
         configure()
+    }
+    
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = "Edit"
+        tc.toolbar.detail = "\(EngagementSubGroup.sharedInstance.name!)"
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        tc.toolbar.tintColor = UIColor.white
+        let saveButton = IconButton(image: Icon.cm.check)
+        saveButton.tintColor = UIColor.white
+        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        let backButton = IconButton(image: Icon.cm.arrowBack)
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        appToolbarController.prepareToolbarCustom(left: [backButton], right: [saveButton])
+    }
+    
+    @objc private func handleBackButton() {
+        appToolbarController.pull(from: self)
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
@@ -317,7 +337,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
     
     // MARK: User actions
     
-    func saveButtonPressed(sender: AnyObject) {
+    func saveButtonPressed() {
         EngagementSubGroup.sharedInstance.save()
     }
     

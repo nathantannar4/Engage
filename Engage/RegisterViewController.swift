@@ -118,14 +118,13 @@ class RegisterViewController: UITableViewController {
                                     Engagement.sharedInstance.join(newUser: PFUser.current()!)
                                 }
                                 PushNotication.parsePushUserAssign()
-                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                                let containerVC = storyboard.instantiateViewController(withIdentifier: "menuVC") as! SWRevealViewController
-                                containerVC.view.backgroundColor = MAIN_COLOR
-                                self.present(containerVC, animated: false, completion: nil)
+                                appToolbarController = AppToolbarController(rootViewController: FeedViewController())
+                                appMenuController = AppMenuController(rootViewController: appToolbarController)
+                                let rootViewController = AppNavigationDrawerController(rootViewController: appMenuController, leftViewController: LeftMenuController(), rightViewController: RightAnnouncementsViewController())
+                                self.present(rootViewController, animated: false, completion: nil)
                             }
                         }
                     }
-                    self.navigationController?.popToRootViewController(animated: false)
                 }
             } else {
                 SVProgressHUD.showError(withStatus: "Error")

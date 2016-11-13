@@ -55,6 +55,11 @@ final class Event {
             newEvent[PF_EVENTS_ALL_DAY] = Event.sharedInstance.allDay
             newEvent[PF_EVENTS_ORGANIZER] = PFUser.current()!
             newEvent[PF_EVENTS_INVITE_TO] = Event.sharedInstance.inviteTo
+            
+            for user in Event.sharedInstance.inviteTo {
+                PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(PFUser.current()?.value(forKey: PF_USER_FULLNAME) as! String) invited you to their event: \(Event.sharedInstance.title!) on \(Event.sharedInstance.start!.mediumDateString!)")
+            }
+            
             newEvent[PF_EVENTS_CONFIRMED] = []
             newEvent[PF_EVENTS_MAYBE] = []
             newEvent[PF_EVENTS_LATITUDE] = Event.sharedInstance.lat!
@@ -98,6 +103,11 @@ final class Event {
         object![PF_EVENTS_ALL_DAY] = Event.sharedInstance.allDay
         object![PF_EVENTS_LONGITUDE] = Event.sharedInstance.long!
         object![PF_EVENTS_LATITUDE] = Event.sharedInstance.lat!
+        
+        for user in (object![PF_EVENTS_INVITE_TO] as! [PFUser]) {
+            PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(PFUser.current()?.value(forKey: PF_USER_FULLNAME) as! String) updated their event: \(Event.sharedInstance.title!)")
+        }
+        
         UIApplication.shared.beginIgnoringInteractionEvents()
         SVProgressHUD.show(withStatus: "Updating Event")
         Event.sharedInstance.object!.saveInBackground { (success: Bool, error: Error?) in

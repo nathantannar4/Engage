@@ -14,6 +14,7 @@ import Parse
 import Former
 import Agrume
 import SVProgressHUD
+import Material
 
 class EditEngagementGroupViewController: FormViewController, SelectUsersFromGroupDelegate, SelectSingleViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -24,21 +25,39 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Configure UI
-        title = "Edit"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
         self.tableView.contentInset.top = 10
         self.tableView.contentInset.bottom = 100
         
         configure()
+        prepareToolbar()
+    }
+    
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = "Edit"
+        tc.toolbar.detail = "\(Engagement.sharedInstance.name!)"
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        tc.toolbar.tintColor = UIColor.white
+        let saveButton = IconButton(image: Icon.cm.check)
+        saveButton.tintColor = UIColor.white
+        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        let backButton = IconButton(image: Icon.cm.arrowBack)
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        appToolbarController.prepareToolbarCustom(left: [backButton], right: [saveButton])
+    }
+    
+    @objc private func handleBackButton() {
+        appToolbarController.pull(from: self)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         SVProgressHUD.dismiss()
-        self.navigationController?.navigationBar.barTintColor = MAIN_COLOR
     }
     
-    func saveButtonPressed(sender: AnyObject) {
+    func saveButtonPressed() {
         Engagement.sharedInstance.save()
     }
     

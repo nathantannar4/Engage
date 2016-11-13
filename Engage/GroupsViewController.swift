@@ -9,6 +9,7 @@
 import UIKit
 import Parse
 import SVProgressHUD
+import Material
 
 
 class GroupsViewController: UITableViewController, UIAlertViewDelegate {
@@ -17,17 +18,33 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        appMenuController.menu.views.first?.isHidden = true
         self.refreshControl = UIRefreshControl()
         self.refreshControl!.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl!.addTarget(self, action: #selector(GroupsViewController.loadGroups), for: .valueChanged)
-        self.navigationItem.title = "Open Chats"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Plus"), style: .plain, target: self, action: #selector(newButtonPressed))
+
+        prepareToolbar()
+    }
+    
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = "Public Group Chats"
+        tc.toolbar.detail = Engagement.sharedInstance.name!
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let backButton = IconButton(image: Icon.cm.arrowBack)
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
+    }
+    
+    @objc private func handleBackButton() {
+        appToolbarController.pull(from: self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         loadGroups()
     }
     
@@ -147,7 +164,8 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
         let chatVC = ChatViewController()
         chatVC.hidesBottomBarWhenPushed = true
         chatVC.groupId = groupId
-        self.navigationController?.pushViewController(chatVC, animated: true)
+        chatVC.groupName = group[PF_GROUPS_NAME] as! String
+        appToolbarController.push(from: self, to: chatVC)
     }
 }
 

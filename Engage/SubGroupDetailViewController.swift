@@ -13,13 +13,14 @@ import Agrume
 import SVProgressHUD
 import MessageUI
 import JSQWebViewController
+import BRYXBanner
+import Material
 
 class SubGroupDetailViewController: FormViewController, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
     
     var firstLoad = true
     var positionIDs = [String]()
     let memberQuery = PFUser.query()
-    var button = UIButton()
     var editorViewable = false
     var querySkip = 0
     var rowCounter = 0
@@ -28,46 +29,42 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         super.viewDidLoad()
         
         // Setup UI and Table Properties
-        title = EngagementSubGroup.sharedInstance.name!
-        tableView.contentInset.top = 0
         tableView.contentInset.bottom = 120
-        addButton()
-        buttonToImage()
-        
+        appMenuController.menu.views.first?.isHidden = false
+        getPositions()
         configure()
-        
-        for position in EngagementSubGroup.sharedInstance.positions {
-            if EngagementSubGroup.sharedInstance.subgroup![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
-                positionIDs.append(EngagementSubGroup.sharedInstance.subgroup![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
-            } else {
-                positionIDs.append("")
-            }
-        }
-        
-        let zeroRow = LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")).configure {
-            $0.rowHeight = 0
-        }
-        
-        let zeroSection = SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: "Posts to \(EngagementSubGroup.sharedInstance.name!)"))
-        self.former.append(sectionFormer: zeroSection)
-        self.former.reload()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
+        prepareToolbar()
         if !firstLoad {
             updateRows()
-            positionIDs.removeAll()
-            for position in EngagementSubGroup.sharedInstance.positions {
-                if EngagementSubGroup.sharedInstance.subgroup![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
-                    positionIDs.append(EngagementSubGroup.sharedInstance.subgroup![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
-                } else {
-                    positionIDs.append("")
-                }
-            }
+            getPositions()
             self.former.reload()
         } else {
             firstLoad = false
         }
+    }
+    
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = EngagementSubGroup.sharedInstance.name!
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let backButton = IconButton(image: Icon.cm.arrowBack)
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        let moreButton = IconButton(image: Icon.cm.moreVertical)
+        moreButton.tintColor = UIColor.white
+        moreButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+        tc.toolbar.leftViews = [backButton]
+        tc.toolbar.rightViews = [moreButton]
+    }
+    
+    @objc private func handleBackButton() {
+        appToolbarController.pull(from: self)
     }
     
     private func configure() {
@@ -79,11 +76,25 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             vc.searchMembers = EngagementSubGroup.sharedInstance.members
             vc.adminMembers = EngagementSubGroup.sharedInstance.admins
             vc.isSub = true
-            self?.navigationController?.pushViewController(vc, animated: true)
+            appToolbarController.push(from: self!, to: vc)
         }
-        self.former.append(sectionFormer: SectionFormer(rowFormer: onlyImageRow, infoRow, phoneRow, addressRow, urlRow, emailRow, membersRow))
-        self.former.reload()
+        let zeroRow = LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")).configure {
+            $0.rowHeight = 0
+        }
+        let zeroSection = SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: "Posts to \(EngagementSubGroup.sharedInstance.name!)"))
+        self.former.append(sectionFormer: SectionFormer(rowFormer: onlyImageRow, infoRow, phoneRow, addressRow, urlRow, emailRow, membersRow), zeroSection)
         loadPosts()
+    }
+    
+    private func getPositions() {
+        positionIDs.removeAll()
+        for position in EngagementSubGroup.sharedInstance.positions {
+            if EngagementSubGroup.sharedInstance.subgroup![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
+                positionIDs.append(EngagementSubGroup.sharedInstance.subgroup![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
+            } else {
+                positionIDs.append("")
+            }
+        }
     }
     
     // MARK: - Table Rows
@@ -211,10 +222,10 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
                     mailComposeViewController.mailComposeDelegate = self
                     mailComposeViewController.setToRecipients([EngagementSubGroup.sharedInstance.email!])
                     mailComposeViewController.setMessageBody("", isHTML: false)
-                    //mailComposeViewController.view.tintColor = MAIN_COLOR
-                    
+                    mailComposeViewController.view.tintColor = MAIN_COLOR
+                    mailComposeViewController.navigationBar.barTintColor = MAIN_COLOR
                     if MFMailComposeViewController.canSendMail() {
-                        self.present(mailComposeViewController, animated: true, completion: nil)
+                        self.present(mailComposeViewController, animated: true, completion: { UIApplication.shared.statusBarStyle = .lightContent })
                     } else {
                         SVProgressHUD.showError(withStatus: "Send Error")
                     }
@@ -224,9 +235,9 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
     
     // MARK: - User actions
     
-    func settingsButtonPressed(sender: UIBarButtonItem) {
+    func settingsButtonPressed() {
         
-        let actionSheetController: UIAlertController = UIAlertController(title: "Settings", message: nil, preferredStyle: .actionSheet)
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheetController.view.tintColor = MAIN_COLOR
         
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
@@ -240,9 +251,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             if admin == PFUser.current()?.objectId! {
                 let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
                     // Edit group if admin
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let vc = storyboard.instantiateViewController(withIdentifier: "editSubGroup") as! EditSubGroupViewController
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    appToolbarController.push(from: self, to: EditSubGroupViewController())
                 }
                 actionSheetController.addAction(editAction)
                 isAdmin = true
@@ -539,10 +548,10 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             if error == nil {
                 for post in posts! {
                     if (post[PF_POST_HAS_IMAGE] as? Bool) == true {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, nav: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
+                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, view: self), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
                         self.rowCounter += 1
                     } else {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, nav: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
+                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, view: self), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
                         self.rowCounter += 1
                     }
                 }
@@ -606,7 +615,6 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         self.former.reload()
         loadPosts()
         Post.new.clear()
-        buttonToImage()
         imageRow.cellUpdate {
             $0.iconView.image = nil
         }
@@ -615,7 +623,6 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
     func postButtonPressed() {
         if !editorViewable {
             Post.new.clear()
-            buttonToText()
             let infoRow = TextViewRowFormer<FormTextViewCell>() { [weak self] in
                 $0.textView.textColor = .formerSubColor()
                 $0.textView.font = .systemFont(ofSize: 15)
@@ -637,7 +644,6 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             
         } else if Post.new.info != ""{
             Post.new.createPost(object: EngagementSubGroup.sharedInstance.subgroup!, completion: {
-                self.buttonToImage()
                 self.imageRow.cellUpdate {
                     $0.iconView.image = nil
                 }
@@ -654,7 +660,6 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         imageRow.cellUpdate {
             $0.iconView.image = nil
         }
-        buttonToImage()
     }
     
     private lazy var loadMoreSection: SectionFormer = {
@@ -682,35 +687,5 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
                 self?.presentImagePicker()
         }
     }()
-    
-    func addButton() {
-        button.frame = CGRect(x: self.view.frame.width - 100, y: self.view.frame.height - 175, width: 65, height: 65)
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.backgroundColor = MAIN_COLOR
-        buttonToImage()
-        button.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
-        button.layer.shadowColor = UIColor.gray.cgColor
-        button.layer.shadowOpacity = 1.0
-        button.layer.shadowOffset = CGSize(width: 2, height: 2)
-        button.layer.shadowRadius = 4
-        view.addSubview(button)
-    }
-    
-    func buttonToImage() {
-        editorViewable = false
-        let tintedImage = Images.resizeImage(image: UIImage(named:"Plus-512.png")!, width: 60, height: 60)!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        button.tintColor = UIColor.white
-        button.setImage(tintedImage, for: .normal)
-        button.setTitle("", for: .normal)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Settings"), style: .plain, target: self, action: #selector(settingsButtonPressed))
-        
-    }
-    
-    func buttonToText() {
-        editorViewable = true
-        button.setImage(UIImage(), for: .normal)
-        button.setTitle("Post", for: .normal)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
-    }
 }
 

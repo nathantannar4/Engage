@@ -13,6 +13,8 @@ import Agrume
 import SVProgressHUD
 import JSQWebViewController
 import MessageUI
+import BRYXBanner
+import Material
 
 class ConferenceViewController: FormViewController  {
     
@@ -28,8 +30,6 @@ class ConferenceViewController: FormViewController  {
         tableView.contentInset.bottom = 60
         tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         title = conference
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Settings"), style: .plain, target: self, action: #selector(settingsButtonPressed))
         
         Conference.sharedInstance.clear()
         
@@ -47,13 +47,7 @@ class ConferenceViewController: FormViewController  {
                         Conference.sharedInstance.create()
                     }
                     Conference.sharedInstance.unpack()
-                    for position in Conference.sharedInstance.positions {
-                        if Conference.sharedInstance.conference![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
-                            self.positionIDs.append(Conference.sharedInstance.conference![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
-                        } else {
-                            self.positionIDs.append("")
-                        }
-                    }
+                    self.getPositions()
                     self.configure()
                     
                 } else {
@@ -64,31 +58,40 @@ class ConferenceViewController: FormViewController  {
             }
     }
     
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = self.conference
+        tc.toolbar.detail = "Conference"
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let moreButton = IconButton(image: Icon.cm.moreVertical)
+        moreButton.tintColor = UIColor.white
+        moreButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
+        appToolbarController.prepareToolbarMenu(right: [moreButton])
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
+        prepareToolbar()
         if !firstLoad {
             updateRows()
-            positionIDs.removeAll()
-            for position in Conference.sharedInstance.positions {
-                if Conference.sharedInstance.conference![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
-                    positionIDs.append(Conference.sharedInstance.conference![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
-                } else {
-                    positionIDs.append("")
-                }
-            }
+            getPositions()
             self.former.remove(section: 1)
             self.former.reload()
             self.loadOC()
         } else {
             firstLoad = false
         }
-        if revealViewController() != nil {
-            let menuButton = UIBarButtonItem()
-            menuButton.image = UIImage(named: "ic_menu_black_24dp")
-            menuButton.target = revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.navigationItem.leftBarButtonItem = menuButton
-            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            tableView.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+    }
+    
+    private func getPositions() {
+        positionIDs.removeAll()
+        for position in Conference.sharedInstance.positions {
+            if Conference.sharedInstance.conference![position.lowercased().replacingOccurrences(of: " ", with: "")] != nil {
+                positionIDs.append(Conference.sharedInstance.conference![position.lowercased().replacingOccurrences(of: " ", with: "")] as! String)
+            } else {
+                positionIDs.append("")
+            }
         }
     }
     
@@ -270,9 +273,9 @@ class ConferenceViewController: FormViewController  {
     
     // MARK: - User actions
     
-    func settingsButtonPressed(sender: UIBarButtonItem) {
+    func settingsButtonPressed() {
         
-        let actionSheetController: UIAlertController = UIAlertController(title: "Settings", message: nil, preferredStyle: .actionSheet)
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheetController.view.tintColor = MAIN_COLOR
         
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
@@ -280,16 +283,32 @@ class ConferenceViewController: FormViewController  {
         }
         actionSheetController.addAction(cancelAction)
         
-        for admin in Engagement.sharedInstance.admins {
-            if admin == PFUser.current()?.objectId! {
-                let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                    // Edit group if admin
-                    self.navigationController?.pushViewController(EditConferenceViewController(), animated: true)
-                }
-                actionSheetController.addAction(editAction)
-                
-                break
+        if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
+            let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
+                appToolbarController.push(from: self, to: EditConferenceViewController())
             }
+            actionSheetController.addAction(editAction)
+            
+            let adminFunctionsAction: UIAlertAction = UIAlertAction(title: "Admin Function", style: .default) { action -> Void in
+                let delegateQuery = PFQuery(className: "WESST_WEC_Delegates")
+                delegateQuery.findObjectsInBackground(block: { (objects: [PFObject]?, error: Error?) in
+                    if error == nil {
+                        var userIds = [String]()
+                        if let objects = objects {
+                            for object in objects {
+                                let user = object.value(forKey: "user") as! PFUser
+                                userIds.append(user.objectId!)
+                            }
+                            let vc = AdminFunctionsViewController()
+                            vc.userIds = userIds
+                            appToolbarController.push(from: self, to: vc)
+                        }
+                    } else {
+                        SVProgressHUD.showError(withStatus: "Network Error")
+                    }
+                })
+            }
+            actionSheetController.addAction(adminFunctionsAction)
         }
         actionSheetController.popoverPresentationController?.sourceView = self.view
         //Present the AlertController
@@ -307,7 +326,7 @@ class ConferenceViewController: FormViewController  {
             $0.bodyLabel.text = Conference.sharedInstance.location
         }
         timeRow.cellUpdate {
-            $0.body = "\(Conference.sharedInstance.start!.mediumDateString) to \(Conference.sharedInstance.end!.mediumDateString)"
+            $0.body = "\(Conference.sharedInstance.start!.mediumDateString!) to \(Conference.sharedInstance.end!.mediumDateString!)"
         }
         urlRow.cellUpdate {
             $0.bodyLabel.text = Conference.sharedInstance.url

@@ -10,6 +10,7 @@ import UIKit
 import Former
 import Parse
 import MapKit
+import Material
 import CoreLocation
 
 class EventDetailViewController: FormViewController, MKMapViewDelegate, CLLocationManagerDelegate {
@@ -36,7 +37,7 @@ class EventDetailViewController: FormViewController, MKMapViewDelegate, CLLocati
         tableView.contentInset.top = 0
         tableView.contentInset.bottom = 30
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         
         organizer = event?.object(forKey: PF_EVENTS_ORGANIZER) as? PFUser
         organizer!.fetchInBackground { (user: PFObject?, error: Error?) in
@@ -120,7 +121,7 @@ class EventDetailViewController: FormViewController, MKMapViewDelegate, CLLocati
         }
         
         if organizer?.objectId == PFUser.current()?.objectId {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonPressed))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.edit, style: .plain, target: self, action: #selector(editButtonPressed))
         }
     }
     
@@ -154,12 +155,11 @@ class EventDetailViewController: FormViewController, MKMapViewDelegate, CLLocati
     }
     
     private func insertEmpty(header: String) {
-        let dividerRow = CustomRowFormer<DividerCell>(instantiateType: .Nib(nibName: "DividerCell")) {
-            $0.divider.backgroundColor = MAIN_COLOR
+        let zeroRow = LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) { _ in
             }.configure {
                 $0.rowHeight = 0
         }
-        self.former.append(sectionFormer: (sectionFormer: SectionFormer(rowFormer: dividerRow).set(headerViewFormer: TableFunctions.createHeader(text: header))))
+        self.former.append(sectionFormer: (sectionFormer: SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: header))))
         self.former.reload()
     }
     
@@ -188,13 +188,7 @@ class EventDetailViewController: FormViewController, MKMapViewDelegate, CLLocati
                 $0.rowHeight = 200
         }
         
-        let dividerRow = CustomRowFormer<DividerCell>(instantiateType: .Nib(nibName: "DividerCell")) {
-            $0.divider.backgroundColor = MAIN_COLOR
-            }.configure {
-                $0.rowHeight = 8
-        }
-        
-        self.former.append(sectionFormer: SectionFormer(rowFormer: mapRow, eventDetailRow, dividerRow))
+        self.former.append(sectionFormer: SectionFormer(rowFormer: mapRow, eventDetailRow))
         self.former.append(sectionFormer: SectionFormer(rowFormer: choiceRow))
         self.former.reload()
         

@@ -12,23 +12,41 @@ import Parse
 import Former
 import Agrume
 import SVProgressHUD
+import BRYXBanner
+import Material
 
 class EditConferenceViewController: FormViewController, SelectSingleViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var setPosition = ""
-    
-    // MARK: Public
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Configure UI
-        title = "Edit"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
-        self.tableView.contentInset.top = 10
-        self.tableView.contentInset.bottom = 100
+        tableView.contentInset.bottom = 100
         
         configure()
+        prepareToolbar()
+    }
+    
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = "Edit"
+        tc.toolbar.detail = Conference.sharedInstance.name!
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let backButton = IconButton(image: Icon.cm.arrowBack)
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        let saveButton = IconButton(image: Icon.cm.check)
+        saveButton.tintColor = UIColor.white
+        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        tc.toolbar.leftViews = [backButton]
+        tc.toolbar.rightViews = [saveButton]
+    }
+    
+    @objc private func handleBackButton() {
+        appToolbarController.pull(from: self)
     }
     
     func saveButtonPressed(sender: AnyObject) {
@@ -108,7 +126,7 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
             }.inlineCellSetup {
                 $0.datePicker.datePickerMode = .date
             }.onDateChanged {
-                Conference.sharedInstance.end = $0 as NSDate?
+                Conference.sharedInstance.end = $0 as NSDate!
             }.displayTextFromDate(String.mediumDateNoTime)
         
         let startRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
@@ -122,7 +140,7 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
             }.inlineCellSetup {
                 $0.datePicker.datePickerMode = .date
             }.onDateChanged {
-                Conference.sharedInstance.start = $0 as NSDate?
+                Conference.sharedInstance.start = $0 as NSDate!
             }.displayTextFromDate(String.mediumDateNoTime)
 
         let urlRow = TextFieldRowFormer<ProfileFieldCell>(instantiateType: .Nib(nibName: "ProfileFieldCell")) { [weak self] in
@@ -218,7 +236,7 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
             for currentTitle in Conference.sharedInstance.positions {
                 let action: UIAlertAction = UIAlertAction(title: currentTitle, style: .default)
                 { action -> Void in
-                    let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "selectSingleVC") as! SelectSingleViewController
+                    let vc = SelectSingleViewController()
                     vc.delegate = self
                     let navVC = UINavigationController(rootViewController: vc)
                     self.setPosition = currentTitle
@@ -251,13 +269,9 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
                         Conference.sharedInstance.conference!.saveInBackground(block: { (success: Bool, error: Error?) in
                             if error == nil {
                                 print("Saved")
-                                let banner = Banner(title: "Success", subtitle: "\(currentTitle) has been vacated.", image: nil, backgroundColor: MAIN_COLOR!)
-                                banner.dismissesOnTap = true
-                                banner.show(duration: 1.0)
+                                SVProgressHUD.showSuccess(withStatus: "\(currentTitle) Vacated")
                             } else {
-                                let banner = Banner(title: "An Error Occured", subtitle: error.debugDescription, image: nil, backgroundColor: MAIN_COLOR!)
-                                banner.dismissesOnTap = true
-                                banner.show(duration: 1.0)
+                                SVProgressHUD.showError(withStatus: "Network Error")
                             }
                         })
                     }
@@ -281,33 +295,29 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
             Conference.sharedInstance.conference![setPosition.lowercased().replacingOccurrences(of: " ", with: "")] = user.objectId
             Conference.sharedInstance.conference!.saveInBackground(block: { (success: Bool, error: Error?) in
                 if error == nil {
-                    let banner = Banner(title: "Success", subtitle: "\(user.value(forKey: PF_USER_FULLNAME) as! String) is now \(self.setPosition).", image: nil, backgroundColor: MAIN_COLOR!)
-                    banner.dismissesOnTap = true
-                    banner.show(duration: 1.0)
+                    SVProgressHUD.showSuccess(withStatus: "\(self.setPosition) Assigned")
                 } else {
-                    let banner = Banner(title: "An Error Occured", subtitle: error.debugDescription, image: nil, backgroundColor: MAIN_COLOR!)
-                    banner.dismissesOnTap = true
-                    banner.show(duration: 1.0)
+                    SVProgressHUD.showError(withStatus: "Network Error")
                 }
             })
         }
     }
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-        
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
-        onlyImageRow.cellUpdate {
-            $0.displayImage.image = image
-        }
-        
-        if image.size.width > 750 {
-            let resizeFactor = 750 / image.size.width
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            onlyImageRow.cellUpdate {
+                $0.displayImage.image = image
+            }
             
-            Conference.sharedInstance.coverPhoto = Images.resizeImage(image: image, width: resizeFactor * image.size.width, height: resizeFactor * image.size.height)!
-        }
-        
-        UIApplication.shared.beginIgnoringInteractionEvents()
-        SVProgressHUD.show(withStatus: "Uploading Photo")
+            if image.size.width > 750 {
+                let resizeFactor = 750 / image.size.width
+                
+                Conference.sharedInstance.coverPhoto = Images.resizeImage(image: image, width: resizeFactor * image.size.width, height: resizeFactor * image.size.height)!
+            }
+            
+            UIApplication.shared.beginIgnoringInteractionEvents()
+            SVProgressHUD.show(withStatus: "Uploading Photo")
             let pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(Conference.sharedInstance.coverPhoto!, 0.6)!)
             pictureFile!.saveInBackground { (succeeded: Bool, error: Error?) -> Void in
                 if error != nil {
@@ -320,10 +330,12 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
                 SVProgressHUD.dismiss()
                 if error != nil {
                     print("Network error")
-                    let banner = Banner(title: "Network Error", subtitle: "Image could not be saved", image: nil, backgroundColor: MAIN_COLOR!)
-                    banner.dismissesOnTap = true
-                    banner.show(duration: 1.0)
+                    SVProgressHUD.showError(withStatus: "Network Error")
                 }
+            }
+        } else{
+            print("Something went wrong")
+            SVProgressHUD.showError(withStatus: "An Error Occurred")
         }
     }
 }

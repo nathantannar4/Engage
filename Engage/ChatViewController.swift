@@ -13,6 +13,7 @@ import Parse
 import JSQMessagesViewController
 import Agrume
 import SVProgressHUD
+import Material
 
 class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -20,7 +21,7 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
     var isLoading: Bool = false
     
     var groupId: String = ""
-    
+    var groupName = ""
     var outgoingColor: UIColor?
     
     var users = [PFUser]()
@@ -39,6 +40,8 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        appMenuController.menu.views.first?.isHidden = true
+        prepareToolbar()
         
         if let user = PFUser.current() {
             self.senderId = user.objectId
@@ -57,6 +60,23 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
         isLoading = false
         self.loadMessages()
         Messages.clearMessageCounter(groupId: groupId);
+    }
+    
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = groupName
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let backButton = IconButton(image: Icon.cm.arrowBack)
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
+    }
+    
+    @objc private func handleBackButton() {
+        appToolbarController.pull(from: self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -349,7 +369,9 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
         
         let profileVC = PublicProfileViewController()
         profileVC.user = users[indexPath.row]
-        self.navigationController?.pushViewController(profileVC, animated: true)
+        let navVC = UINavigationController(rootViewController: profileVC)
+        navVC.navigationBar.barTintColor = MAIN_COLOR!
+        appToolbarController.show(navVC, sender: self)
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {

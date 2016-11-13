@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "Message-97.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Create New-100 4.56.39 PM.png",
+      "filename" : "Message-96.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "Message-98.png",
       "scale" : "3x"
     }
   ],

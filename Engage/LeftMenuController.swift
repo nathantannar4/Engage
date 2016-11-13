@@ -1,5 +1,5 @@
 //
-//  MenuController.swift
+//  LeftMenuController.swift
 //  Engage
 //
 //  Created by Tannar, Nathan on 2016-09-10.
@@ -10,8 +10,9 @@ import UIKit
 import Former
 import Parse
 import Agrume
+import Material
 
-final class SWMenuController: FormViewController {
+class LeftMenuController: FormViewController {
     
     var menuItems = [String]()
     let feedVC = FeedViewController()
@@ -27,16 +28,14 @@ final class SWMenuController: FormViewController {
         // Configure UI
         tableView.contentInset.top = 30
         tableView.separatorStyle = .none
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
+        
         tableView.backgroundColor = MAIN_COLOR
         if Engagement.sharedInstance.name != nil && Engagement.sharedInstance.subGroupName != nil{
             if Engagement.sharedInstance.subGroupName != "" {
                 if Engagement.sharedInstance.name! == "WESST" {
                     menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "\(Engagement.sharedInstance.subGroupName!)", "Profile", "Messages", "Events", "Engineering Competition", "AGM & Retreat", "Executives Meeting", "Switch Groups"]
                     if isWESST {
-                        menuItems.popLast()
+                        menuItems.removeLast()
                     }
                 } else {
                     menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "\(Engagement.sharedInstance.subGroupName!)", "Profile", "Messages", "Events", "Switch Groups"]
@@ -45,7 +44,7 @@ final class SWMenuController: FormViewController {
                 if Engagement.sharedInstance.name! == "WESST" {
                     menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "Subgroups", "Profile", "Messages", "Events", "Engineering Competition", "AGM & Retreat", "Executives Meeting", "Switch Groups"]
                     if isWESST {
-                        menuItems.popLast()
+                        menuItems.removeLast()
                     }
                 } else {
                     menuItems = ["Activity Feed", "\(Engagement.sharedInstance.name!)", "Subgroups", "Profile", "Messages", "Events", "Switch Groups"]
@@ -72,8 +71,14 @@ final class SWMenuController: FormViewController {
             $0.self.backgroundColor = MAIN_COLOR
             $0.titleLabel.textColor = UIColor.white
             $0.titleLabel.font = .boldSystemFont(ofSize: 16)
+            if text == "Switch Groups" {
+                $0.selectionStyle = .none
+            }
             }.configure {
                 $0.text = text
+                if text == "Switch Groups" {
+                    $0.rowHeight = 100.0
+                }
             }.onSelected { _ in
                 onSelected?()
         }
@@ -93,72 +98,78 @@ final class SWMenuController: FormViewController {
         for item in menuItems {
             menuRows.append(createMenu(item) { [weak self] in
                 self?.former.deselect(animated: true)
-                var navVC: UINavigationController!
                 switch self!.menuItems.index(of: item)! {
                 case 0:
-                    navVC = UINavigationController(rootViewController: self!.feedVC)
+                    appMenuController.menu.views.first?.isHidden = false
+                    self?.switchToView(target: self!.feedVC)
                 case 1:
-                    navVC = UINavigationController(rootViewController: self!.groupVC)
+                    appMenuController.menu.views.first?.isHidden = true
+                    self?.switchToView(target: self!.groupVC)
                 case 2:
-                    navVC = UINavigationController(rootViewController: self!.subGroupsVC)
+                    appMenuController.menu.views.first?.isHidden = true
+                    self?.switchToView(target: self!.subGroupsVC)
                 case 3:
-                    navVC = UINavigationController(rootViewController: self!.profileVC)
+                    appMenuController.menu.views.first?.isHidden = true
+                    self?.switchToView(target: self!.profileVC)
                 case 4:
-                    navVC = UINavigationController(rootViewController: self!.messagesVC)
+                    appMenuController.menu.views.first?.isHidden = false
+                    self?.switchToView(target: self!.messagesVC)
                 case 5:
+                    appMenuController.menu.views.first?.isHidden = false
                     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "calendarVC") as! CalendarViewController
-                    navVC = UINavigationController(rootViewController: vc)
+                    self?.switchToView(target: vc)
                 case 6:
                     if Engagement.sharedInstance.sponsor == true {
-                        navVC = UINavigationController(rootViewController: self!.sponsorsVC)
+                        appMenuController.menu.views.first?.isHidden = true
+                        self?.switchToView(target: self!.sponsorsVC)
                     } else {
+                        appMenuController.menu.views.first?.isHidden = true
                         if Engagement.sharedInstance.name == "WESST" {
                             let vc = ConferenceViewController()
                             vc.conference = "WEC"
-                            navVC = UINavigationController(rootViewController: vc)
+                            self?.switchToView(target: vc)
                         } else {
                             self?.dismiss(animated: true, completion: nil)
                         }
                     }
                 case 7:
+                    appMenuController.menu.views.first?.isHidden = true
                     if Engagement.sharedInstance.sponsor == true {
                         if Engagement.sharedInstance.name == "WESST" {
                             let vc = ConferenceViewController()
                             vc.conference = "WEC"
-                            navVC = UINavigationController(rootViewController: vc)
+                            self?.switchToView(target: vc)
                         } else {
                             self?.dismiss(animated: true, completion: nil)
                         }
                     } else {
                         let vc = ConferenceViewController()
                         vc.conference = "AGMR"
-                        navVC = UINavigationController(rootViewController: vc)
+                        self?.switchToView(target: vc)
                     }
+                    appMenuController.menu.views.first?.isHidden = true
                 case 8:
+                    appMenuController.menu.views.first?.isHidden = true
                     if Engagement.sharedInstance.sponsor == true {
                         let vc = ConferenceViewController()
                         vc.conference = "AGMR"
-                        navVC = UINavigationController(rootViewController: vc)
+                        self?.switchToView(target: vc)
                     } else {
                         let vc = ConferenceViewController()
                         vc.conference = "EM"
-                        navVC = UINavigationController(rootViewController: vc)
+                        self?.switchToView(target: vc)
                     }
                 case 9:
+                    appMenuController.menu.views.first?.isHidden = true
                     if Engagement.sharedInstance.sponsor == true {
                         let vc = ConferenceViewController()
                         vc.conference = "EM"
-                        navVC = UINavigationController(rootViewController: vc)
+                        self?.switchToView(target: vc)
                     } else {
                         self?.dismiss(animated: true, completion: nil)
                     }
                 default:
                     self?.dismiss(animated: true, completion: nil)
-                }
-                if navVC != nil {
-                    navVC.navigationBar.barTintColor = MAIN_COLOR!
-                    let segue = SWRevealViewControllerSeguePushController(identifier: item, source: self!, destination: navVC)
-                    segue.perform()
                 }
             })
         }
@@ -168,5 +179,17 @@ final class SWMenuController: FormViewController {
         
         self.former.append(sectionFormer: menuSection)
         self.former.reload()
+    }
+    
+    internal func switchToView(target: UIViewController) {
+        if appToolbarController.rootViewController != target {
+            appToolbarController.transition(to: target, duration: 0.01, options: .curveEaseOut, animations: nil , completion: closeNavigationDrawer)
+        } else {
+            closeNavigationDrawer(result: true)
+        }
+    }
+    
+    internal func closeNavigationDrawer(result: Bool) {
+        navigationDrawerController?.closeLeftView()
     }
 }

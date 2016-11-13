@@ -9,6 +9,7 @@
 import UIKit
 import Former
 import Parse
+import Material
 
 final class CreateSimpleEventViewController: FormViewController, SelectMultipleViewControllerDelegate {
     
@@ -21,8 +22,8 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         title = "New Event"
         tableView.contentInset.top = 10
         tableView.contentInset.bottom = 50
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createButtonPressed))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(createButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         
         configure()
     }

@@ -12,6 +12,7 @@ import Former
 import Agrume
 import Parse
 import SVProgressHUD
+import Material
 
 class TableFunctions {
     
@@ -43,13 +44,16 @@ class TableFunctions {
         }
     }
     
-    class func createFeedCellPhoto(user: PFUser, post: PFObject, nav: UINavigationController) -> RowFormer {
+    class func createFeedCellPhoto(user: PFUser, post: PFObject, view: UIViewController) -> RowFormer {
         return CustomRowFormer<FeedCellPhoto>(instantiateType: .Nib(nibName: "FeedCellPhoto")) {
-            if post[PF_POST_TO_OBJECT] != nil {
-                $0.username.text = "\(user.value(forKey: PF_USER_FULLNAME) as! String) >> \(nav.title!)"
+            if post[PF_POST_TO_USER] != nil {
+                $0.username.text = "\(user.value(forKey: PF_USER_FULLNAME) as! String) >> \((post[PF_POST_TO_USER] as! PFUser).value(forKey: PF_USER_FULLNAME) as! String)"
+            } else if post[PF_POST_TO_OBJECT] != nil {
+                $0.username.text = "\(user.value(forKey: PF_USER_FULLNAME) as! String) >> \((post[PF_POST_TO_OBJECT] as! PFObject).value(forKey: PF_SUBGROUP_NAME) as! String)"
             } else {
                 $0.username.text = user.value(forKey: PF_USER_FULLNAME) as? String
             }
+
             $0.info.text = post[PF_POST_INFO] as? String
             $0.date.text = Utilities.dateToString(time: post.createdAt! as NSDate)
             if post[PF_POST_REPLIES] as! Int == 1 {
@@ -72,11 +76,11 @@ class TableFunctions {
                 let detailVC = PostDetailViewController()
                 detailVC.post = post
                 detailVC.postUser = post[PF_POST_USER] as? PFUser
-                nav.pushViewController(detailVC, animated: true)
+                appToolbarController.push(from: view, to: detailVC)
         }
     }
     
-    class func createFeedCell(user: PFUser, post: PFObject, nav: UINavigationController) -> RowFormer {
+    class func createFeedCell(user: PFUser, post: PFObject, view: UIViewController) -> RowFormer {
         return CustomRowFormer<FeedCell>(instantiateType: .Nib(nibName: "FeedCell")) {
             if post[PF_POST_TO_USER] != nil {
                 $0.username.text = "\(user.value(forKey: PF_USER_FULLNAME) as! String) >> \((post[PF_POST_TO_USER] as! PFUser).value(forKey: PF_USER_FULLNAME) as! String)"
@@ -105,7 +109,7 @@ class TableFunctions {
                 let detailVC = PostDetailViewController()
                 detailVC.post = post
                 detailVC.postUser = post[PF_POST_USER] as? PFUser
-                nav.pushViewController(detailVC, animated: true)
+                appToolbarController.push(from: view, to: detailVC)
         }
     }
 
