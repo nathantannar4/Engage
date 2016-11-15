@@ -28,6 +28,7 @@ class LeftMenuController: FormViewController {
         // Configure UI
         tableView.contentInset.top = 30
         tableView.separatorStyle = .none
+        tableView.bounces = false
         
         tableView.backgroundColor = MAIN_COLOR
         if Engagement.sharedInstance.name != nil && Engagement.sharedInstance.subGroupName != nil{
@@ -70,7 +71,7 @@ class LeftMenuController: FormViewController {
             //$0.selectionStyle = .
             $0.self.backgroundColor = MAIN_COLOR
             $0.titleLabel.textColor = UIColor.white
-            $0.titleLabel.font = .boldSystemFont(ofSize: 16)
+            $0.titleLabel.font = RobotoFont.bold(with: 16.0)
             if text == "Switch Groups" {
                 $0.selectionStyle = .none
             }
@@ -91,7 +92,7 @@ class LeftMenuController: FormViewController {
             $0.selectionStyle = .none
             $0.self.backgroundColor = MAIN_COLOR
             $0.titleLabel.textColor = UIColor.white
-            $0.titleLabel.font = .boldSystemFont(ofSize: 20)
+            $0.titleLabel.font = RobotoFont.medium(with: 20.0)
             }.configure {
                 $0.text = "Menu"
         })

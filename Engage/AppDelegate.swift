@@ -69,11 +69,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     internal func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        UIApplication.shared.applicationIconBadgeNumber += 1
-        let notificationMessage =  userInfo["alert"] as! String
-        Utilities.showBanner(title: "", subtitle: notificationMessage, duration: 2.0)
-        print("Recieved Remote Notification")
-        print(userInfo)
+        if let data = userInfo["aps"] {
+            let notificationMessage = (data as AnyObject).value(forKey: "alert") as? String
+            if  notificationMessage != nil {
+                print("Recieved Remote Notification: \(notificationMessage!)")
+                let currentBadgeNumber: Int = UIApplication.shared.applicationIconBadgeNumber
+                UIApplication.shared.applicationIconBadgeNumber = currentBadgeNumber + 1
+                Utilities.showBanner(title: notificationMessage!, subtitle: "", duration: 2.0)
+            } else {
+                print("Notification was nil")
+            }
+        } else {
+            print("Data was nil")
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -92,7 +100,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func applicationWillTerminate(_ application: UIApplication) {

@@ -8,15 +8,17 @@
 
 import UIKit
 import Material
+import Former
 
 class AppMenuController: MenuController, UITextViewDelegate {
+    
     private let baseSize = CGSize(width: 56, height: 56)
     private let bottomInset: CGFloat = 24
     private let rightInset: CGFloat = 24
     
     open override func prepare() {
         super.prepare()
-        //view.backgroundColor = Color.grey.lighten5
+        
         prepareMenu()
     }
     

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import Contacts
 import CoreLocation
 import AddressBookUI
 

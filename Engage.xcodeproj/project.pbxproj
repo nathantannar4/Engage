@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3803965C1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803965B1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift */; };
+		3810BB081DDAE2BF000198D5 /* DelegatePackageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3810BB071DDAE2BF000198D5 /* DelegatePackageViewController.swift */; };
+		3810BB0A1DDAE2C6000198D5 /* DelegatesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3810BB091DDAE2C6000198D5 /* DelegatesViewController.swift */; };
 		381C02F41DC1909F00831EE0 /* WESST-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 381C02F31DC1909F00831EE0 /* WESST-Logo.png */; };
 		381D03271DA20D6400B270C6 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03241DA20D6400B270C6 /* ProfileViewController.swift */; };
 		381D03281DA20D6400B270C6 /* PublicProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03251DA20D6400B270C6 /* PublicProfileViewController.swift */; };
@@ -64,6 +66,7 @@
 		381D03991DA34A1800B270C6 /* UserListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03941DA34A1800B270C6 /* UserListViewController.swift */; };
 		381D039C1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D039B1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift */; };
 		383E60721DA811220033012B /* TableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383E60711DA811220033012B /* TableFunctions.swift */; };
+		384C42441DD93536003CB577 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384C42431DD93536003CB577 /* Device.swift */; };
 		3874CA251D9E26A500C014F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CA241D9E26A500C014F3 /* AppDelegate.swift */; };
 		3874CA271D9E26A500C014F3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CA261D9E26A500C014F3 /* LoginViewController.swift */; };
 		3874CA2A1D9E26A500C014F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3874CA281D9E26A500C014F3 /* Main.storyboard */; };
@@ -173,6 +176,8 @@
 		1B335058B75F5D766BE032F1 /* Pods-Engage.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Engage.release.xcconfig"; path = "Pods/Target Support Files/Pods-Engage/Pods-Engage.release.xcconfig"; sourceTree = "<group>"; };
 		3803965B1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminFunctionsViewController.swift; sourceTree = "<group>"; };
 		380396AC1DD3FF9B00CE3E9C /* HCPSDKforiOSAssistant.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = HCPSDKforiOSAssistant.app; path = ../HCPSDKforiOSAssistant.app; sourceTree = "<group>"; };
+		3810BB071DDAE2BF000198D5 /* DelegatePackageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatePackageViewController.swift; sourceTree = "<group>"; };
+		3810BB091DDAE2C6000198D5 /* DelegatesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatesViewController.swift; sourceTree = "<group>"; };
 		381C02F31DC1909F00831EE0 /* WESST-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "WESST-Logo.png"; sourceTree = "<group>"; };
 		381D03241DA20D6400B270C6 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		381D03251DA20D6400B270C6 /* PublicProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicProfileViewController.swift; sourceTree = "<group>"; };
@@ -230,6 +235,7 @@
 		381D03941DA34A1800B270C6 /* UserListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListViewController.swift; sourceTree = "<group>"; };
 		381D039B1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngagementGroupDetailsViewController.swift; sourceTree = "<group>"; };
 		383E60711DA811220033012B /* TableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableFunctions.swift; sourceTree = "<group>"; };
+		384C42431DD93536003CB577 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		3874CA211D9E26A500C014F3 /* Engage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Engage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3874CA241D9E26A500C014F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3874CA261D9E26A500C014F3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -552,6 +558,7 @@
 				3874CA861DA0604400C014F3 /* Utilities.swift */,
 				381D032B1DA2155A00B270C6 /* Messages.swift */,
 				381D032C1DA2155A00B270C6 /* Camera.swift */,
+				384C42431DD93536003CB577 /* Device.swift */,
 			);
 			name = "Class Functins";
 			sourceTree = "<group>";
@@ -669,6 +676,8 @@
 			children = (
 				38CB5DD41DAC336F00E71612 /* Conference.swift */,
 				38CB5DD51DAC336F00E71612 /* ConferenceViewController.swift */,
+				3810BB071DDAE2BF000198D5 /* DelegatePackageViewController.swift */,
+				3810BB091DDAE2C6000198D5 /* DelegatesViewController.swift */,
 				38CB5DD61DAC336F00E71612 /* EditConferenceViewController.swift */,
 			);
 			name = Conference;
@@ -896,6 +905,7 @@
 				38AFE8771DA101C700B52032 /* Post.swift in Sources */,
 				3874CAB81DA064AA00C014F3 /* ProfileLabelCell.swift in Sources */,
 				389036161DA365F200DCF82C /* AdvancedEvent.swift in Sources */,
+				384C42441DD93536003CB577 /* Device.swift in Sources */,
 				389036171DA365F200DCF82C /* CreateSimpleEventViewController.swift in Sources */,
 				381D03991DA34A1800B270C6 /* UserListViewController.swift in Sources */,
 				381D03981DA34A1800B270C6 /* EditSubGroupViewController.swift in Sources */,
@@ -917,6 +927,7 @@
 				3874CA871DA0604400C014F3 /* Utilities.swift in Sources */,
 				3874CAAC1DA064AA00C014F3 /* ImageCell.swift in Sources */,
 				381D03281DA20D6400B270C6 /* PublicProfileViewController.swift in Sources */,
+				3810BB081DDAE2BF000198D5 /* DelegatePackageViewController.swift in Sources */,
 				381D038C1DA2F75000B270C6 /* CVWeekdaySymbolType.swift in Sources */,
 				3874CA7D1D9F93C500C014F3 /* RegisterViewController.swift in Sources */,
 				381D03431DA2222A00B270C6 /* SelectSingleFromSubGroupViewController.swift in Sources */,
@@ -993,6 +1004,7 @@
 				389036191DA365F200DCF82C /* EditEventViewController.swift in Sources */,
 				3874CA781D9F882800C014F3 /* LicensingItem.swift in Sources */,
 				38AFE8791DA101C700B52032 /* PostDetailViewController.swift in Sources */,
+				3810BB0A1DDAE2C6000198D5 /* DelegatesViewController.swift in Sources */,
 				381D03971DA34A1800B270C6 /* CreateSubGroupViewController.swift in Sources */,
 				381D03511DA22F4200B270C6 /* LeftMenuController.swift in Sources */,
 				381D034C1DA22A0F00B270C6 /* CalendarViewController.swift in Sources */,
@@ -1121,7 +1133,7 @@
 			baseConfigurationReference = D078A42BFB98078E2B1EDE42 /* Pods-Engage.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = WESSTAppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Engage/Engage.entitlements;
@@ -1129,7 +1141,7 @@
 				INFOPLIST_FILE = Engage/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.EngageNewUI;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.WESST;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1142,7 +1154,7 @@
 			baseConfigurationReference = 1B335058B75F5D766BE032F1 /* Pods-Engage.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = WESSTAppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Engage/Engage.entitlements;
@@ -1150,7 +1162,7 @@
 				INFOPLIST_FILE = Engage/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.EngageNewUI;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.WESST;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

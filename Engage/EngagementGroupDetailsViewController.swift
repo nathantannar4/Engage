@@ -25,7 +25,8 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+
         getPositions()
         configure()
     }

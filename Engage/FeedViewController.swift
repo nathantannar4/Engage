@@ -21,10 +21,11 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     internal var sendButtonItem: MenuItem!
     internal var posts = [PFObject]()
     internal var postImages = [String: UIImage]()
+    internal var menuOpen = false
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        
+        SVProgressHUD.dismiss()
         self.tableView.emptyDataSetSource = self;
         self.tableView.emptyDataSetDelegate = self
         self.tableView.backgroundColor = Color.grey.lighten3
@@ -33,6 +34,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         self.tableView.contentInset.bottom = 100
         self.tableView.estimatedRowHeight = 180
         self.refreshControl = UIRefreshControl()
+        self.refreshControl?.tintColor = MAIN_COLOR
         self.refreshControl?.addTarget(self, action: #selector(FeedViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(self.refreshControl!)
 
@@ -86,22 +88,36 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let content = self.posts[indexPath.row].value(forKey: PF_POST_INFO) as! String
-        var height: CGFloat = 20.0
+        let contentCount = content.characters.count
+        var height: CGFloat = 180
         if (self.posts[indexPath.row].value(forKey: PF_POST_HAS_IMAGE) as! Bool) {
-            height += 453.0
-        } else {
-            height += 153.0
+            height += 210
         }
-        if content.characters.count > 45 {
-            height += 20.0
-            if content.characters.count > 90 {
-                height += 20.0
-                if content.characters.count > 135 {
-                    height += 20.0
-                }
+        if UIDevice.current.modelName == "iPhone 6 Plus" || UIDevice.current.modelName == "iPhone 6s Plus" || UIDevice.current.modelName == "iPhone 7 Plus" {
+            // 5.5 Inch Screen
+            var count = 50
+            while count < contentCount {
+                height += 20
+                count += 50
             }
+            return height
+        } else if UIDevice.current.modelName == "iPhone 6" || UIDevice.current.modelName == "iPhone 6s" || UIDevice.current.modelName == "iPhone 7" || UIDevice.current.modelName == "i386" || UIDevice.current.modelName == "x86_64" {
+            // 4.7 Inch Screen & Simulator
+            var count = 45
+            while count < contentCount {
+                height += 20
+                count += 45
+            }
+            return height
+        } else {
+            // 4 Inch Screen
+            var count = 35
+            while count < contentCount {
+                height += 20
+                count += 35
+            }
+            return height
         }
-        return height
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -420,6 +436,19 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         guard let mc = menuController as? AppMenuController else {
             return
         }
+        if menuOpen {
+            mc.menu.views.first?.animate(animation: Motion.rotate(angle: 0))
+            mc.menu.views.first?.backgroundColor = UIColor.flatRed()
+            
+        } else {
+            mc.menu.views.first?.animate(animation: Motion.rotate(angle: 45))
+            mc.menu.views.first?.backgroundColor = MAIN_COLOR
+        }
+        
+        /*
+        guard let mc = menuController as? AppMenuController else {
+            return
+        }
         
         if mc.menu.isOpened {
             print("closeMenu")
@@ -436,6 +465,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
                 (view as? MenuItem)?.hideTitleLabel()
             }
         }
+        */
     }
     
     private func prepareAddButton() {
@@ -460,21 +490,6 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         
         mc.menu.delegate = self
         mc.menu.views = [addButton, sendButtonItem]
-    }
-    
-    func menu(menu: Menu, tappedAt point: CGPoint, isOutside: Bool) {
-        guard isOutside else {
-            return
-        }
-        
-        guard let mc = menuController as? AppMenuController else {
-            print("isMc")
-            return
-        }
-        
-        mc.closeMenu { (view) in
-            (view as? MenuItem)?.hideTitleLabel()
-        }
     }
 }
 

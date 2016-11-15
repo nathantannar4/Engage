@@ -12,6 +12,7 @@ import Parse
 class PushNotication {
     
     class func parsePushUserAssign() {
+        UIApplication.shared.applicationIconBadgeNumber = 0
         let installation = PFInstallation.current()!
         installation[PF_INSTALLATION_USER] = PFUser.current()
         installation.saveInBackground(block: { (success, error) in
@@ -22,6 +23,7 @@ class PushNotication {
     }
     
     class func parsePushUserResign() {
+        UIApplication.shared.applicationIconBadgeNumber = 0
         let installation = PFInstallation.current()!
         installation.remove(forKey: PF_INSTALLATION_USER)
         installation.saveInBackground { (succeeded: Bool, error: Error?) -> Void in

@@ -93,6 +93,7 @@ class ConferenceViewController: FormViewController  {
                 positionIDs.append("")
             }
         }
+        print(positionIDs)
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
@@ -220,7 +221,7 @@ class ConferenceViewController: FormViewController  {
         }
         
         self.former.append(sectionFormer: SectionFormer(rowFormer: onlyImageRow, infoRow, hostSchoolRow, locationRow, timeRow, urlRow))
-        if conference == "WEC" {
+        if conference == "WECs" {
             self.former.insert(rowFormer: delegatePackageRow, below: urlRow)
         }
         loadOC()
@@ -230,7 +231,7 @@ class ConferenceViewController: FormViewController  {
         
         var members = [RowFormer]()
         let memberQuery = PFUser.query()
-        memberQuery!.whereKey(PF_USER_OBJECTID, containedIn: Engagement.sharedInstance.members)
+        memberQuery!.whereKey(PF_USER_OBJECTID, containedIn: self.positionIDs)
         memberQuery!.addAscendingOrder(PF_USER_FULLNAME)
         memberQuery!.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
             if error == nil {

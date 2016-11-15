@@ -67,7 +67,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
         
         let pushSendRow = createMenu("Send Push") { [weak self] in
             self?.former.deselect(animated: true)
-            if (self?.pushNotificationText.characters.count)! > 10 {
+            if (self?.pushNotificationText.characters.count)! > 1 && (self?.pushNotificationText.characters.count)! <= 140 {
                 let actionSheetController: UIAlertController = UIAlertController(title: "Send Push", message: "Select your audience", preferredStyle: .actionSheet)
                 actionSheetController.view.tintColor = MAIN_COLOR
                 
@@ -115,7 +115,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
                 //Present the AlertController
                 self?.present(actionSheetController, animated: true, completion: nil)
             } else {
-                SVProgressHUD.showError(withStatus: "To short of a notification")
+                SVProgressHUD.showError(withStatus: "Notifiation should be under 140 characters")
             }
         }
         
@@ -167,9 +167,58 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
             self?.present(actionSheetController, animated: true, completion: nil)
         }
         
-        self.former.append(sectionFormer: SectionFormer(rowFormer: pushRow, pushSendRow).set(headerViewFormer: TableFunctions.createHeader(text: "Push Notifications")))
+        self.former.append(sectionFormer: SectionFormer(rowFormer: pushRow, pushSendRow).set(headerViewFormer: TableFunctions.createHeader(text: "Announcement")))
         self.former.append(sectionFormer: SectionFormer(rowFormer: emailRow).set(headerViewFormer: TableFunctions.createHeader(text: "Email Notifications")))
-        self.former.reload()
+        
+        if self.userIds.count != 0 {
+            let exportRow = createMenu("Email Data") { [weak self] in
+                self?.former.deselect(animated: true)
+                SVProgressHUD.show(withStatus: "Loading Data")
+                let exportQuery = PFQuery(className: "WESST_WEC_Delegates")
+                exportQuery.includeKey("user")
+                exportQuery.order(byAscending: "school")
+                exportQuery.findObjectsInBackground(block: { (objects: [PFObject]?, error: Error?) in
+                    if error == nil {
+                        var exportString = ""
+                        if let objects = objects {
+                            for object in objects {
+                                let user = object.object(forKey: "user") as! PFUser
+                                exportString.append((object.value(forKey: "school") as! String) + " | ")
+                                exportString.append((user.value(forKey: PF_USER_FULLNAME) as! String) + " ")
+                                exportString.append((user.value(forKey: PF_USER_EMAIL) as! String) + " ")
+                                /*
+                                for key in object.allKeys {
+                                    if key != "user" {
+                                        exportString.append("\(object.value(forKey: key)!) |")
+                                    }
+                                }
+                                */
+                                exportString.append("\n")
+                            }
+                        }
+                        SVProgressHUD.dismiss()
+                        let mailComposeViewController = MFMailComposeViewController()
+                        mailComposeViewController.navigationBar.tintColor = UIColor.white
+                        mailComposeViewController.navigationBar.shadowImage = UIImage()
+                        mailComposeViewController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+                        mailComposeViewController.mailComposeDelegate = self
+                        mailComposeViewController.setToRecipients([PFUser.current()!.value(forKey: PF_USER_EMAIL) as! String])
+                        mailComposeViewController.setMessageBody(exportString, isHTML: false)
+                        mailComposeViewController.setSubject("[Notification] \(Engagement.sharedInstance.name!)")
+                        mailComposeViewController.view.tintColor = MAIN_COLOR
+                        mailComposeViewController.navigationBar.barTintColor = MAIN_COLOR!
+                        if MFMailComposeViewController.canSendMail() {
+                            self?.present(mailComposeViewController, animated: true, completion: { UIApplication.shared.statusBarStyle = .lightContent })
+                        }
+                        
+                    } else {
+                        SVProgressHUD.showError(withStatus: "Network Error")
+                    }
+                })
+            }
+            
+            self.former.append(sectionFormer: SectionFormer(rowFormer: exportRow).set(headerViewFormer: TableFunctions.createHeader(text: "Export Members")))
+        }
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
@@ -201,10 +250,20 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
     }
     
     private func pushToUsers(id: String) {
-        PushNotication.sendPushNotificationMessage(id, text: self.pushNotificationText)
-        self.pushNotificationText = ""
-        self.former.removeAll()
-        configure()
+        //PushNotication.sendPushNotificationMessage(id, text: self.pushNotificationText)
+        let announcementObject = PFObject(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Announcements")
+        announcementObject[PF_POST_USER] = PFUser.current()!
+        announcementObject[PF_POST_INFO] = self.pushNotificationText
+        announcementObject.saveInBackground { (success: Bool, error: Error?) in
+            if success {
+                SVProgressHUD.showSuccess(withStatus: "Announcement Sent")
+                self.pushNotificationText = ""
+                self.former.removeAll()
+                self.configure()
+            } else {
+                SVProgressHUD.showError(withStatus: "Network Error")
+            }
+        }
     }
     
     func didSelectMultipleUsers(selectedUsers: [PFUser]!) {

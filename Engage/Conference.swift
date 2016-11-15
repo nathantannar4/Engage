@@ -39,7 +39,7 @@ final class Conference {
         info = ""
         name = ""
         password = ""
-        coverPhoto = nil
+        coverPhoto = UIImage()
         hostSchool = ""
         year = ""
         location = ""

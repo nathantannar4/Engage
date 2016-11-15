@@ -26,12 +26,14 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(closeButtonPressed))
-        let infoButton = UIBarButtonItem(image: UIImage(named: "Info")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(infoButtonPressed))
-        infoButton.tintColor = UIColor.white
-        let messageButton = UIBarButtonItem(image: UIImage(named: "Compose")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(messageButtonPressed))
-        messageButton.tintColor = UIColor.white
-        navigationItem.rightBarButtonItems = [messageButton, infoButton]
+        if user?.objectId! != PFUser.current()!.objectId! {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(closeButtonPressed))
+            let infoButton = UIBarButtonItem(image: UIImage(named: "Info")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(infoButtonPressed))
+            infoButton.tintColor = UIColor.white
+            let messageButton = UIBarButtonItem(image: UIImage(named: "Compose")?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(messageButtonPressed))
+            messageButton.tintColor = UIColor.white
+            navigationItem.rightBarButtonItems = [messageButton, infoButton]
+        }
     
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         

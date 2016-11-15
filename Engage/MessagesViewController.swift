@@ -191,7 +191,7 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
             }
         } else {
             print("openMenu")
-            addButton.backgroundColor = Color.red.base
+            addButton.backgroundColor = UIColor.flatRed()
             addButton.tintColor = UIColor.white
             mc.openMenu { (view) in
                 (view as? MenuItem)?.showTitleLabel()

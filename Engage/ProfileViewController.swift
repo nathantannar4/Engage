@@ -176,11 +176,12 @@ class ProfileViewController: FormViewController  {
         alert.addAction(cancelAction)
         
         let logout: UIAlertAction = UIAlertAction(title: "Logout", style: .default) { action -> Void in
-            self.present(alert, animated: true, completion: nil)
             PFUser.logOut()
             PushNotication.parsePushUserResign()
             self.dismiss(animated: true, completion: nil)
         }
         alert.addAction(logout)
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }
