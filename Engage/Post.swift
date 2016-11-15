@@ -105,6 +105,7 @@ final class Post {
             newPost[PF_POST_COMMENT_DATES] = []
             newPost[PF_POST_COMMENT_USERS] = []
             newPost[PF_POST_REPLIES] = 0
+            newPost[PF_POST_LIKES] = []
             newPost[PF_POST_USER] = PFUser.current()
             if object != nil {
                 if let _ = object as? PFUser {
@@ -116,9 +117,9 @@ final class Post {
             
             if Post.new.hasImage == true {
                 
-                if Post.new.image!.size.width > 300 {
+                if Post.new.image!.size.width > 500 {
                     
-                    let resizeFactor = 300 / Post.new.image!.size.width
+                    let resizeFactor = 500 / Post.new.image!.size.width
                     
                     Post.new.image = Images.resizeImage(image: Post.new.image!, width: resizeFactor * Post.new.image!.size.width, height: resizeFactor * Post.new.image!.size.height)!
                 }

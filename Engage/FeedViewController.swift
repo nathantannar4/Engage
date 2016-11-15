@@ -12,9 +12,8 @@ import DZNEmptyDataSet
 import SVProgressHUD
 import Parse
 import ParseUI
-import Former
 
-class FeedViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, MenuDelegate {
+class FeedViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, MenuDelegate, UITextFieldDelegate {
     
     internal var querySkip = 0
     internal var addButton: FabButton!
@@ -22,32 +21,38 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     internal var posts = [PFObject]()
     internal var postImages = [String: UIImage]()
     internal var menuOpen = false
+    internal var newPostView = UIView()
+    internal var textField = UITextField()
+    internal var postImageView = UIImageView()
+    internal var addImageButton = UIButton()
     
-    open override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         SVProgressHUD.dismiss()
-        self.tableView.emptyDataSetSource = self;
-        self.tableView.emptyDataSetDelegate = self
-        self.tableView.backgroundColor = Color.grey.lighten3
-        self.tableView.separatorStyle = .none
-        self.tableView.contentInset.top = 10
-        self.tableView.contentInset.bottom = 100
-        self.tableView.estimatedRowHeight = 180
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl?.tintColor = MAIN_COLOR
-        self.refreshControl?.addTarget(self, action: #selector(FeedViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
-        self.tableView.addSubview(self.refreshControl!)
-
+        
+        tableView.emptyDataSetSource = self;
+        tableView.emptyDataSetDelegate = self
+        tableView.backgroundColor = Color.grey.lighten3
+        tableView.separatorStyle = .none
+        tableView.contentInset.bottom = 100
+        tableView.estimatedRowHeight = 180
+        refreshControl = UIRefreshControl()
+        refreshControl?.tintColor = MAIN_COLOR
+        refreshControl?.addTarget(self, action: #selector(FeedViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        tableView.addSubview(self.refreshControl!)
         loadPosts()
     }
     
-    open override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appMenuController.menu.views.first?.isHidden = true
+        appMenuController.menu.views.first?.isHidden = false
         prepareToolbar()
-        prepareAddButton()
-        prepareSendButton()
-        prepareMenuController()
+        
+        if !menuOpen {
+            prepareAddButton()
+            prepareSendButton()
+            prepareMenuController()
+        }
     }
     
     func handleRefresh(_ refreshControl: UIRefreshControl) {
@@ -76,6 +81,19 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     
     func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
         return Color.grey.lighten3
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if menuOpen {
+            return 150
+        } else {
+            return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        newPostView.isHidden = false
+        return newPostView
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -121,6 +139,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        view.endEditing(true)
         let offset = scrollView.contentOffset
         let bounds = scrollView.bounds
         let size = scrollView.contentSize
@@ -407,7 +426,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     
     // MARK: - UIImagePickerDelegate
     
-    private func presentImagePicker() {
+    @objc private func presentImagePicker() {
         let picker = UIImagePickerController()
         picker.navigationBar.barTintColor = MAIN_COLOR
         picker.delegate = self
@@ -421,9 +440,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             Post.new.image = image
             Post.new.hasImage = true
-            //imageRow.cellUpdate {
-            //    $0.iconView.image = image
-            //}
+            postImageView.image = image
         } else{
             print("Something went wrong")
             SVProgressHUD.showError(withStatus: "An Error Occurred")
@@ -432,40 +449,79 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     
     // Menu Controller
     // Handle the menu toggle event.
-    internal func handleToggleMenu(button: Button) {
+    private func closeMenu() {
         guard let mc = menuController as? AppMenuController else {
             return
         }
+        menuOpen = false
+        mc.menu.views.first?.animate(animation: Motion.rotate(angle: 0))
+        mc.menu.views.first?.backgroundColor = MAIN_COLOR
+        mc.menu.close()
+        tableView.reloadData()
+    }
+    
+    private func openMenu() {
+        guard let mc = menuController as? AppMenuController else {
+            return
+        }
+        menuOpen = true
+        mc.menu.views.first?.animate(animation: Motion.rotate(angle: 45))
+        mc.menu.views.first?.backgroundColor = UIColor.flatRed()
+        mc.menu.open()
+        Post.new.clear()
+        prepareNewPostRow()
+        tableView.reloadData()
+    }
+    
+    @objc private func handleToggleMenu(button: Button) {
         if menuOpen {
-            mc.menu.views.first?.animate(animation: Motion.rotate(angle: 0))
-            mc.menu.views.first?.backgroundColor = UIColor.flatRed()
+            closeMenu()
             
         } else {
-            mc.menu.views.first?.animate(animation: Motion.rotate(angle: 45))
-            mc.menu.views.first?.backgroundColor = MAIN_COLOR
+            openMenu()
         }
+    }
+    
+    @objc private func handleSendButton(button: Button) {
+        if textField.text!.isNotEmpty {
+            Post.new.info = textField.text
+            Post.new.createPost(object: nil, completion: {
+                self.closeMenu()
+                self.handleRefresh(self.refreshControl!)
+            })
+        }
+    }
+    
+    private func prepareNewPostRow() {
+        newPostView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 130)
+        newPostView.backgroundColor = UIColor.white
         
-        /*
-        guard let mc = menuController as? AppMenuController else {
-            return
-        }
+        textField.frame = CGRect(x: 5, y: 0, width: self.view.frame.width - 5, height: 60)
+        textField.placeholder = "What's new \(Profile.sharedInstance.name!)?"
+        textField.font = RobotoFont.regular(with: 15.0)
+        textField.text = ""
+        addToolBar(textField: textField)
+        newPostView.addSubview(textField)
         
-        if mc.menu.isOpened {
-            print("closeMenu")
-            addButton.backgroundColor = MAIN_COLOR
-            addButton.tintColor = UIColor.white
-            mc.closeMenu { (view) in
-                (view as? MenuItem)?.hideTitleLabel()
-            }
-        } else {
-            print("openMenu")
-            addButton.backgroundColor = Color.red.base
-            addButton.tintColor = UIColor.white
-            mc.openMenu { (view) in
-                (view as? MenuItem)?.hideTitleLabel()
-            }
-        }
-        */
+        postImageView.frame = CGRect(x: 5, y: 65, width: 60, height: 60)
+        postImageView.image = UIImage()
+        postImageView.layer.borderWidth = 1
+        postImageView.layer.masksToBounds = true
+        postImageView.backgroundColor = MAIN_COLOR
+        postImageView.layer.borderColor = MAIN_COLOR?.cgColor
+        postImageView.layer.cornerRadius = postImageView.frame.height/2
+        newPostView.addSubview(postImageView)
+        
+        addImageButton.frame = CGRect(x: 70, y: 65, width: 180, height: 60)
+        let buttonTitle = NSAttributedString(string: "Add Image to Post", attributes: [NSForegroundColorAttributeName : MAIN_COLOR! as UIColor, NSFontAttributeName: RobotoFont.medium(with: 15)])
+        addImageButton.setAttributedTitle(buttonTitle, for: UIControlState.normal)
+        addImageButton.setTitleColor(MAIN_COLOR, for: UIControlState.normal)
+        addImageButton.addTarget(self, action: #selector(presentImagePicker), for: .touchUpInside)
+        newPostView.addSubview(addImageButton)
+        
+        let divider = UILabel(frame: CGRect(x: 0, y: 145, width: self.view.frame.width, height: 5))
+        divider.backgroundColor = MAIN_COLOR
+        newPostView.addSubview(divider)
     }
     
     private func prepareAddButton() {
@@ -479,8 +535,9 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         sendButtonItem = MenuItem()
         sendButtonItem.tintColor = UIColor.white
         sendButtonItem.button.image = Icon.check
-        sendButtonItem.button.backgroundColor = Color.green.base
+        sendButtonItem.button.backgroundColor = UIColor.flatGreen()
         sendButtonItem.button.depthPreset = .depth1
+        sendButtonItem.button.addTarget(self, action: #selector(handleSendButton), for: .touchUpInside)
     }
     
     private func prepareMenuController() {
@@ -491,14 +548,29 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         mc.menu.delegate = self
         mc.menu.views = [addButton, sendButtonItem]
     }
-}
-
-extension String {
-    func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName: font], context: nil)
+    
+    func addToolBar(textField: UITextField){
+        let toolBar = UIToolbar()
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = MAIN_COLOR
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.done, target: self, action: #selector(donePressed))
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(cancelPressed))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        toolBar.sizeToFit()
         
-        return boundingBox.height
+        textField.delegate = self
+        textField.inputAccessoryView = toolBar
+    }
+    func donePressed(){
+        view.endEditing(true)
+    }
+    func cancelPressed(){
+        view.endEditing(true)
+        closeMenu()
+        tableView.reloadData()
     }
 }
 

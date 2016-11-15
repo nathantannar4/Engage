@@ -250,13 +250,13 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
     }
     
     private func pushToUsers(id: String) {
-        //PushNotication.sendPushNotificationMessage(id, text: self.pushNotificationText)
         let announcementObject = PFObject(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Announcements")
         announcementObject[PF_POST_USER] = PFUser.current()!
         announcementObject[PF_POST_INFO] = self.pushNotificationText
         announcementObject.saveInBackground { (success: Bool, error: Error?) in
             if success {
                 SVProgressHUD.showSuccess(withStatus: "Announcement Sent")
+                PushNotication.sendPushNotificationMessage(id, text: self.pushNotificationText)
                 self.pushNotificationText = ""
                 self.former.removeAll()
                 self.configure()
