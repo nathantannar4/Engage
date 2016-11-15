@@ -47,7 +47,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
     }
     
     @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
+        appToolbarController.rotateLeft(from: self)
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in

@@ -17,7 +17,6 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     
     internal var querySkip = 0
     internal var addButton: FabButton!
-    internal var sendButtonItem: MenuItem!
     internal var posts = [PFObject]()
     internal var postImages = [String: UIImage]()
     internal var menuOpen = false
@@ -50,7 +49,6 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         
         if !menuOpen {
             prepareAddButton()
-            prepareSendButton()
             prepareMenuController()
         }
     }
@@ -119,7 +117,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
                 count += 50
             }
             return height
-        } else if UIDevice.current.modelName == "iPhone 6" || UIDevice.current.modelName == "iPhone 6s" || UIDevice.current.modelName == "iPhone 7" || UIDevice.current.modelName == "i386" || UIDevice.current.modelName == "x86_64" {
+        } else if UIDevice.current.modelName == "iPhone 6" || UIDevice.current.modelName == "iPhone 6s" || UIDevice.current.modelName == "iPhone 7" || UIDevice.current.modelName == "Simulator" {
             // 4.7 Inch Screen & Simulator
             var count = 45
             while count < contentCount {
@@ -187,6 +185,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        closeMenu()
         let vc = PostDetailViewController()
         vc.post = self.posts[indexPath.row]
         appToolbarController.push(from: self, to: vc)
@@ -464,7 +463,6 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         menuOpen = false
         mc.menu.views.first?.animate(animation: Motion.rotate(angle: 0))
         mc.menu.views.first?.backgroundColor = MAIN_COLOR
-        mc.menu.close()
         tableView.reloadData()
     }
     
@@ -490,8 +488,9 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         }
     }
     
-    @objc private func handleSendButton(button: Button) {
+    @objc private func handleSendButton() {
         if textField.text!.isNotEmpty {
+            view.endEditing(true)
             Post.new.info = textField.text
             Post.new.createPost(object: nil, completion: {
                 self.closeMenu()
@@ -539,22 +538,13 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         addButton.addTarget(self, action: #selector(handleToggleMenu), for: .touchUpInside)
     }
     
-    private func prepareSendButton() {
-        sendButtonItem = MenuItem()
-        sendButtonItem.tintColor = UIColor.white
-        sendButtonItem.button.image = Icon.check
-        sendButtonItem.button.backgroundColor = UIColor.flatGreen()
-        sendButtonItem.button.depthPreset = .depth1
-        sendButtonItem.button.addTarget(self, action: #selector(handleSendButton), for: .touchUpInside)
-    }
-    
     private func prepareMenuController() {
         guard let mc = menuController as? AppMenuController else {
             return
         }
         
         mc.menu.delegate = self
-        mc.menu.views = [addButton, sendButtonItem]
+        mc.menu.views = [addButton]
     }
     
     func addToolBar(textField: UITextField){
@@ -562,7 +552,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         toolBar.barStyle = UIBarStyle.default
         toolBar.isTranslucent = true
         toolBar.tintColor = MAIN_COLOR
-        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.done, target: self, action: #selector(donePressed))
+        let doneButton = UIBarButtonItem(title: "Post", style: UIBarButtonItemStyle.done, target: self, action: #selector(handleSendButton))
         let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(cancelPressed))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
         toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
@@ -572,13 +562,9 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         textField.delegate = self
         textField.inputAccessoryView = toolBar
     }
-    func donePressed(){
-        view.endEditing(true)
-    }
+    
     func cancelPressed(){
         view.endEditing(true)
-        closeMenu()
-        tableView.reloadData()
     }
 }
 

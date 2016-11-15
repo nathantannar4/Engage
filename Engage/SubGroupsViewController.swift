@@ -96,7 +96,7 @@ class SubGroupsViewController: FormViewController {
                         EngagementSubGroup.sharedInstance.clear()
                         EngagementSubGroup.sharedInstance.subgroup = subGroup
                         EngagementSubGroup.sharedInstance.unpack()
-                        appToolbarController.rotateRight(from: self!, to: SubGroupDetailViewController())
+                        appToolbarController.push(from: self!, to: SubGroupDetailViewController())
                     })
                 }
                 if Engagement.sharedInstance.subGroupName != "" {

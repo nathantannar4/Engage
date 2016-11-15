@@ -30,6 +30,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         
         // Setup UI and Table Properties
         tableView.contentInset.bottom = 120
+        tableView.separatorStyle = .none
         appMenuController.menu.views.first?.isHidden = false
         getPositions()
         configure()
@@ -64,7 +65,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
     }
     
     @objc private func handleBackButton() {
-        appToolbarController.rotateLeft(from: self)
+        appToolbarController.pull(from: self)
     }
     
     private func configure() {
@@ -251,7 +252,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             if admin == PFUser.current()?.objectId! {
                 let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
                     // Edit group if admin
-                    appToolbarController.push(from: self, to: EditSubGroupViewController())
+                    appToolbarController.rotateRight(from: self, to: EditSubGroupViewController())
                 }
                 actionSheetController.addAction(editAction)
                 isAdmin = true

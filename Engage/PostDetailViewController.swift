@@ -30,7 +30,6 @@ class PostDetailViewController: FormViewController, UITextFieldDelegate {
         
         prepareToolbar()
         appMenuController.menu.views.first?.isHidden = true
-        tableView.contentInset.top = 0
         tableView.contentInset.bottom = 100
         
         postUser = post?.object(forKey: "user") as? PFUser
@@ -160,11 +159,15 @@ class PostDetailViewController: FormViewController, UITextFieldDelegate {
             }.onSelected { (cell: CustomRowFormer<DetailPostCell>) in
                 self.former.deselect(animated: true)
                 if self.postUser?.objectId == PFUser.current()?.objectId {
-                    self.navigationController?.pushViewController(editVC, animated: true)
+                    let navVC = UINavigationController(rootViewController: editVC)
+                    navVC.navigationBar.barTintColor = MAIN_COLOR!
+                    appToolbarController.show(navVC, sender: self)
                 } else {
                     let profileVC = PublicProfileViewController()
                     profileVC.user = self.postUser
-                    self.navigationController?.pushViewController(profileVC, animated: true)
+                    let navVC = UINavigationController(rootViewController: profileVC)
+                    navVC.navigationBar.barTintColor = MAIN_COLOR!
+                    appToolbarController.show(navVC, sender: self)
                 }
         }
         

@@ -99,6 +99,7 @@ class LeftMenuController: FormViewController {
         for item in menuItems {
             menuRows.append(createMenu(item) { [weak self] in
                 self?.former.deselect(animated: true)
+                
                 switch self!.menuItems.index(of: item)! {
                 case 0:
                     appMenuController.menu.views.first?.isHidden = false

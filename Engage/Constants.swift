@@ -24,7 +24,7 @@ struct Constants {
 
 /* App Settings */
 var VERSION = "1.0.2"
-var isWESST = true
+var isWESST = false
 
 var appToolbarController = AppToolbarController()
 var appMenuController = AppMenuController()
