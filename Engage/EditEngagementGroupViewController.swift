@@ -50,7 +50,7 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
     }
     
     @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
+        appToolbarController.rotateLeft(from: self)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

@@ -46,7 +46,7 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
     }
     
     @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
+        appToolbarController.rotateLeft(from: self)
     }
     
     func saveButtonPressed(sender: AnyObject) {

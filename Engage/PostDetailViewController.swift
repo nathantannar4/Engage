@@ -13,7 +13,7 @@ import Agrume
 import SVProgressHUD
 import Material
 
-class PostDetailViewController: FormViewController {
+class PostDetailViewController: FormViewController, UITextFieldDelegate {
     
     var post: PFObject?
     var comments: [String]?
@@ -31,7 +31,7 @@ class PostDetailViewController: FormViewController {
         prepareToolbar()
         appMenuController.menu.views.first?.isHidden = true
         tableView.contentInset.top = 0
-        tableView.contentInset.bottom = 50
+        tableView.contentInset.bottom = 100
         
         postUser = post?.object(forKey: "user") as? PFUser
         
@@ -73,9 +73,7 @@ class PostDetailViewController: FormViewController {
         let backButton = IconButton(image: Icon.cm.arrowBack)
         backButton.tintColor = UIColor.white
         backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        let commentButton = IconButton(image: UIImage(named: "comment")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: UIColor.white)
-        commentButton.addTarget(self, action: #selector(addComment), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [commentButton])
+        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
     }
     
     @objc private func handleBackButton() {
@@ -97,12 +95,17 @@ class PostDetailViewController: FormViewController {
     @objc private func addComment() {
         
         if (Comment.new.comment != "" && Comment.new.comment != nil) {
+            view.endEditing(true)
             post?.add(Comment.new.comment!, forKey: "comments")
             post?.add(NSDate(), forKey: "commentsDate")
             post?.add(PFUser.current()!, forKey: "commentsUser")
             post?.incrementKey("replies")
             post?.saveInBackground(block: { (success: Bool, error: Error?) in
                 if error == nil {
+                    PushNotication.sendPushNotificationMessage(self.postUser!.objectId!, text: "\(Profile.sharedInstance.name!) commented on your post")
+                    for user in self.commentsUser! {
+                        PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(Profile.sharedInstance.name!) also commented on a post you replied to")
+                    }
                     self.commentStrings.append(Comment.new.comment!)
                     self.commentsDates.append("Now")
                     self.commentsUsernames.append((PFUser.current()?.value(forKey: "fullname") as? String)!)
@@ -116,8 +119,6 @@ class PostDetailViewController: FormViewController {
     }
     
     // MARK: Private
-    
-    private lazy var formerInputAccessoryView: FormerInputAccessoryView = FormerInputAccessoryView(former: self.former)
     
     private lazy var zeroRow: LabelRowFormer<ImageCell> = {
         
@@ -140,7 +141,7 @@ class PostDetailViewController: FormViewController {
             } else {
                 $0.username.text = self.postUser![PF_USER_FULLNAME] as? String
             }
-            $0.info.font = .systemFont(ofSize: 16)
+            $0.info.font = RobotoFont.regular(with: 15.0)
             $0.info.text = self.post![PF_POST_INFO] as? String
             $0.school.text =  ""
             $0.school.textColor = MAIN_COLOR
@@ -210,6 +211,7 @@ class PostDetailViewController: FormViewController {
                             editVC.image = UIImage(data: imageData)
                             var postImageRow = [LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
                                 $0.displayImage.image = UIImage(data:imageData)!
+                                $0.displayImage.contentMode = .scaleAspectFit
                                 }.configure {
                                     $0.rowHeight = 200
                                 }.onSelected({ (cell: LabelRowFormer<ImageCell>) in
@@ -228,7 +230,7 @@ class PostDetailViewController: FormViewController {
         
         let reportRow = LabelRowFormer<FormLabelCell>() {
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .systemFont(ofSize: 10)
+            $0.titleLabel.font = RobotoFont.regular(with: 10.0)
             }.configure {
                 $0.rowHeight = 30
                 $0.text = "Flag Post"
@@ -266,6 +268,7 @@ class PostDetailViewController: FormViewController {
                 $0.title = self.commentsUsernames[index]
                 $0.date = self.commentsDates[index]
                 $0.body = self.commentStrings[index]
+                $0.bodyLabel.font = RobotoFont.regular(with: 15.0)
                 $0.titleColor = MAIN_COLOR
                 }.configure {
                     $0.rowHeight = UITableViewAutomaticDimension
@@ -290,11 +293,11 @@ class PostDetailViewController: FormViewController {
             self.former.reload()
         }
         
-        let commentRow = TextViewRowFormer<FormTextViewCell>() { [weak self] in
+        let commentRow = TextFieldRowFormer<FormTextFieldCell>() { [weak self] in
             Comment.new.post = self!.post
-            $0.textView.textColor = .formerSubColor()
-            $0.textView.font = .systemFont(ofSize: 15)
-            $0.textView.inputAccessoryView = self?.formerInputAccessoryView
+            $0.textField.textColor = .formerSubColor()
+            $0.textField.font = RobotoFont.regular(with: 15.0)
+            self?.addToolBar(textField: $0.textField)
             }.configure {
                 $0.placeholder = "Add a comment"
                 $0.rowHeight = 75
@@ -308,6 +311,25 @@ class PostDetailViewController: FormViewController {
             self.former.append(sectionFormer: SectionFormer(rowFormer: commentRow))
             self.former.reload()
         }
+    }
+    
+    func addToolBar(textField: UITextField){
+        let toolBar = UIToolbar()
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = MAIN_COLOR
+        let doneButton = UIBarButtonItem(title: "Comment", style: UIBarButtonItemStyle.done, target: self, action: #selector(addComment))
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(cancelPressed))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        toolBar.sizeToFit()
+        
+        textField.delegate = self
+        textField.inputAccessoryView = toolBar
+    }
+    func cancelPressed(){
+        view.endEditing(true)
     }
 }
 

@@ -68,6 +68,17 @@ class AppToolbarController: ToolbarController {
         appToolbarController.transition(to: to, duration: 0.01, options: .curveEaseOut, animations: nil , completion: nil)
     }
     
+    func rotateRight(from: UIViewController, to: UIViewController) {
+        secondLastView = lastView
+        lastView = from
+        appToolbarController.transition(to: to, duration: 0.25, options: .transitionFlipFromRight, animations: nil , completion: nil)
+    }
+    
+    func rotateLeft(from: UIViewController) {
+        appToolbarController.transition(to: lastView, duration: 0.25, options: .transitionFlipFromLeft, animations: nil , completion: nil)
+        lastView = secondLastView
+    }
+    
     func pull(from: UIViewController) {
         appToolbarController.transition(to: lastView, duration: 0.01, options: .curveEaseOut, animations: nil , completion: nil)
         lastView = secondLastView

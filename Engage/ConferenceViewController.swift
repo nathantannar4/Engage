@@ -256,8 +256,9 @@ class ConferenceViewController: FormViewController  {
                                 }.onSelected { [weak self] _ in
                                     self?.former.deselect(animated: true)
                                     let profileVC = PublicProfileViewController()
-                                    profileVC.user = user
-                                    self?.navigationController?.pushViewController(profileVC, animated: true)
+                                    let navVC = UINavigationController(rootViewController: profileVC)
+                                    navVC.navigationBar.barTintColor = MAIN_COLOR!
+                                    appToolbarController.show(navVC, sender: self)
                                 })
                         }
                     }
@@ -286,7 +287,7 @@ class ConferenceViewController: FormViewController  {
         
         if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
             let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                appToolbarController.push(from: self, to: EditConferenceViewController())
+                appToolbarController.rotateRight(from: self, to: EditConferenceViewController())
             }
             actionSheetController.addAction(editAction)
             

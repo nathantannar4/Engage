@@ -160,7 +160,7 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
         
         if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
             let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                appToolbarController.push(from: self, to: EditEngagementGroupViewController())
+                appToolbarController.rotateRight(from: self, to: EditEngagementGroupViewController())
             }
             actionSheetController.addAction(editAction)
             

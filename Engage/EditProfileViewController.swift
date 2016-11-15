@@ -49,7 +49,7 @@ final class EditProfileViewController: FormViewController, UIImagePickerControll
     }
     
     @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
+        appToolbarController.rotateLeft(from: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

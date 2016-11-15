@@ -168,7 +168,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
         chatVC.hidesBottomBarWhenPushed = true
         chatVC.groupId = groupId
         chatVC.groupName = group[PF_GROUPS_NAME] as! String
-        appToolbarController.push(from: MessagesViewController(), to: chatVC)
+        appToolbarController.push(from: UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "messagesVC") as! MessagesViewController, to: chatVC)
     }
 }
 

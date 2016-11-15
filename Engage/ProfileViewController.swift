@@ -162,7 +162,7 @@ class ProfileViewController: FormViewController  {
     // MARK: - User actions
     
     func editButtonPressed() {
-        appToolbarController.push(from: self, to: EditProfileViewController())
+        appToolbarController.rotateRight(from: self, to: EditProfileViewController())
     }
     
     func logoutButtonPressed() {

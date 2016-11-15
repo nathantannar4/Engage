@@ -64,7 +64,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
     }
     
     @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
+        appToolbarController.rotateLeft(from: self)
     }
     
     private func configure() {

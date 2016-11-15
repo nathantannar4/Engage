@@ -281,6 +281,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         // Comment Button
         let commentButton = IconButton(image: UIImage(named: "comment")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: Color.gray)
         commentButton.titleColor = Color.gray
+        commentButton.isEnabled = false
         commentButton.setTitle(" \(postObject.value(forKey: PF_POST_REPLIES) as! Int)", for: .normal)
         
         // Bottom Bar
@@ -418,7 +419,14 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
             print("like \(sender.object.objectId!)")
             likes?.append(PFUser.current()!.objectId!)
             sender.object[PF_POST_LIKES] = likes
-            sender.object.saveInBackground()
+            sender.object.saveInBackground(block: { (success: Bool, error: Error?) in
+                if success {
+                    let user = sender.object.value(forKey: "user") as! PFUser
+                    PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(Profile.sharedInstance.name!) liked your post")
+                } else {
+                    SVProgressHUD.showError(withStatus: "Network Error")
+                }
+            })
             sender.tintColor = MAIN_COLOR
         }
         sender.setTitle(" \(likes!.count)", for: .normal)
