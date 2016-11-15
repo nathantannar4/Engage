@@ -170,7 +170,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
         self.former.append(sectionFormer: SectionFormer(rowFormer: pushRow, pushSendRow).set(headerViewFormer: TableFunctions.createHeader(text: "Announcement")))
         self.former.append(sectionFormer: SectionFormer(rowFormer: emailRow).set(headerViewFormer: TableFunctions.createHeader(text: "Email Notifications")))
         
-        if self.userIds.count != 0 {
+        if Conference.sharedInstance.name == "WEC" {
             let exportRow = createMenu("Email Data") { [weak self] in
                 self?.former.deselect(animated: true)
                 SVProgressHUD.show(withStatus: "Loading Data")

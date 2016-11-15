@@ -82,7 +82,7 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
     private lazy var imageRow: LabelRowFormer<ImageCell> = {
         LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
             $0.displayImage.image = self.image
-            let label = UILabel(frame: CGRect(x: 0, y: 150.0, width: $0.displayImage.frame.width / 5, height: 20.0))
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: $0.displayImage.frame.width, height: 20.0))
             label.backgroundColor = MAIN_COLOR
             label.textColor = UIColor.white
             label.font = RobotoFont.regular(with: 16.0)

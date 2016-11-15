@@ -36,7 +36,10 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
         let backButton = IconButton(image: Icon.cm.arrowBack)
         backButton.tintColor = UIColor.white
         backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
+        let newButton = IconButton(image: Icon.cm.add)
+        newButton.tintColor = UIColor.white
+        newButton.addTarget(self, action: #selector(actionNew), for: .touchUpInside)
+        appToolbarController.prepareToolbarCustom(left: [backButton], right: [newButton])
     }
     
     @objc private func handleBackButton() {
@@ -165,7 +168,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
         chatVC.hidesBottomBarWhenPushed = true
         chatVC.groupId = groupId
         chatVC.groupName = group[PF_GROUPS_NAME] as! String
-        appToolbarController.push(from: self, to: chatVC)
+        appToolbarController.push(from: MessagesViewController(), to: chatVC)
     }
 }
 
