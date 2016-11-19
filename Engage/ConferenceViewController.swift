@@ -293,6 +293,7 @@ class ConferenceViewController: FormViewController  {
             
             let adminFunctionsAction: UIAlertAction = UIAlertAction(title: "Admin Function", style: .default) { action -> Void in
                 let delegateQuery = PFQuery(className: "WESST_WEC_Delegates")
+                delegateQuery.limit = 300
                 delegateQuery.findObjectsInBackground(block: { (objects: [PFObject]?, error: Error?) in
                     if error == nil {
                         var userIds = [String]()

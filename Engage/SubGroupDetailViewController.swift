@@ -31,7 +31,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         // Setup UI and Table Properties
         tableView.contentInset.bottom = 120
         tableView.separatorStyle = .none
-        appMenuController.menu.views.first?.isHidden = false
+        appMenuController.menu.views.first?.isHidden = true
         getPositions()
         configure()
     }

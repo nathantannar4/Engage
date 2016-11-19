@@ -104,7 +104,7 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
             }
             query.includeKey(PF_CHAT_USER)
             query.order(byDescending: PF_CHAT_CREATEDAT)
-            query.limit = 50
+            query.limit = 150
             query.findObjectsInBackground(block: { (objects: [PFObject]?, error: Error?) -> Void in
                 if error == nil {
                     self.automaticallyScrollsToMostRecentMessage = false

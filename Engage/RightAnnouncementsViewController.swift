@@ -94,57 +94,57 @@ class RightAnnouncementsViewController: UITableViewController {
             header.textLabel?.textColor = UIColor.white
             header.textLabel?.font = RobotoFont.bold(with: 20.0)
             header.backgroundColor = MAIN_COLOR
+            header.selectionStyle = .none
             return header
         } else {
+            let cell = UITableViewCell()
+            let card = Card()
             
+            // Content
+            //***********
+            let contentView = UILabel()
+            contentView.numberOfLines = 0
+            contentView.text = self.announcements[indexPath.row - 1].value(forKey: PF_POST_INFO) as? String
+            contentView.font = RobotoFont.regular(with: 15)
+            
+            // Bottom Bar
+            //***********
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .short
+            let dateLabel = UILabel()
+            dateLabel.font = RobotoFont.regular(with: 13)
+            dateLabel.textColor = Color.gray
+            dateLabel.text = dateFormatter.string(from: self.announcements[indexPath.row - 1].createdAt!)
+            dateLabel.textAlignment = .right
+            
+            
+            // Bottom Bar
+            let bottomBar = Bar()
+            bottomBar.rightViews = [dateLabel]
+            
+            // Configure Card
+            card.contentView = contentView
+            card.contentViewEdgeInsetsPreset = .wideRectangle2
+            card.bottomBar = bottomBar
+            card.bottomBarEdgeInsetsPreset = .wideRectangle2
+            
+            // Configure Cell
+            if UIDevice.current.modelName == "iPhone 6 Plus" || UIDevice.current.modelName == "iPhone 6s Plus" || UIDevice.current.modelName == "iPhone 7 Plus" {
+                // 5.5 Inch Screen
+                cell.contentView.layout(card).horizontally(left: 10, right: 140).center()
+            } else if UIDevice.current.modelName == "iPhone 6" || UIDevice.current.modelName == "iPhone 6s" || UIDevice.current.modelName == "iPhone 7" || UIDevice.current.modelName == "i386" || UIDevice.current.modelName == "x86_64" {
+                // 4.7 Inch Screen & Simulator
+                cell.contentView.layout(card).horizontally(left: 10, right: 100).center()
+            } else {
+                // 4 Inch Screen & Simulator
+                cell.contentView.layout(card).horizontally(left: 10, right: 47).center()
+            }
+            cell.selectionStyle = .none
+            cell.backgroundColor = MAIN_COLOR
+            
+            return cell
         }
-        let cell = UITableViewCell()
-        let card = Card()
-        
-        // Content
-        //***********
-        let contentView = UILabel()
-        contentView.numberOfLines = 0
-        contentView.text = self.announcements[indexPath.row - 1].value(forKey: PF_POST_INFO) as? String
-        contentView.font = RobotoFont.regular(with: 15)
-        
-        // Bottom Bar
-        //***********
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        let dateLabel = UILabel()
-        dateLabel.font = RobotoFont.regular(with: 13)
-        dateLabel.textColor = Color.gray
-        dateLabel.text = dateFormatter.string(from: self.announcements[indexPath.row - 1].createdAt!)
-        dateLabel.textAlignment = .right
-        
-        
-        // Bottom Bar
-        let bottomBar = Bar()
-        bottomBar.rightViews = [dateLabel]
-        
-        // Configure Card
-        card.contentView = contentView
-        card.contentViewEdgeInsetsPreset = .wideRectangle2
-        card.bottomBar = bottomBar
-        card.bottomBarEdgeInsetsPreset = .wideRectangle2
-        
-        // Configure Cell
-        if UIDevice.current.modelName == "iPhone 6 Plus" || UIDevice.current.modelName == "iPhone 6s Plus" || UIDevice.current.modelName == "iPhone 7 Plus" {
-            // 5.5 Inch Screen
-            cell.contentView.layout(card).horizontally(left: 10, right: 140).center()
-        } else if UIDevice.current.modelName == "iPhone 6" || UIDevice.current.modelName == "iPhone 6s" || UIDevice.current.modelName == "iPhone 7" || UIDevice.current.modelName == "i386" || UIDevice.current.modelName == "x86_64" {
-            // 4.7 Inch Screen & Simulator
-            cell.contentView.layout(card).horizontally(left: 10, right: 100).center()
-        } else {
-            // 4 Inch Screen & Simulator
-            cell.contentView.layout(card).horizontally(left: 10, right: 47).center()
-        }
-        cell.selectionStyle = .none
-        cell.backgroundColor = MAIN_COLOR
-
-        return cell
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {

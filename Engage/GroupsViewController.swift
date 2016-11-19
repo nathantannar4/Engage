@@ -164,11 +164,10 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
         
         Messages.createMessageItem(user: PFUser.current()!, groupId: groupId, description: group[PF_GROUPS_NAME] as! String)
         
-        let chatVC = ChatViewController()
-        chatVC.hidesBottomBarWhenPushed = true
-        chatVC.groupId = groupId
-        chatVC.groupName = group[PF_GROUPS_NAME] as! String
-        appToolbarController.push(from: UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "messagesVC") as! MessagesViewController, to: chatVC)
+        let messageVC = MessageViewController()
+        messageVC.groupId = groupId
+        messageVC.groupName = group[PF_GROUPS_NAME] as! String
+        appToolbarController.push(from: self, to: messageVC)
     }
 }
 

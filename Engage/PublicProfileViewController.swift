@@ -43,10 +43,12 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
     @objc private func messageButtonPressed() {
         let user1 = PFUser.current()!
         let user2 = user! as? PFUser
-        let chatVC = ChatViewController()
-        chatVC.groupId = Messages.startPrivateChat(user1: user1, user2: user2!)
-        chatVC.outgoingColor = MAIN_COLOR
-        appToolbarController.push(from: MessagesViewController(), to: chatVC)
+        
+        let messageVC = MessageViewController()
+        messageVC.groupId = Messages.startPrivateChat(user1: user1, user2: user2!)
+        messageVC.title = user2!.value(forKey: PF_USER_FULLNAME) as! String
+        
+        self.navigationController?.pushViewController(messageVC, animated: true)
     }
     
     @objc private func closeButtonPressed() {

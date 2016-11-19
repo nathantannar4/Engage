@@ -109,7 +109,7 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
     // MARK: - User actions
     
     func openChat(groupId: String, title: String) {
-        let messageVC = ChatViewController()
+        let messageVC = MessageViewController()
         messageVC.groupId = groupId
         messageVC.groupName = title
         appToolbarController.push(from: self, to: messageVC)

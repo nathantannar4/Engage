@@ -10,6 +10,7 @@ import SlackTextViewController
 import Parse
 import SVProgressHUD
 import JSQSystemSoundPlayer
+import Material
 
 let DEBUG_CUSTOM_TYPING_INDICATOR = false
 
@@ -27,13 +28,14 @@ class MessageViewController: SLKTextViewController {
     var userPhotos = [UIImage]()
     
     var groupId: String = ""
+    var groupName = ""
     
     var messages = [Message]()
     
     var users: Array = [String]()
     var channels: Array = [String]()
     var emojis: Array = ["-1", "m", "man", "machine", "block-a", "block-b", "bowtie", "boar", "boat", "book", "bookmark", "neckbeard", "metal", "fu", "feelsgood"]
-    var commands: Array = ["msg", "call", "text", "skype", "kick", "invite"]
+    var commands: Array = [String]() //["msg", "call", "text", "skype", "kick", "invite"]
     
     var searchResult: [String]?
     
@@ -71,10 +73,28 @@ class MessageViewController: SLKTextViewController {
         }
     }
     
+    private func prepareToolbar() {
+        guard let tc = toolbarController else {
+            return
+        }
+        tc.toolbar.title = groupName
+        tc.toolbar.detail = ""
+        tc.toolbar.backgroundColor = MAIN_COLOR
+        let backButton = IconButton(image: Icon.cm.arrowBack)
+        backButton.tintColor = UIColor.white
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
+    }
+    
+    @objc private func handleBackButton() {
+        appToolbarController.pull(from: self)
+    }
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
+        appMenuController.menu.views.first?.isHidden = true
+        prepareToolbar()
         self.commonInit()
         
         // Load Public Chat Groups
@@ -103,10 +123,11 @@ class MessageViewController: SLKTextViewController {
         self.shouldScrollToBottomAfterKeyboardShows = false
         self.isInverted = true
         
-        self.leftButton.setImage(UIImage(named: "icn_upload"), for: UIControlState())
-        self.leftButton.tintColor = UIColor.gray
+        //self.leftButton.setImage(UIImage(named: "icn_upload"), for: UIControlState())
+        //self.leftButton.tintColor = UIColor.gray
         
         self.rightButton.setTitle(NSLocalizedString("Send", comment: ""), for: UIControlState())
+        self.rightButton.tintColor = MAIN_COLOR
         
         self.textInputbar.autoHideRightButton = true
         self.textInputbar.maxCharCount = 256
@@ -192,6 +213,7 @@ extension MessageViewController {
                         let newMessage = Message(text: object[PF_CHAT_TEXT] as! String, username: user.value(forKey: PF_USER_FULLNAME) as! String, user: user, date: object.createdAt!)
                         self.messages.append(newMessage)
                     }
+                    self.messages.reverse()
                     self.tableView.reloadData()
                     SVProgressHUD.dismiss()
                 } else {
@@ -206,10 +228,10 @@ extension MessageViewController {
     func configureActionItems() {
         
         //let arrowItem = UIBarButtonItem(image: UIImage(named: "icn_arrow_down"), style: .plain, target: self, action: #selector(MessageViewController.hideOrShowTextInputbar(_:)))
-        let typeItem = UIBarButtonItem(image: UIImage(named: "icn_typing"), style: .plain, target: self, action: #selector(MessageViewController.simulateUserTyping(_:)))
+        //let typeItem = UIBarButtonItem(image: UIImage(named: "icn_typing"), style: .plain, target: self, action: #selector(MessageViewController.simulateUserTyping(_:)))
         //let appendItem = UIBarButtonItem(image: UIImage(named: "icn_append"), style: .plain, target: self, action: #selector(MessageViewController.fillWithText(_:)))
         //let pipItem = UIBarButtonItem(image: UIImage(named: "icn_pic"), style: .plain, target: self, action: #selector(MessageViewController.togglePIPWindow(_:)))
-        self.navigationItem.rightBarButtonItems = [typeItem]
+        //self.navigationItem.rightBarButtonItems = [typeItem]
     }
     
     // MARK: - Action Methods

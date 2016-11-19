@@ -25,6 +25,10 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     internal var postImageView = UIImageView()
     internal var addImageButton = UIButton()
     
+    // Comments
+    internal var commentIndex = 0
+    internal var commentObjects = [commentObject()]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         SVProgressHUD.dismiss()
@@ -106,6 +110,9 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         let content = self.posts[indexPath.row].value(forKey: PF_POST_INFO) as! String
         let contentCount = content.characters.count
         var height: CGFloat = 180
+        if tableView.isEditing {
+            return height
+        }
         if (self.posts[indexPath.row].value(forKey: PF_POST_HAS_IMAGE) as! Bool) {
             height += 210
         }
@@ -183,156 +190,193 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
             }
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        closeMenu()
+        //closeMenu()
         let vc = PostDetailViewController()
         vc.post = self.posts[indexPath.row]
         appToolbarController.push(from: self, to: vc)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = UITableViewCell()
-        let card = PresenterCard()
-        let postObject = self.posts[indexPath.row]
-        let user = postObject.value(forKey: PF_POST_USER) as! PFUser
-        
-        // Toolbar
-        //***********
-        let userImageView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        let userImage = PFImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        userImage.image = UIImage(named: "profile_blank")
-        userImage.file = user[PF_USER_PICTURE] as? PFFile
-        userImage.loadInBackground()
-        userImage.layer.borderWidth = 1
-        userImage.layer.masksToBounds = true
-        userImage.layer.borderColor = MAIN_COLOR?.cgColor
-        userImage.layer.cornerRadius = userImage.frame.height/2
-        userImageView.addSubview(userImage)
-        
-        // More Button
-        let moreButton = IconButtonWithObject(image: Icon.cm.moreVertical, tintColor: Color.gray)
-        moreButton.object = postObject
-        moreButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)
-        
-        let toolbar = Toolbar(leftViews: [userImageView, UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 0))], rightViews: [moreButton], centerViews: [])
-        
-        // User Label
-        toolbar.title = user.value(forKey: PF_USER_FULLNAME) as? String
-        toolbar.titleLabel.textAlignment = .left
-        toolbar.detail = "..."
-        let customQuery = PFQuery(className: "WESST_User")
-        customQuery.whereKey("user", equalTo: user)
-        customQuery.includeKey("subgroup")
-        customQuery.cachePolicy = .cacheElseNetwork
-        customQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
-            if error == nil {
-                if let user = users!.first {
-                    let subgroup = user["subgroup"] as? PFObject
-                    if subgroup != nil {
-                        toolbar.detail = subgroup!.value(forKey: PF_SUBGROUP_NAME) as? String
-                    } else {
-                        toolbar.detail = ""
+        if tableView.isEditing {
+            let card = Card()
+            
+            // Content
+            //***********
+            let contentView = UILabel()
+            contentView.numberOfLines = 0
+            contentView.text = self.commentObjects[commentIndex].getComment()
+            contentView.font = RobotoFont.regular(with: 15)
+            
+            // Toolbar Bar
+            //***********
+            let dateLabel = UILabel()
+            dateLabel.font = RobotoFont.regular(with: 13)
+            dateLabel.textColor = Color.gray
+            dateLabel.text = self.commentObjects[commentIndex].getDateString()
+            dateLabel.textAlignment = .right
+            
+            let usernameLabel = UILabel()
+            usernameLabel.font = RobotoFont.regular(with: 15)
+            usernameLabel.textColor = MAIN_COLOR
+            usernameLabel.text = self.commentObjects[commentIndex].getUsername()
+            usernameLabel.textAlignment = .left
+            
+            let toolbar = Toolbar()
+            toolbar.rightViews = [dateLabel]
+            toolbar.leftViews = [usernameLabel]
+            
+            // Configure Card
+            card.contentView = contentView
+            card.contentViewEdgeInsetsPreset = .wideRectangle2
+            card.toolbar = toolbar
+            card.toolbarEdgeInsetsPreset = .wideRectangle2
+            cell.contentView.layout(card).horizontally(left: 10, right: 10).center()
+            
+            commentIndex += 1
+        } else {
+            let card = PresenterCard()
+            let postObject = self.posts[indexPath.row]
+            let user = postObject.value(forKey: PF_POST_USER) as! PFUser
+            
+            // Toolbar
+            //***********
+            let userImageView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+            let userImage = PFImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+            userImage.image = UIImage(named: "profile_blank")
+            userImage.file = user[PF_USER_PICTURE] as? PFFile
+            userImage.loadInBackground()
+            userImage.layer.borderWidth = 1
+            userImage.layer.masksToBounds = true
+            userImage.layer.borderColor = MAIN_COLOR?.cgColor
+            userImage.layer.cornerRadius = userImage.frame.height/2
+            userImageView.addSubview(userImage)
+            
+            // More Button
+            let moreButton = IconButtonWithObject(image: Icon.cm.moreVertical, tintColor: Color.gray)
+            moreButton.object = postObject
+            moreButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)
+            
+            let toolbar = Toolbar(leftViews: [userImageView, UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 0))], rightViews: [moreButton], centerViews: [])
+            
+            // User Label
+            toolbar.title = user.value(forKey: PF_USER_FULLNAME) as? String
+            toolbar.titleLabel.textAlignment = .left
+            toolbar.detail = "..."
+            let customQuery = PFQuery(className: "WESST_User")
+            customQuery.whereKey("user", equalTo: user)
+            customQuery.includeKey("subgroup")
+            customQuery.cachePolicy = .cacheElseNetwork
+            customQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
+                if error == nil {
+                    if let user = users!.first {
+                        let subgroup = user["subgroup"] as? PFObject
+                        if subgroup != nil {
+                            toolbar.detail = subgroup!.value(forKey: PF_SUBGROUP_NAME) as? String
+                        } else {
+                            toolbar.detail = ""
+                        }
                     }
                 }
-            }
-        })
-        toolbar.detailLabel.textAlignment = .left
-        toolbar.detailLabel.textColor = Color.gray
-        
-        // Content
-        //***********
-        let contentView = UILabel()
-        contentView.numberOfLines = 0
-        contentView.text = postObject.value(forKey: PF_POST_INFO) as? String
-        contentView.font = RobotoFont.regular(with: 15)
-        
-        // Bottom Bar
-        //***********
-        // Date Label
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        let dateLabel = UILabel()
-        dateLabel.font = RobotoFont.regular(with: 13)
-        dateLabel.textColor = Color.gray
-        dateLabel.text = dateFormatter.string(from: self.posts[indexPath.row].createdAt!)
-        dateLabel.textAlignment = .right
-        
-        // Like Button
-        let likeButton = IconButtonWithObject(image: UIImage(named: "like")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: Color.gray)
-        likeButton.object = self.posts[indexPath.row]
-        if self.posts[indexPath.row].value(forKey: PF_POST_LIKES) != nil {
-            if ((self.posts[indexPath.row].value(forKey: PF_POST_LIKES) as! [String]).contains(PFUser.current()!.objectId!)) {
-                likeButton.tintColor = MAIN_COLOR
-            }
-        } else {
-            likeButton.tintColor = Color.gray
-        }
-        likeButton.titleColor = Color.gray
-        let likes = (postObject.value(forKey: PF_POST_LIKES) as? [String])?.count
-        if likes != nil {
-            likeButton.setTitle(" \(likes!)", for: .normal)
-        }
-        likeButton.addTarget(self, action: #selector(handleLike(sender:)), for: .touchUpInside)
-        
-        // Comment Button
-        let commentButton = IconButton(image: UIImage(named: "comment")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: Color.gray)
-        commentButton.titleColor = Color.gray
-        commentButton.isEnabled = false
-        commentButton.setTitle(" \(postObject.value(forKey: PF_POST_REPLIES) as! Int)", for: .normal)
-        
-        // Bottom Bar
-        let bottomBar = Bar()
-        bottomBar.leftViews = [likeButton, commentButton]
-        bottomBar.rightViews = [dateLabel]
-        
-        // Image View
-        if (postObject.value(forKey: PF_POST_HAS_IMAGE) as! Bool) {
-            if self.postImages[postObject.objectId!] == nil {
-                let imageFile = self.posts[indexPath.row].value(forKey: PF_POST_IMAGE) as! PFFile
-                imageFile.getDataInBackground(block: { (data: Data?, error: Error?) in
-                    if error == nil {
-                        let presenterView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-                        var image = UIImage(data: data!)
-                        self.postImages[postObject.objectId!] = image
-                        image = image?.resize(toHeight: 300)
-                        presenterView.image = image
-                        presenterView.contentMode = .scaleAspectFit
-                        presenterView.layer.masksToBounds = true
-                        card.presenterView = presenterView
-                        card.presenterViewEdgeInsetsPreset = .wideRectangle3
-                    }
-                })
+            })
+            toolbar.detailLabel.textAlignment = .left
+            toolbar.detailLabel.textColor = Color.gray
+            
+            // Content
+            //***********
+            let contentView = UILabel()
+            contentView.numberOfLines = 0
+            contentView.text = postObject.value(forKey: PF_POST_INFO) as? String
+            contentView.font = RobotoFont.regular(with: 15)
+            
+            // Bottom Bar
+            //***********
+            // Date Label
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .none
+            let dateLabel = UILabel()
+            dateLabel.font = RobotoFont.regular(with: 13)
+            dateLabel.textColor = Color.gray
+            dateLabel.text = dateFormatter.string(from: self.posts[indexPath.row].createdAt!)
+            dateLabel.textAlignment = .right
+            
+            // Like Button
+            let likeButton = IconButtonWithObject(image: UIImage(named: "like")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: Color.gray)
+            likeButton.object = self.posts[indexPath.row]
+            if self.posts[indexPath.row].value(forKey: PF_POST_LIKES) != nil {
+                if ((self.posts[indexPath.row].value(forKey: PF_POST_LIKES) as! [String]).contains(PFUser.current()!.objectId!)) {
+                    likeButton.tintColor = MAIN_COLOR
+                }
             } else {
-                let presenterView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-                var image = self.postImages[postObject.objectId!]
-                image = image?.resize(toHeight: 300)
-                presenterView.image = image
-                presenterView.contentMode = .scaleAspectFit
-                presenterView.layer.masksToBounds = true
-                card.presenterView = presenterView
-                card.presenterViewEdgeInsetsPreset = .wideRectangle3
+                likeButton.tintColor = Color.gray
             }
+            likeButton.titleColor = Color.gray
+            let likes = (postObject.value(forKey: PF_POST_LIKES) as? [String])?.count
+            if likes != nil {
+                likeButton.setTitle(" \(likes!)", for: .normal)
+            }
+            likeButton.addTarget(self, action: #selector(handleLike(sender:)), for: .touchUpInside)
+            
+            // Comment Button
+            let commentButton = IconButtonWithObject(image: UIImage(named: "comment")?.resize(toWidth: 25.0)?.withRenderingMode(.alwaysTemplate), tintColor: Color.gray)
+            commentButton.titleColor = Color.gray
+            commentButton.object = self.posts[indexPath.row]
+            commentButton.isEnabled = false
+            commentButton.setTitle(" \(postObject.value(forKey: PF_POST_REPLIES) as! Int)", for: .normal)
+            commentButton.addTarget(self, action: #selector(handleComment(sender:)), for: .touchUpInside)
+            
+            // Bottom Bar
+            let bottomBar = Bar()
+            bottomBar.leftViews = [likeButton, commentButton]
+            bottomBar.rightViews = [dateLabel]
+            
+            // Image View
+            if (postObject.value(forKey: PF_POST_HAS_IMAGE) as! Bool) {
+                if self.postImages[postObject.objectId!] == nil {
+                    let imageFile = self.posts[indexPath.row].value(forKey: PF_POST_IMAGE) as! PFFile
+                    imageFile.getDataInBackground(block: { (data: Data?, error: Error?) in
+                        if error == nil {
+                            let presenterView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+                            var image = UIImage(data: data!)
+                            self.postImages[postObject.objectId!] = image
+                            image = image?.resize(toHeight: 300)
+                            presenterView.image = image
+                            presenterView.contentMode = .scaleAspectFit
+                            presenterView.layer.masksToBounds = true
+                            card.presenterView = presenterView
+                            card.presenterViewEdgeInsetsPreset = .wideRectangle3
+                        }
+                    })
+                } else {
+                    let presenterView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+                    var image = self.postImages[postObject.objectId!]
+                    image = image?.resize(toHeight: 300)
+                    presenterView.image = image
+                    presenterView.contentMode = .scaleAspectFit
+                    presenterView.layer.masksToBounds = true
+                    card.presenterView = presenterView
+                    card.presenterViewEdgeInsetsPreset = .wideRectangle3
+                }
+            }
+            
+            // Configure Card
+            card.toolbar = toolbar
+            card.toolbarEdgeInsetsPreset = .square3
+            card.toolbarEdgeInsets.bottom = 0
+            card.toolbarEdgeInsets.right = 8
+            card.contentView = contentView
+            card.contentViewEdgeInsetsPreset = .wideRectangle3
+            card.bottomBar = bottomBar
+            card.bottomBarEdgeInsetsPreset = .wideRectangle3
+            card.bottomBarEdgeInsets.left = 0
+            cell.contentView.layout(card).horizontally(left: 10, right: 10).center()
         }
-        
-        // Configure Card
-        card.toolbar = toolbar
-        card.toolbarEdgeInsetsPreset = .square3
-        card.toolbarEdgeInsets.bottom = 0
-        card.toolbarEdgeInsets.right = 8
-        card.contentView = contentView
-        card.contentViewEdgeInsetsPreset = .wideRectangle3
-        card.bottomBar = bottomBar
-        card.bottomBarEdgeInsetsPreset = .wideRectangle3
-        card.bottomBarEdgeInsets.left = 0
-        
         // Configure Cell
-        cell.contentView.layout(card).horizontally(left: 10, right: 10).center()
         cell.selectionStyle = .none
         cell.backgroundColor = Color.grey.lighten3
-        
         return cell
     }
     
@@ -397,7 +441,40 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     }
     
     func handleComment(sender: IconButtonWithObject) {
+        commentIndex = 0
+        var comments = sender.object.value(forKey: "comments") as? [String]
+        let commentsUser = sender.object.value(forKey: "commentsUser") as? [PFUser]
+        var commentsDate = sender.object.value (forKey: "commentsDate") as? [Date]
         
+        if (comments!.count) > 0 {
+            var index = 0
+            var userIds = [String]()
+            for user in commentsUser! {
+                userIds.append(user.objectId!)
+            }
+            let userQuery = PFUser.query()
+            userQuery?.whereKey(PF_USER_OBJECTID, containedIn: userIds)
+            userQuery?.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
+                if error == nil {
+                    if let users = users {
+                        self.commentObjects.removeAll()
+                        for user in users {
+                            let downloadedComment = commentObject()
+                            print(user)
+                            downloadedComment.initialize(commentString: comments![index], usernnameString: user.value(forKey: PF_USER_FULLNAME) as! String, userIdString: user.objectId!, commentDate: commentsDate![index])
+                            self.commentObjects.append(downloadedComment)
+                            index += 1
+                        }
+                        // Reload Table
+                        //self.tableView.beginUpdates()
+                        self.tableView.reloadData()
+                        //self.tableView.endUpdates()
+                    }
+                } else {
+                    SVProgressHUD.showError(withStatus: "Network Error")
+                }
+            })
+        }
     }
     
     func handleLike(sender: IconButtonWithObject) {
@@ -503,14 +580,14 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         newPostView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 130)
         newPostView.backgroundColor = UIColor.white
         
-        textField.frame = CGRect(x: 5, y: 0, width: self.view.frame.width - 5, height: 60)
+        textField.frame = CGRect(x: 10, y: 0, width: self.view.frame.width - 10, height: 60)
         textField.placeholder = "What's new \(Profile.sharedInstance.name!)?"
         textField.font = RobotoFont.regular(with: 15.0)
         textField.text = ""
         addToolBar(textField: textField)
         newPostView.addSubview(textField)
         
-        postImageView.frame = CGRect(x: 5, y: 65, width: 60, height: 60)
+        postImageView.frame = CGRect(x: 10, y: 65, width: 60, height: 60)
         postImageView.image = UIImage()
         postImageView.layer.borderWidth = 1
         postImageView.layer.masksToBounds = true
@@ -570,4 +647,34 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
 
 class IconButtonWithObject: IconButton {
     var object: PFObject!
+}
+
+class commentObject {
+    private var comment: String!
+    private var username: String!
+    private var userId: String!
+    private var date: Date!
+    
+    func initialize(commentString: String, usernnameString: String, userIdString: String, commentDate: Date) {
+        comment = commentString
+        username = usernnameString
+        userId = userIdString
+        date = commentDate
+    }
+    
+    func getComment() -> String {
+        return comment
+    }
+    
+    func getUsername() -> String {
+        return username
+    }
+    
+    func getUserId() -> String {
+        return userId
+    }
+    
+    func getDateString() -> String {
+        return Utilities.dateToString(time: date as NSDate)
+    }
 }

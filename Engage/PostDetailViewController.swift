@@ -303,7 +303,7 @@ class PostDetailViewController: FormViewController, UITextFieldDelegate {
             self?.addToolBar(textField: $0.textField)
             }.configure {
                 $0.placeholder = "Add a comment"
-                $0.rowHeight = 75
+                $0.rowHeight = 44
             }.onTextChanged {
                 Comment.new.comment = $0
         }

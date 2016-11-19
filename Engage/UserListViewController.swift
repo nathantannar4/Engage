@@ -28,7 +28,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
         // Configure UI
         title = "Members"
         tableView.contentInset.top = 40
-        
+        appMenuController.menu.views.first?.isHidden = true
         self.searchBar.delegate = self
         self.searchBar.tintColor = MAIN_COLOR
         
@@ -74,6 +74,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
         if searchLower != "" {
             memberQuery!.whereKey(PF_USER_FULLNAME_LOWER, contains: searchLower)
         }
+        memberQuery?.limit = 1000
         memberQuery!.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
             SVProgressHUD.dismiss()
             if error == nil {
@@ -88,7 +89,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
                                 $0.iconView.layer.borderColor = MAIN_COLOR?.cgColor
                                 $0.iconView.image = UIImage(named: "profile_blank")
                                 $0.iconView.file = user[PF_USER_PICTURE] as? PFFile
-                                $0.iconView.loadInBackground()
+                                //$0.iconView.loadInBackground()
                                 $0.titleLabel.textColor = UIColor.black
                                 $0.detailLabel.textColor = UIColor.gray
                                 let index = self.positionIDs.index(of: user.objectId!)
@@ -120,7 +121,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
                                 $0.iconView.layer.borderColor = MAIN_COLOR?.cgColor
                                 $0.iconView.image = UIImage(named: "profile_blank")
                                 $0.iconView.file = user[PF_USER_PICTURE] as? PFFile
-                                $0.iconView.loadInBackground()
+                                //$0.iconView.loadInBackground()
                                 $0.titleLabel.textColor = UIColor.black
                                 $0.detailLabel.textColor = UIColor.gray
                                 $0.detailLabel.text = "Admin"
@@ -144,7 +145,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
                                 $0.iconView.layer.borderColor = MAIN_COLOR?.cgColor
                                 $0.iconView.image = UIImage(named: "profile_blank")
                                 $0.iconView.file = user[PF_USER_PICTURE] as? PFFile
-                                $0.iconView.loadInBackground()
+                                //$0.iconView.loadInBackground()
                                 $0.titleLabel.textColor = UIColor.black
                                 }.configure {
                                     $0.text = user[PF_USER_FULLNAME] as? String

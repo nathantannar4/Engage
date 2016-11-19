@@ -90,7 +90,8 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
                 let allMembersAction: UIAlertAction = UIAlertAction(title: "All Members", style: .default) { action -> Void in
                     SVProgressHUD.show(withStatus: "Loading Members")
                     let userQuery = PFUser.query()!
-                    userQuery.whereKey("objectId", containedIn: Engagement.sharedInstance.members)
+                    userQuery.limit = 1000
+                    userQuery.whereKey("objectId", containedIn: self!.userIds)
                     userQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
                         if error == nil {
                             var idString = ""
@@ -142,7 +143,8 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
             let allMembersAction: UIAlertAction = UIAlertAction(title: "All Members", style: .default) { action -> Void in
                 SVProgressHUD.show(withStatus: "Loading Emails")
                 let userQuery = PFUser.query()!
-                userQuery.whereKey("objectId", containedIn: Engagement.sharedInstance.members)
+                userQuery.limit = 1000
+                userQuery.whereKey("objectId", containedIn: self!.userIds)
                 userQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
                     if error == nil {
                         var emails = [String]()
@@ -175,6 +177,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
                 self?.former.deselect(animated: true)
                 SVProgressHUD.show(withStatus: "Loading Data")
                 let exportQuery = PFQuery(className: "WESST_WEC_Delegates")
+                exportQuery.limit = 1000
                 exportQuery.includeKey("user")
                 exportQuery.order(byAscending: "school")
                 exportQuery.findObjectsInBackground(block: { (objects: [PFObject]?, error: Error?) in
