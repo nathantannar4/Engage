@@ -21,10 +21,12 @@ This app has been a personal project of mine and I thank you for your support!
 ## To-Do List
 
 - [x] Release on App Store
-- [ ] Create a marketing web page
+- [x] Create a marketing web page
 - [ ] Start a Kickstarter to fund improvements and an Android version
-- [ ] Enhance UI
-- [ ] Enhance group messaging using the SlackTextViewController
+- [x] Enhance UI
+- [ ] Optimize UI
+- [x] Full Push Notification integration
+- [x] Enhance group messaging using the SlackTextViewController
 
 ## Team
 
