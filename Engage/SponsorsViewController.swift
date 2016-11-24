@@ -11,6 +11,7 @@ import Former
 import Parse
 import Agrume
 import SVProgressHUD
+import Material
 
 class SponsorsViewController: FormViewController {
     
@@ -21,6 +22,7 @@ class SponsorsViewController: FormViewController {
         
         // Configure UI
         title = "Sponsors"
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
         tableView.contentInset.top = 0
         tableView.contentInset.bottom = 50
         if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
@@ -31,18 +33,6 @@ class SponsorsViewController: FormViewController {
         configure()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        prepareToolbar()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Sponsors"
-        tc.toolbar.detail = ""
-        tc.toolbar.backgroundColor = MAIN_COLOR
-    }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
         return LabelRowFormer<FormLabelCell>() {
@@ -114,5 +104,9 @@ class SponsorsViewController: FormViewController {
         let navVC = UINavigationController(rootViewController: vc)
         navVC.navigationBar.barTintColor = MAIN_COLOR!
         self.present(navVC, animated: true, completion: nil)
+    }
+    
+    func leftDrawerButtonPressed() {
+        self.evo_drawerController?.toggleDrawerSide(.left, animated: true, completion: nil)
     }
 }

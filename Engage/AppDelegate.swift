@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
             ParseMutableClientConfiguration.applicationId = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b";
             ParseMutableClientConfiguration.clientKey = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq";
-            ParseMutableClientConfiguration.server = "http://nathantannar.me:1337/parse";
+            ParseMutableClientConfiguration.server = "http://159.203.3.130:1337/parse";
         });
         Parse.initialize(with: config) 
         
@@ -43,6 +43,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Remove back button text from navbar
         let barAppearace = UIBarButtonItem.appearance()
         barAppearace.setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -60), for:UIBarMetrics.default)
+        
+        // Remove shadow from navigation bar
+        UINavigationBar.appearance().shadowImage = UIImage()
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
 
         
         // Register for push notifications

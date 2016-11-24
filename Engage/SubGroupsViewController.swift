@@ -22,15 +22,24 @@ class SubGroupsViewController: FormViewController {
         super.viewDidLoad()
         
         // Configure UI
+        if Engagement.sharedInstance.subGroupName != "" {
+            self.title = Engagement.sharedInstance.subGroupName
+        } else {
+            self.title = "Subgroups"
+        }
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(createSubGroup))
         tableView.contentInset.top = 0
         tableView.contentInset.bottom = 50
         configure()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        SVProgressHUD.dismiss()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
-        prepareToolbar()
         EngagementSubGroup.sharedInstance.clear()
-        appMenuController.menu.views.first?.isHidden = true
         if firstLoad {
             SVProgressHUD.show(withStatus: "Loading")
             firstLoad = false
@@ -38,23 +47,6 @@ class SubGroupsViewController: FormViewController {
             SVProgressHUD.show(withStatus: "Refreshing")
             self.refresh(sender: self)
         }
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        if Engagement.sharedInstance.subGroupName != "" {
-            tc.toolbar.title = Engagement.sharedInstance.subGroupName
-        } else {
-            tc.toolbar.title = "Subgroups"
-        }
-        tc.toolbar.detail = ""
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let addButton = IconButton(image: Icon.cm.add)
-        addButton.tintColor = UIColor.white
-        addButton.addTarget(self, action: #selector(createSubGroup), for: .touchUpInside)
-        appToolbarController.prepareToolbarMenu(right: [addButton])
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
@@ -96,7 +88,7 @@ class SubGroupsViewController: FormViewController {
                         EngagementSubGroup.sharedInstance.clear()
                         EngagementSubGroup.sharedInstance.subgroup = subGroup
                         EngagementSubGroup.sharedInstance.unpack()
-                        appToolbarController.push(from: self!, to: SubGroupDetailViewController())
+                        self?.navigationController?.pushViewController(SubGroupDetailViewController(), animated: true)
                     })
                 }
                 if Engagement.sharedInstance.subGroupName != "" {
@@ -118,6 +110,11 @@ class SubGroupsViewController: FormViewController {
     func createSubGroup() {
         let navVC = UINavigationController(rootViewController: CreateSubGroupViewController())
         navVC.navigationBar.barTintColor = MAIN_COLOR!
-        appToolbarController.present(navVC, animated: true, completion: nil)
+        self.present(navVC, animated: true)
+    }
+    
+    
+    func leftDrawerButtonPressed() {
+        self.evo_drawerController?.toggleDrawerSide(.left, animated: true, completion: nil)
     }
 }

@@ -22,31 +22,11 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Edit"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(saveButtonPressed))
         tableView.contentInset.bottom = 100
         
         configure()
-        prepareToolbar()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Edit"
-        tc.toolbar.detail = Conference.sharedInstance.name!
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        let saveButton = IconButton(image: Icon.cm.check)
-        saveButton.tintColor = UIColor.white
-        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-        tc.toolbar.leftViews = [backButton]
-        tc.toolbar.rightViews = [saveButton]
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.rotateLeft(from: self)
     }
     
     func saveButtonPressed(sender: AnyObject) {

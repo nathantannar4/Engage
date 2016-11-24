@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Former
 import BRYXBanner
+import DrawerController
 
 class Utilities {
     
@@ -21,10 +22,35 @@ class Utilities {
     
     class func showEngagement(_ target: AnyObject) {
         PushNotication.parsePushUserAssign()
+        
+        /*
         appToolbarController = AppToolbarController(rootViewController: FeedViewController())
         appMenuController = AppMenuController(rootViewController: appToolbarController)
         let rootViewController = AppNavigationDrawerController(rootViewController: appMenuController, leftViewController: LeftMenuController(), rightViewController: RightAnnouncementsViewController())
         target.present(rootViewController, animated: true, completion: nil)
+        */
+        
+        let leftSideDrawerViewController = LeftMenuController()
+        let centerViewController = FeedViewController()
+        let rightSideDrawerViewController = RightAnnouncementsViewController()
+        
+        let navigationController = UINavigationController(rootViewController: centerViewController)
+        navigationController.navigationBar.barTintColor = MAIN_COLOR
+        navigationController.restorationIdentifier = "ExampleCenterNavigationControllerRestorationKey"
+        
+        drawerController = DrawerController(centerViewController: navigationController, leftDrawerViewController: LeftMenuController(), rightDrawerViewController: RightAnnouncementsViewController())
+        drawerController.showsShadows = false
+        
+        drawerController.restorationIdentifier = "Drawer"
+        drawerController.maximumRightDrawerWidth = 200.0
+        drawerController.openDrawerGestureModeMask = .all
+        drawerController.closeDrawerGestureModeMask = .all
+        
+        drawerController.drawerVisualStateBlock = { (drawerController, drawerSide, percentVisible) in
+            let block = ExampleDrawerVisualStateManager.sharedManager.drawerVisualStateBlock(for: drawerSide)
+            block?(drawerController, drawerSide, percentVisible)
+        }        
+        target.present(drawerController, animated: true, completion: nil)
     }
     
     class func showBanner(title: String, subtitle: String, duration: Double) {

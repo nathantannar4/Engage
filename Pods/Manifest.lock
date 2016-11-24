@@ -12,6 +12,12 @@ PODS:
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
   - CVCalendar (1.4.0)
+  - DrawerController (3.0.0):
+    - DrawerController/Core (= 3.0.0)
+    - DrawerController/DrawerVisualStates (= 3.0.0)
+  - DrawerController/Core (3.0.0)
+  - DrawerController/DrawerVisualStates (3.0.0):
+    - DrawerController/Core
   - DZNEmptyDataSet (1.8.1)
   - FontAwesomeKit (2.2.0):
     - FontAwesomeKit/Core (= 2.2.0)
@@ -33,16 +39,16 @@ PODS:
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JSQWebViewController (5.0.0)
-  - Material (2.3.7):
-    - Material/Core (= 2.3.7)
-  - Material/Core (2.3.7)
+  - Material (2.3.16):
+    - Material/Core (= 2.3.16)
+  - Material/Core (2.3.16)
   - Parse (1.14.2):
     - Bolts/Tasks (~> 1.8)
   - ParseUI (1.2.0):
     - Bolts/Tasks (~> 1.3)
     - Parse (~> 1.9)
   - SlackTextViewController (1.9.5)
-  - SVProgressHUD (2.0.3)
+  - SVProgressHUD (2.0.4)
   - TextFieldEffects (1.3.0)
   - XLPagerTabStrip (6.0.0)
 
@@ -53,6 +59,7 @@ DEPENDENCIES:
   - BWWalkthrough
   - ChameleonFramework/Swift
   - CVCalendar
+  - DrawerController
   - DZNEmptyDataSet
   - FontAwesomeKit
   - Former
@@ -73,20 +80,21 @@ SPEC CHECKSUMS:
   BWWalkthrough: 0c27ad2773a25c8f4fb9004bc7d6685deb35fecc
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   CVCalendar: ec1a06a508f99d8e5067258754f811a8a1433a3f
+  DrawerController: 5e859c5dbeae3cea20981eb5ff2aa16eb946dff9
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   FontAwesomeKit: 025fd4dd1017fe4e3f8d47b03e024deedbb33cd4
   Former: 0b48a812c0d93b092b908d1b0574d0fd95c6b6f9
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JSQWebViewController: 0461aa42612b221571556df61d9c09f080cb2eef
-  Material: b0aa466c72931f6dc3854a059e086455f4103a28
+  Material: db663ff81d7c72a8f7454fc297d147dcba8bb869
   Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
   ParseUI: af2eba584799da4a9fbdac0e178662d7438b502e
   SlackTextViewController: fbcdadbb8090673f604484ff5b6eb8d77baed42a
-  SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
+  SVProgressHUD: bfde85ed6c573ea802b9cb37894ed9b629034f1b
   TextFieldEffects: ef594746f17997c813e07633f8ae5acaf9b04f27
   XLPagerTabStrip: c46e802a8dcac29edbcea573de8fe920e052455b
 
-PODFILE CHECKSUM: 4885990da4af12b916492d35491a84484d1eb313
+PODFILE CHECKSUM: 8c382f3aa9423fa0faac4054fdb5879b69dee9a5
 
 COCOAPODS: 1.0.1

@@ -44,7 +44,7 @@ class TableFunctions {
         }
     }
     
-    class func createFeedCellPhoto(user: PFUser, post: PFObject, view: UIViewController) -> RowFormer {
+    class func createFeedCellPhoto(user: PFUser, post: PFObject, target: UINavigationController) -> RowFormer {
         return CustomRowFormer<FeedCellPhoto>(instantiateType: .Nib(nibName: "FeedCellPhoto")) {
             if post[PF_POST_TO_USER] != nil {
                 $0.username.text = "\(user.value(forKey: PF_USER_FULLNAME) as! String) >> \((post[PF_POST_TO_USER] as! PFUser).value(forKey: PF_USER_FULLNAME) as! String)"
@@ -76,11 +76,11 @@ class TableFunctions {
                 let detailVC = PostDetailViewController()
                 detailVC.post = post
                 detailVC.postUser = post[PF_POST_USER] as? PFUser
-                appToolbarController.push(from: view, to: detailVC)
+                target.pushViewController(detailVC, animated: true)
         }
     }
     
-    class func createFeedCell(user: PFUser, post: PFObject, view: UIViewController) -> RowFormer {
+    class func createFeedCell(user: PFUser, post: PFObject, target: UINavigationController) -> RowFormer {
         return CustomRowFormer<FeedCell>(instantiateType: .Nib(nibName: "FeedCell")) {
             if post[PF_POST_TO_USER] != nil {
                 $0.username.text = "\(user.value(forKey: PF_USER_FULLNAME) as! String) >> \((post[PF_POST_TO_USER] as! PFUser).value(forKey: PF_USER_FULLNAME) as! String)"
@@ -109,7 +109,7 @@ class TableFunctions {
                 let detailVC = PostDetailViewController()
                 detailVC.post = post
                 detailVC.postUser = post[PF_POST_USER] as? PFUser
-                appToolbarController.push(from: view, to: detailVC)
+                target.pushViewController(detailVC, animated: true)
         }
     }
 

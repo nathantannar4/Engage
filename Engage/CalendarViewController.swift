@@ -81,6 +81,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = CVDate(date: NSDate() as Date).globalDescription
         self.menuView.backgroundColor = MAIN_COLOR
         self.tableView.separatorStyle = .none
         
@@ -94,21 +95,9 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
         
         currentDay = (currentDay.addingDays(1) as NSDate).atStartOfDay() as NSDate
         Event.sharedInstance.clear()
-        prepareAddButton()
-        prepareMenuController()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Events"
-        tc.toolbar.detail = CVDate(date: NSDate() as Date).globalDescription
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let moreButton = IconButton(image: Icon.cm.shuffle)
-        moreButton.tintColor = UIColor.white
-        moreButton.addTarget(self, action: #selector(switchView), for: .touchUpInside)
-        appToolbarController.prepareToolbarMenu(right: [moreButton])
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(createEvent))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -117,7 +106,6 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     
     override func viewWillAppear(_ animated: Bool) {
         refreshMonth()
-        prepareToolbar()
     }
     
     func refreshMonth() {
@@ -518,25 +506,13 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     
     // Menu Controller
     // Handle the menu toggle event.
-    internal func handleToggleMenu(button: Button) {
+    internal func createEvent() {
         let navVC = UINavigationController(rootViewController: CreateSimpleEventViewController())
         navVC.navigationBar.barTintColor = MAIN_COLOR!
         self.present(navVC, animated: true, completion: nil)
     }
     
-    private func prepareAddButton() {
-        addButton = FabButton(image: Icon.cm.add)
-        addButton.tintColor = UIColor.white
-        addButton.backgroundColor = MAIN_COLOR
-        addButton.addTarget(self, action: #selector(handleToggleMenu), for: .touchUpInside)
-    }
-    
-    private func prepareMenuController() {
-        guard let mc = menuController as? AppMenuController else {
-            return
-        }
-        
-        mc.menu.delegate = self
-        mc.menu.views = [addButton]
+    func leftDrawerButtonPressed() {
+        self.evo_drawerController?.toggleDrawerSide(.left, animated: true, completion: nil)
     }
 }

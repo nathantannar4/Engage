@@ -28,44 +28,22 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Setup UI and Table Properties
-        tableView.contentInset.bottom = 120
-        tableView.separatorStyle = .none
-        appMenuController.menu.views.first?.isHidden = true
-        getPositions()
-        configure()
+        self.title = EngagementSubGroup.sharedInstance.name!
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.moreVertical, style: .plain, target: self, action: #selector(settingsButtonPressed))
+        self.tableView.contentInset.bottom = 120
+        self.tableView.separatorStyle = .none
+        self.getPositions()
+        self.configure()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        prepareToolbar()
         if !firstLoad {
-            updateRows()
-            getPositions()
+            self.updateRows()
+            self.getPositions()
             self.former.reload()
         } else {
             firstLoad = false
         }
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = EngagementSubGroup.sharedInstance.name!
-        tc.toolbar.detail = ""
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        let moreButton = IconButton(image: Icon.cm.moreVertical)
-        moreButton.tintColor = UIColor.white
-        moreButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
-        tc.toolbar.leftViews = [backButton]
-        tc.toolbar.rightViews = [moreButton]
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
     }
     
     private func configure() {
@@ -77,7 +55,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             vc.searchMembers = EngagementSubGroup.sharedInstance.members
             vc.adminMembers = EngagementSubGroup.sharedInstance.admins
             vc.isSub = true
-            appToolbarController.push(from: self!, to: vc)
+            self?.navigationController?.pushViewController(vc, animated: true)
         }
         let zeroRow = LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")).configure {
             $0.rowHeight = 0
@@ -252,7 +230,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             if admin == PFUser.current()?.objectId! {
                 let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
                     // Edit group if admin
-                    appToolbarController.rotateRight(from: self, to: EditSubGroupViewController())
+                    self.navigationController?.pushViewController(EditSubGroupViewController(), animated: true)
                 }
                 actionSheetController.addAction(editAction)
                 isAdmin = true
@@ -549,10 +527,10 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             if error == nil {
                 for post in posts! {
                     if (post[PF_POST_HAS_IMAGE] as? Bool) == true {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, view: self), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
+                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, target: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
                         self.rowCounter += 1
                     } else {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, view: self), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
+                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, target: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
                         self.rowCounter += 1
                     }
                 }

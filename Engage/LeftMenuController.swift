@@ -68,7 +68,6 @@ class LeftMenuController: FormViewController {
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
         return LabelRowFormer<FormLabelCell>() {
-            //$0.selectionStyle = .
             $0.self.backgroundColor = MAIN_COLOR
             $0.titleLabel.textColor = UIColor.white
             $0.titleLabel.font = RobotoFont.bold(with: 16.0)
@@ -102,30 +101,22 @@ class LeftMenuController: FormViewController {
                 
                 switch self!.menuItems.index(of: item)! {
                 case 0:
-                    appMenuController.menu.views.first?.isHidden = false
                     self?.switchToView(target: self!.feedVC)
                 case 1:
-                    appMenuController.menu.views.first?.isHidden = true
                     self?.switchToView(target: self!.groupVC)
                 case 2:
-                    appMenuController.menu.views.first?.isHidden = true
                     self?.switchToView(target: self!.subGroupsVC)
                 case 3:
-                    appMenuController.menu.views.first?.isHidden = true
                     self?.switchToView(target: self!.profileVC)
                 case 4:
-                    appMenuController.menu.views.first?.isHidden = false
                     self?.switchToView(target: self!.messagesVC)
                 case 5:
-                    appMenuController.menu.views.first?.isHidden = false
                     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "calendarVC") as! CalendarViewController
                     self?.switchToView(target: vc)
                 case 6:
                     if Engagement.sharedInstance.sponsor == true {
-                        appMenuController.menu.views.first?.isHidden = true
                         self?.switchToView(target: self!.sponsorsVC)
                     } else {
-                        appMenuController.menu.views.first?.isHidden = true
                         if Engagement.sharedInstance.name == "WESST" {
                             let vc = ConferenceViewController()
                             vc.conference = "WEC"
@@ -135,7 +126,6 @@ class LeftMenuController: FormViewController {
                         }
                     }
                 case 7:
-                    appMenuController.menu.views.first?.isHidden = true
                     if Engagement.sharedInstance.sponsor == true {
                         if Engagement.sharedInstance.name == "WESST" {
                             let vc = ConferenceViewController()
@@ -149,9 +139,7 @@ class LeftMenuController: FormViewController {
                         vc.conference = "AGMR"
                         self?.switchToView(target: vc)
                     }
-                    appMenuController.menu.views.first?.isHidden = true
                 case 8:
-                    appMenuController.menu.views.first?.isHidden = true
                     if Engagement.sharedInstance.sponsor == true {
                         let vc = ConferenceViewController()
                         vc.conference = "AGMR"
@@ -162,7 +150,6 @@ class LeftMenuController: FormViewController {
                         self?.switchToView(target: vc)
                     }
                 case 9:
-                    appMenuController.menu.views.first?.isHidden = true
                     if Engagement.sharedInstance.sponsor == true {
                         let vc = ConferenceViewController()
                         vc.conference = "EM"
@@ -183,15 +170,9 @@ class LeftMenuController: FormViewController {
         self.former.reload()
     }
     
-    internal func switchToView(target: UIViewController) {
-        if appToolbarController.rootViewController != target {
-            appToolbarController.transition(to: target, duration: 0.01, options: .curveEaseOut, animations: nil , completion: closeNavigationDrawer)
-        } else {
-            closeNavigationDrawer(result: true)
-        }
-    }
-    
-    internal func closeNavigationDrawer(result: Bool) {
-        navigationDrawerController?.closeLeftView()
+    private func switchToView(target: UIViewController) {
+        let navVC = UINavigationController(rootViewController: target)
+        navVC.navigationBar.barTintColor = MAIN_COLOR
+        self.evo_drawerController?.setCenter(navVC, withCloseAnimation: true, completion: nil)
     }
 }

@@ -18,32 +18,12 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        appMenuController.menu.views.first?.isHidden = true
+        title = "Public Group Chats"
         self.refreshControl = UIRefreshControl()
         self.refreshControl!.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl!.addTarget(self, action: #selector(GroupsViewController.loadGroups), for: .valueChanged)
 
-        prepareToolbar()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Public Group Chats"
-        tc.toolbar.detail = Engagement.sharedInstance.name!
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        let newButton = IconButton(image: Icon.cm.add)
-        newButton.tintColor = UIColor.white
-        newButton.addTarget(self, action: #selector(actionNew), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [newButton])
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(newButtonPressed))
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -68,7 +48,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
         }
     }
     
-    func newButtonPressed(_ sender: AnyObject) {
+    func newButtonPressed() {
         self.actionNew()
     }
     
@@ -167,7 +147,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
         let messageVC = MessageViewController()
         messageVC.groupId = groupId
         messageVC.groupName = group[PF_GROUPS_NAME] as! String
-        appToolbarController.push(from: self, to: messageVC)
+        self.navigationController?.pushViewController(messageVC, animated: true)
     }
 }
 

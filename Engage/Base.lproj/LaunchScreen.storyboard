@@ -22,7 +22,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="WESST-Logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="4k6-in-X9x">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Engage-Logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="4k6-in-X9x">
                                 <rect key="frame" x="16" y="79" width="343" height="343"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="343" id="ice-WW-j7S"/>
@@ -52,6 +52,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="WESST-Logo.png" width="800" height="300"/>
+        <image name="Engage-Logo.png" width="450" height="449"/>
     </resources>
 </document>

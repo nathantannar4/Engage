@@ -25,36 +25,24 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = Engagement.sharedInstance.name!
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.moreVertical, style: .plain, target: self, action: #selector(settingsButtonPressed))
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-
-        getPositions()
-        configure()
+        self.getPositions()
+        self.configure()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        prepareToolbar()
         if !firstLoad {
             Engagement.sharedInstance.unpack()
-            getPositions()
+            self.getPositions()
             self.former.removeAll()
-            configure()
+            self.configure()
         } else {
             firstLoad = false
         }
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "\(Engagement.sharedInstance.name!)"
-        tc.toolbar.detail = ""
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        tc.toolbar.tintColor = UIColor.white
-        let moreButton = IconButton(image: Icon.cm.moreVertical)
-        moreButton.tintColor = UIColor.white
-        moreButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
-        appToolbarController.prepareToolbarMenu(right: [moreButton])
     }
     
     // MARK: - Table Rows
@@ -125,7 +113,7 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             vc.positionIDs = (self?.positionIDs)!
             vc.searchMembers = Engagement.sharedInstance.members
             vc.adminMembers = Engagement.sharedInstance.admins
-            appToolbarController.push(from: self!, to: vc)
+            self?.navigationController?.pushViewController(vc, animated: true)
         }
         self.former.append(sectionFormer: SectionFormer(rowFormer: onlyImageRow, infoRow, urlRow, emailRow, membersRow))
         self.former.reload()
@@ -160,12 +148,12 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
         
         if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
             let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                appToolbarController.rotateRight(from: self, to: EditEngagementGroupViewController())
+                self.navigationController?.pushViewController(EditEngagementGroupViewController(), animated: true)
             }
             actionSheetController.addAction(editAction)
             
             let functionsAction: UIAlertAction = UIAlertAction(title: "Admin Functions", style: .default) { action -> Void in
-                appToolbarController.push(from: self, to: AdminFunctionsViewController())
+                self.navigationController?.pushViewController(AdminFunctionsViewController(), animated: true)
             }
             actionSheetController.addAction(functionsAction)
             
@@ -260,6 +248,10 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             }.onSelected { _ in
                 onSelected?()
         }
+    }
+    
+    func leftDrawerButtonPressed() {
+        self.evo_drawerController?.toggleDrawerSide(.left, animated: true, completion: nil)
     }
     
     // MARK: - Delegate Methods

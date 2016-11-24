@@ -66,6 +66,7 @@
 		381D03991DA34A1800B270C6 /* UserListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03941DA34A1800B270C6 /* UserListViewController.swift */; };
 		381D039C1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D039B1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift */; };
 		383E60721DA811220033012B /* TableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383E60711DA811220033012B /* TableFunctions.swift */; };
+		384146191DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384146181DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift */; };
 		384C42441DD93536003CB577 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384C42431DD93536003CB577 /* Device.swift */; };
 		3874CA251D9E26A500C014F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CA241D9E26A500C014F3 /* AppDelegate.swift */; };
 		3874CA271D9E26A500C014F3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CA261D9E26A500C014F3 /* LoginViewController.swift */; };
@@ -146,10 +147,7 @@
 		38AFE87A1DA101C700B52032 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AFE8751DA101C700B52032 /* EditPostViewController.swift */; };
 		38AFE87E1DA18B5500B52032 /* Plus-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 38AFE87C1DA18B5500B52032 /* Plus-512.png */; };
 		38AFE87F1DA18B5500B52032 /* Nathan.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 38AFE87D1DA18B5500B52032 /* Nathan.jpg */; };
-		38C468461DD440E00016C7C6 /* AppNavigationDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C468401DD440E00016C7C6 /* AppNavigationDrawerController.swift */; };
-		38C468471DD440E00016C7C6 /* AppToolbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C468411DD440E00016C7C6 /* AppToolbarController.swift */; };
 		38C468491DD440E00016C7C6 /* RightAnnouncementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C468431DD440E00016C7C6 /* RightAnnouncementsViewController.swift */; };
-		38C4689D1DD52C420016C7C6 /* AppMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C4689C1DD52C420016C7C6 /* AppMenuController.swift */; };
 		38CB5DCA1DAAD4F100E71612 /* Engage-Logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 38CB5DC91DAAD4F100E71612 /* Engage-Logo.jpg */; };
 		38CB5DCC1DAAE6BE00E71612 /* Engage-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 38CB5DCB1DAAE6BE00E71612 /* Engage-Logo.png */; };
 		38CB5DCF1DAB2B8000E71612 /* ColorListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CB5DCE1DAB2B8000E71612 /* ColorListCell.swift */; };
@@ -235,6 +233,7 @@
 		381D03941DA34A1800B270C6 /* UserListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListViewController.swift; sourceTree = "<group>"; };
 		381D039B1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngagementGroupDetailsViewController.swift; sourceTree = "<group>"; };
 		383E60711DA811220033012B /* TableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableFunctions.swift; sourceTree = "<group>"; };
+		384146181DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleDrawerVisualStateManager.swift; sourceTree = "<group>"; };
 		384C42431DD93536003CB577 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		3874CA211D9E26A500C014F3 /* Engage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Engage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3874CA241D9E26A500C014F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -325,10 +324,7 @@
 		38AFE8751DA101C700B52032 /* EditPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
 		38AFE87C1DA18B5500B52032 /* Plus-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Plus-512.png"; sourceTree = "<group>"; };
 		38AFE87D1DA18B5500B52032 /* Nathan.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Nathan.jpg; sourceTree = "<group>"; };
-		38C468401DD440E00016C7C6 /* AppNavigationDrawerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNavigationDrawerController.swift; sourceTree = "<group>"; };
-		38C468411DD440E00016C7C6 /* AppToolbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppToolbarController.swift; sourceTree = "<group>"; };
 		38C468431DD440E00016C7C6 /* RightAnnouncementsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightAnnouncementsViewController.swift; sourceTree = "<group>"; };
-		38C4689C1DD52C420016C7C6 /* AppMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppMenuController.swift; sourceTree = "<group>"; };
 		38CB5DC91DAAD4F100E71612 /* Engage-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Engage-Logo.jpg"; sourceTree = "<group>"; };
 		38CB5DCB1DAAE6BE00E71612 /* Engage-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Engage-Logo.png"; sourceTree = "<group>"; };
 		38CB5DCE1DAB2B8000E71612 /* ColorListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorListCell.swift; sourceTree = "<group>"; };
@@ -465,6 +461,38 @@
 			name = SubGroup;
 			sourceTree = "<group>";
 		};
+		3841461A1DE69DB9001443CD /* Login/Register */ = {
+			isa = PBXGroup;
+			children = (
+				3874CA261D9E26A500C014F3 /* LoginViewController.swift */,
+				3874CA7C1D9F93C500C014F3 /* RegisterViewController.swift */,
+			);
+			name = Login/Register;
+			sourceTree = "<group>";
+		};
+		3874789C1DE02EFB005D6198 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				38CB5DC91DAAD4F100E71612 /* Engage-Logo.jpg */,
+				38CB5DDF1DB09E9300E71612 /* Engage-Wide.jpg */,
+				38F5CEE31DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg */,
+				38CB5DCB1DAAE6BE00E71612 /* Engage-Logo.png */,
+				381C02F31DC1909F00831EE0 /* WESST-Logo.png */,
+				38AFE87C1DA18B5500B52032 /* Plus-512.png */,
+				38F5CEE11DB4B98B00F64DF0 /* city.png */,
+				38F5CEDB1DB4AFC300F64DF0 /* people.png */,
+				38AFE87D1DA18B5500B52032 /* Nathan.jpg */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		387478A21DE0E908005D6198 /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = SWRevealViewController;
+			sourceTree = "<group>";
+		};
 		3874CA181D9E26A500C014F3 = {
 			isa = PBXGroup;
 			children = (
@@ -488,37 +516,29 @@
 			children = (
 				3874CA611D9F84E800C014F3 /* Engage.entitlements */,
 				3874CA3A1D9E35EA00C014F3 /* Engage-Bridging-Header.h */,
+				387478A21DE0E908005D6198 /* SWRevealViewController */,
 				38F5CEE51DB4C07800F64DF0 /* Walkthrough */,
 				3874CA7B1D9F882C00C014F3 /* LicensingViewController */,
 				3874CA601D9F840200C014F3 /* NSDate */,
-				3874CA4D1D9E3AEB00C014F3 /* Constants.swift */,
 				3874CA241D9E26A500C014F3 /* AppDelegate.swift */,
-				3874CA261D9E26A500C014F3 /* LoginViewController.swift */,
-				3874CA7C1D9F93C500C014F3 /* RegisterViewController.swift */,
+				3874CA4D1D9E3AEB00C014F3 /* Constants.swift */,
 				38CB5DD21DAC308600E71612 /* AppInfoViewController.swift */,
+				3841461A1DE69DB9001443CD /* Login/Register */,
 				38C4684C1DD447D80016C7C6 /* Menu Controllers */,
 				381D03471DA2222F00B270C6 /* User Selection Delegates */,
+				38AFE87B1DA101D700B52032 /* Feed */,
 				3874CA931DA0642E00C014F3 /* Engagement */,
 				381D039A1DA34A2500B270C6 /* SubGroup */,
 				38F5CEC21DB2E13400F64DF0 /* Sponsors */,
-				38AFE87B1DA101D700B52032 /* Feed */,
 				381D03341DA21CA700B270C6 /* Profile */,
 				381D03481DA225EB00B270C6 /* Messaging */,
-				38CB5DDA1DADDFB300E71612 /* Conference */,
 				381D034F1DA22CCB00B270C6 /* Calendar */,
+				38CB5DDA1DADDFB300E71612 /* Conference */,
 				3874CA961DA0649800C014F3 /* Cells */,
 				3874CA921DA0641D00C014F3 /* Class Functins */,
 				3874CA2B1D9E26A500C014F3 /* Assets.xcassets */,
 				3874CA4B1D9E361D00C014F3 /* Images.xcassets */,
-				38CB5DC91DAAD4F100E71612 /* Engage-Logo.jpg */,
-				38CB5DDF1DB09E9300E71612 /* Engage-Wide.jpg */,
-				38F5CEE31DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg */,
-				38CB5DCB1DAAE6BE00E71612 /* Engage-Logo.png */,
-				381C02F31DC1909F00831EE0 /* WESST-Logo.png */,
-				38AFE87C1DA18B5500B52032 /* Plus-512.png */,
-				38F5CEE11DB4B98B00F64DF0 /* city.png */,
-				38F5CEDB1DB4AFC300F64DF0 /* people.png */,
-				38AFE87D1DA18B5500B52032 /* Nathan.jpg */,
+				3874789C1DE02EFB005D6198 /* Images */,
 				3874CA281D9E26A500C014F3 /* Main.storyboard */,
 				3874CA2D1D9E26A500C014F3 /* LaunchScreen.storyboard */,
 				3874CA301D9E26A500C014F3 /* Info.plist */,
@@ -571,8 +591,8 @@
 				3874CA8D1DA0630200C014F3 /* FindEngagementsViewController.swift */,
 				3874CA8E1DA0630200C014F3 /* CreateEngagementViewController.swift */,
 				381D039B1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift */,
-				3803965B1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift */,
 				381D038E1DA34A0700B270C6 /* EditEngagementGroupViewController.swift */,
+				3803965B1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift */,
 			);
 			name = Engagement;
 			sourceTree = "<group>";
@@ -662,9 +682,7 @@
 		38C4684C1DD447D80016C7C6 /* Menu Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				38C468401DD440E00016C7C6 /* AppNavigationDrawerController.swift */,
-				38C468411DD440E00016C7C6 /* AppToolbarController.swift */,
-				38C4689C1DD52C420016C7C6 /* AppMenuController.swift */,
+				384146181DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift */,
 				381D03501DA22F4200B270C6 /* LeftMenuController.swift */,
 				38C468431DD440E00016C7C6 /* RightAnnouncementsViewController.swift */,
 			);
@@ -890,7 +908,6 @@
 				38F5CEBF1DB2DDB900F64DF0 /* SponsorsViewController.swift in Sources */,
 				381D03841DA2F75000B270C6 /* CVDate.swift in Sources */,
 				381D034E1DA22CC300B270C6 /* Event.swift in Sources */,
-				38C468471DD440E00016C7C6 /* AppToolbarController.swift in Sources */,
 				381D03861DA2F75000B270C6 /* CVRange.swift in Sources */,
 				381D037B1DA2F75000B270C6 /* CVCalendarViewAnimator.swift in Sources */,
 				381D037A1DA2F75000B270C6 /* CVCalendarView.swift in Sources */,
@@ -963,6 +980,7 @@
 				381D03761DA2F75000B270C6 /* CVCalendarMenuViewDelegate.swift in Sources */,
 				389036181DA365F200DCF82C /* EventDetailViewController.swift in Sources */,
 				3803965C1DD2FA1E00CE3E9C /* AdminFunctionsViewController.swift in Sources */,
+				384146191DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift in Sources */,
 				3874CA7A1D9F882800C014F3 /* LicensingViewController.swift in Sources */,
 				381D03441DA2222A00B270C6 /* SelectUsersFromSubGroupViewController.swift in Sources */,
 				381D03951DA34A1800B270C6 /* SubGroupsViewController.swift in Sources */,
@@ -992,10 +1010,8 @@
 				389036641DA6C21400DCF82C /* LocationPickerViewController.swift in Sources */,
 				3874CAAA1DA064AA00C014F3 /* MapCell.swift in Sources */,
 				389036441DA4AA3900DCF82C /* MessageTableViewCell.m in Sources */,
-				38C4689D1DD52C420016C7C6 /* AppMenuController.swift in Sources */,
 				3874CA771D9F882800C014F3 /* License.swift in Sources */,
 				381D03771DA2F75000B270C6 /* CVCalendarMonthContentViewController.swift in Sources */,
-				38C468461DD440E00016C7C6 /* AppNavigationDrawerController.swift in Sources */,
 				381D032F1DA2155A00B270C6 /* Camera.swift in Sources */,
 				38F5CEC11DB2E12F00F64DF0 /* SponsorDetailViewController.swift in Sources */,
 				381D03271DA20D6400B270C6 /* ProfileViewController.swift in Sources */,
@@ -1133,7 +1149,7 @@
 			baseConfigurationReference = D078A42BFB98078E2B1EDE42 /* Pods-Engage.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = WESSTAppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Engage/Engage.entitlements;
@@ -1141,7 +1157,7 @@
 				INFOPLIST_FILE = Engage/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.WESST;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.Engage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1154,7 +1170,7 @@
 			baseConfigurationReference = 1B335058B75F5D766BE032F1 /* Pods-Engage.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = WESSTAppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Engage/Engage.entitlements;
@@ -1162,7 +1178,7 @@
 				INFOPLIST_FILE = Engage/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.WESST;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.Engage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

@@ -40,8 +40,8 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        appMenuController.menu.views.first?.isHidden = true
-        prepareToolbar()
+        
+        self.title = groupName
         
         if let user = PFUser.current() {
             self.senderId = user.objectId
@@ -62,22 +62,6 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
         Messages.clearMessageCounter(groupId: groupId);
     }
     
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = groupName
-        tc.toolbar.detail = ""
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
-    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -371,7 +355,7 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
         profileVC.user = users[indexPath.row]
         let navVC = UINavigationController(rootViewController: profileVC)
         navVC.navigationBar.barTintColor = MAIN_COLOR!
-        appToolbarController.show(navVC, sender: self)
+        self.present(navVC, animated: true, completion: nil)
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {

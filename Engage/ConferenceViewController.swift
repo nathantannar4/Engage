@@ -30,6 +30,7 @@ class ConferenceViewController: FormViewController  {
         tableView.contentInset.bottom = 60
         tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         title = conference
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.moreVertical, style: .plain, target: self, action: #selector(settingsButtonPressed))
         
         Conference.sharedInstance.clear()
         
@@ -58,21 +59,7 @@ class ConferenceViewController: FormViewController  {
             }
     }
     
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = self.conference
-        tc.toolbar.detail = "Conference"
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let moreButton = IconButton(image: Icon.cm.moreVertical)
-        moreButton.tintColor = UIColor.white
-        moreButton.addTarget(self, action: #selector(settingsButtonPressed), for: .touchUpInside)
-        appToolbarController.prepareToolbarMenu(right: [moreButton])
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
-        prepareToolbar()
         if !firstLoad {
             updateRows()
             getPositions()
@@ -258,7 +245,7 @@ class ConferenceViewController: FormViewController  {
                                     let profileVC = PublicProfileViewController()
                                     let navVC = UINavigationController(rootViewController: profileVC)
                                     navVC.navigationBar.barTintColor = MAIN_COLOR!
-                                    appToolbarController.show(navVC, sender: self)
+                                    self?.present(navVC, animated: true, completion: nil)
                                 })
                         }
                     }
@@ -287,7 +274,7 @@ class ConferenceViewController: FormViewController  {
         
         if Engagement.sharedInstance.admins.contains(PFUser.current()!.objectId!) {
             let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                appToolbarController.rotateRight(from: self, to: EditConferenceViewController())
+                self.navigationController?.pushViewController(EditConferenceViewController(), animated: true)
             }
             actionSheetController.addAction(editAction)
             
@@ -304,7 +291,7 @@ class ConferenceViewController: FormViewController  {
                             }
                             let vc = AdminFunctionsViewController()
                             vc.userIds = userIds
-                            appToolbarController.push(from: self, to: vc)
+                            self.navigationController?.pushViewController(vc, animated: true)
                         }
                     } else {
                         SVProgressHUD.showError(withStatus: "Network Error")

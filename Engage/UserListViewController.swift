@@ -28,35 +28,12 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
         // Configure UI
         title = "Members"
         tableView.contentInset.top = 40
-        appMenuController.menu.views.first?.isHidden = true
         self.searchBar.delegate = self
         self.searchBar.tintColor = MAIN_COLOR
         
         // Populate table
         SVProgressHUD.show(withStatus: "Loading Members")
         searchUsers(searchLower: "")
-        prepareToolbar()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Members"
-        if isSub {
-            tc.toolbar.detail = EngagementSubGroup.sharedInstance.name!
-        } else {
-            tc.toolbar.detail = Engagement.sharedInstance.name!
-        }
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -110,7 +87,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
                                     profileVC.user = user
                                     let navVC = UINavigationController(rootViewController: profileVC)
                                     navVC.navigationBar.barTintColor = MAIN_COLOR!
-                                    appToolbarController.show(navVC, sender: self)
+                                    self?.present(navVC, animated: true)
                                 })
                         } else if self.adminMembers.contains(user.objectId!) {
                             members.append(LabelRowFormer<ProfileImageDetailCell>(instantiateType: .Nib(nibName: "ProfileImageDetailCell")) {
@@ -134,7 +111,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
                                     profileVC.user = user
                                     let navVC = UINavigationController(rootViewController: profileVC)
                                     navVC.navigationBar.barTintColor = MAIN_COLOR!
-                                    appToolbarController.show(navVC, sender: self)
+                                    self?.present(navVC, animated: true, completion: nil)
                                 })
                         } else {
                             members.append(LabelRowFormer<ProfileImageCell>(instantiateType: .Nib(nibName: "ProfileImageCell")) {
@@ -156,7 +133,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
                                     profileVC.user = user
                                     let navVC = UINavigationController(rootViewController: profileVC)
                                     navVC.navigationBar.barTintColor = MAIN_COLOR!
-                                    appToolbarController.show(navVC, sender: self)
+                                    self?.present(navVC, animated: true, completion: nil)
                                 })
                         }
                     }

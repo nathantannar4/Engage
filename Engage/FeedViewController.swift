@@ -13,7 +13,7 @@ import SVProgressHUD
 import Parse
 import ParseUI
 
-class FeedViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, MenuDelegate, UITextFieldDelegate {
+class FeedViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UITextFieldDelegate {
     
     internal var querySkip = 0
     internal var addButton: FabButton!
@@ -31,50 +31,19 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         SVProgressHUD.dismiss()
-        
-        tableView.emptyDataSetSource = self;
-        tableView.emptyDataSetDelegate = self
-        tableView.backgroundColor = Color.grey.lighten3
-        tableView.separatorStyle = .none
-        tableView.contentInset.bottom = 100
-        tableView.estimatedRowHeight = 180
-        refreshControl = UIRefreshControl()
-        refreshControl?.tintColor = MAIN_COLOR
-        refreshControl?.addTarget(self, action: #selector(FeedViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
-        tableView.addSubview(self.refreshControl!)
-        loadPosts()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        appMenuController.menu.views.first?.isHidden = false
-        prepareToolbar()
-        
-        if !menuOpen {
-            prepareAddButton()
-            prepareMenuController()
-        }
+        self.title = "Activity Feed"
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(openNewPost))
+        self.prepareTable()
+        self.loadPosts()
     }
     
     func handleRefresh(_ refreshControl: UIRefreshControl) {
         querySkip = 0
         loadPosts()
         refreshControl.endRefreshing()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Activity Feed"
-        tc.toolbar.titleLabel.textColor = UIColor.white
-        tc.toolbar.detail = "All Posts"
-        tc.toolbar.detailLabel.textColor = UIColor.white
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        tc.toolbar.tintColor = UIColor.white
-        appToolbarController.prepareToolbarMenu(right: [])
-        appToolbarController.prepareBellButton()
     }
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
@@ -95,6 +64,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         newPostView.isHidden = false
+        self.prepareNewPostRow()
         return newPostView
     }
     
@@ -195,7 +165,8 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         //closeMenu()
         let vc = PostDetailViewController()
         vc.post = self.posts[indexPath.row]
-        appToolbarController.push(from: self, to: vc)
+        self.navigationController?.pushViewController(vc, animated: true)
+        //appToolbarController.push(from: self, to: vc)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -400,7 +371,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
                 vc.image = self.postImages[sender.object!.objectId!]
                 let navVC = UINavigationController(rootViewController: vc)
                 navVC.navigationBar.barTintColor = MAIN_COLOR!
-                appToolbarController.show(navVC, sender: self)
+                self.present(navVC, animated: true)
             }
             actionSheetController.addAction(editAction)
             
@@ -510,7 +481,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     
     // MARK: - UIImagePickerDelegate
     
-    @objc private func presentImagePicker() {
+    func presentImagePicker() {
         let picker = UIImagePickerController()
         picker.navigationBar.barTintColor = MAIN_COLOR
         picker.delegate = self
@@ -531,51 +502,18 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         }
     }
     
-    // Menu Controller
-    // Handle the menu toggle event.
-    private func closeMenu() {
-        guard let mc = menuController as? AppMenuController else {
-            return
-        }
-        menuOpen = false
-        mc.menu.views.first?.animate(animation: Motion.rotate(angle: 0))
-        mc.menu.views.first?.backgroundColor = MAIN_COLOR
-        tableView.reloadData()
+    private func prepareTable() {
+        self.tableView.emptyDataSetSource = self
+        self.tableView.emptyDataSetDelegate = self
+        self.tableView.backgroundColor = Color.grey.lighten3
+        self.tableView.separatorStyle = .none
+        self.tableView.contentInset.bottom = 100
+        self.tableView.estimatedRowHeight = 180
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.addTarget(self, action: #selector(FeedViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        self.tableView.addSubview(self.refreshControl!)
     }
-    
-    private func openMenu() {
-        guard let mc = menuController as? AppMenuController else {
-            return
-        }
-        menuOpen = true
-        mc.menu.views.first?.animate(animation: Motion.rotate(angle: 45))
-        mc.menu.views.first?.backgroundColor = UIColor.flatRed()
-        mc.menu.open()
-        Post.new.clear()
-        prepareNewPostRow()
-        tableView.reloadData()
-    }
-    
-    @objc private func handleToggleMenu(button: Button) {
-        if menuOpen {
-            closeMenu()
-            
-        } else {
-            openMenu()
-        }
-    }
-    
-    @objc private func handleSendButton() {
-        if textField.text!.isNotEmpty {
-            view.endEditing(true)
-            Post.new.info = textField.text
-            Post.new.createPost(object: nil, completion: {
-                self.closeMenu()
-                self.handleRefresh(self.refreshControl!)
-            })
-        }
-    }
-    
+
     private func prepareNewPostRow() {
         newPostView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 130)
         newPostView.backgroundColor = UIColor.white
@@ -608,22 +546,6 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         newPostView.addSubview(divider)
     }
     
-    private func prepareAddButton() {
-        addButton = FabButton(image: Icon.cm.add)
-        addButton.tintColor = UIColor.white
-        addButton.backgroundColor = MAIN_COLOR
-        addButton.addTarget(self, action: #selector(handleToggleMenu), for: .touchUpInside)
-    }
-    
-    private func prepareMenuController() {
-        guard let mc = menuController as? AppMenuController else {
-            return
-        }
-        
-        mc.menu.delegate = self
-        mc.menu.views = [addButton]
-    }
-    
     func addToolBar(textField: UITextField){
         let toolBar = UIToolbar()
         toolBar.barStyle = UIBarStyle.default
@@ -640,8 +562,32 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         textField.inputAccessoryView = toolBar
     }
     
-    func cancelPressed(){
+    func handleSendButton() {
+        if textField.text!.isNotEmpty {
+            view.endEditing(true)
+            Post.new.info = textField.text
+            Post.new.createPost(object: nil, completion: {
+                self.handleRefresh(self.refreshControl!)
+                self.cancelPressed()
+            })
+        }
+    }
+    
+    func openNewPost() {
+        menuOpen = true
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelPressed))
+        tableView.reloadData()
+    }
+    
+    func cancelPressed() {
         view.endEditing(true)
+        menuOpen = false
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(openNewPost))
+        tableView.reloadData()
+    }
+    
+    func leftDrawerButtonPressed() {
+        self.evo_drawerController?.toggleDrawerSide(.left, animated: true, completion: nil)
     }
 }
 

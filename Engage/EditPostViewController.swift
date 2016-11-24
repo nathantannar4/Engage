@@ -132,7 +132,7 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
     private func configure() {
         title = "Edit Post"
         tableView.contentInset.top = 0
-        tableView.contentInset.bottom = 20
+        tableView.contentInset.bottom = 50
         
         let infoRow = TextViewRowFormer<FormTextViewCell>() { [weak self] in
             $0.textView.textColor = .formerSubColor()

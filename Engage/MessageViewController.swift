@@ -24,6 +24,8 @@ class MessageViewController: SLKTextViewController {
         var date: Date
     }
     
+    var timer: Timer = Timer()
+    
     var userIDs = [String]()
     var userPhotos = [UIImage]()
     
@@ -73,28 +75,20 @@ class MessageViewController: SLKTextViewController {
         }
     }
     
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = groupName
-        tc.toolbar.detail = ""
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(MessageViewController.configureDataSource), userInfo: nil, repeats: true)
     }
     
-    @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        timer.invalidate()
     }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        appMenuController.menu.views.first?.isHidden = true
-        prepareToolbar()
+        self.title = groupName
         self.commonInit()
         
         // Load Public Chat Groups
@@ -188,7 +182,7 @@ extension MessageViewController {
             }
             query.includeKey(PF_CHAT_USER)
             query.order(byDescending: PF_CHAT_CREATEDAT)
-            query.limit = 50
+            query.limit = 100
             query.findObjectsInBackground(block: { (objects: [PFObject]?, error: Error?) -> Void in
                 if error == nil {
                     for object in (objects as [PFObject]!).reversed() {

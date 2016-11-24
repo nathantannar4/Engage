@@ -44,6 +44,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>DrawerController.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>FontAwesomeKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -127,16 +132,6 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>04693735BCFA74B873DE04047ECC5FBA</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>08C670F14C5E0F92D52B4FD40051294F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>16FB872D0D2D4BA0F378AB34D47CF95F</key>
 		<dict>
 			<key>primary</key>
@@ -147,17 +142,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>1B006392A6DC63E06AC81DE6F08803B1</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>1DE16FFF5C2365197D875DE00D7328B7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>1ED4DFAAD25E1999D0244868457A351E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>28B32B71E638F3A5D3ED8826A1D0C0DC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -167,7 +157,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3959133326B5660AB5CF7E36EB345B0C</key>
+		<key>2DEA63043EEA20BDE5246DCB6642FEB3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3EA3DE68988F01892E6AC1BF64B53C18</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -177,7 +172,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5484CB5F8398661113094ACD8575807B</key>
+		<key>52B55F6D02C14B45F8DDB86E0D52F98A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5695E7FD59B6024888EED347421AA4CC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -192,7 +192,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>803D61FA1CE4D64892DECE674C046C92</key>
+		<key>7B0BCD7969159A8782D304C45437DF88</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7EF98BACAC16BB71AE0E9591FCC195D1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -212,7 +217,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9DEBB4594E0EDF0F701352D723470A07</key>
+		<key>9D98668DE1A2E68382DC84FFE88C6E01</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -222,7 +227,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AA878934FE7B97D25BA7B850E57F2FA9</key>
+		<key>BC911AFCCCAA952028F27336441D755A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D083682CF36071495A66680CF5CE2BA5</key>
 		<dict>
 			<key>primary</key>
 			<true/>

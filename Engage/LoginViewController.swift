@@ -84,11 +84,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
                         if !Engagement.sharedInstance.members.contains(PFUser.current()!.objectId!) {
                             Engagement.sharedInstance.join(newUser: PFUser.current()!)
                         }
-                        PushNotication.parsePushUserAssign()
-                        appToolbarController = AppToolbarController(rootViewController: FeedViewController())
-                        appMenuController = AppMenuController(rootViewController: appToolbarController)
-                        let rootViewController = AppNavigationDrawerController(rootViewController: appMenuController, leftViewController: LeftMenuController(), rightViewController: RightAnnouncementsViewController())
-                        self.present(rootViewController, animated: false, completion: nil)
+                        Utilities.showEngagement(self)
                     }
                 }
             }
@@ -159,11 +155,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
                                 if !Engagement.sharedInstance.members.contains(PFUser.current()!.objectId!) {
                                     Engagement.sharedInstance.join(newUser: PFUser.current()!)
                                 }
-                                PushNotication.parsePushUserAssign()
-                                appToolbarController = AppToolbarController(rootViewController: FeedViewController())
-                                appMenuController = AppMenuController(rootViewController: appToolbarController)
-                                let rootViewController = AppNavigationDrawerController(rootViewController: appMenuController, leftViewController: LeftMenuController(), rightViewController: RightAnnouncementsViewController())
-                                self.present(rootViewController, animated: false, completion: nil)
+                                Utilities.showEngagement(self)
                             }
                         }
                     }

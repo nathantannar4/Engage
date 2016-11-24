@@ -93,6 +93,7 @@ class RightAnnouncementsViewController: UITableViewController {
             header.textLabel?.text = "Announcements"
             header.textLabel?.textColor = UIColor.white
             header.textLabel?.font = RobotoFont.bold(with: 20.0)
+            header.textLabel?.textAlignment = .right
             header.backgroundColor = MAIN_COLOR
             header.selectionStyle = .none
             return header

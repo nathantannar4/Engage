@@ -21,33 +21,15 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.contentInset.top = 10
-        tableView.contentInset.bottom = 60
+        self.title = "Admin Functions"
+        self.tableView.contentInset.top = 10
+        self.tableView.contentInset.bottom = 60
         
         if userIds.count == 0 {
             userIds = Engagement.sharedInstance.members
         }
         
-        prepareToolbar()
-        configure()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Admin Functions"
-        tc.toolbar.detail = "\(userIds.count) Members"
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        tc.toolbar.tintColor = UIColor.white
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
+        self.configure()
     }
     
     private lazy var formerInputAccessoryView: FormerInputAccessoryView = FormerInputAccessoryView(former: self.former)
@@ -186,16 +168,14 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
                         if let objects = objects {
                             for object in objects {
                                 let user = object.object(forKey: "user") as! PFUser
-                                exportString.append((object.value(forKey: "school") as! String) + " | ")
                                 exportString.append((user.value(forKey: PF_USER_FULLNAME) as! String) + " ")
-                                exportString.append((user.value(forKey: PF_USER_EMAIL) as! String) + " ")
-                                /*
+                                
                                 for key in object.allKeys {
                                     if key != "user" {
-                                        exportString.append("\(object.value(forKey: key)!) |")
+                                        exportString.append("\(object.value(forKey: key)) |")
                                     }
                                 }
-                                */
+                                
                                 exportString.append("\n")
                             }
                         }

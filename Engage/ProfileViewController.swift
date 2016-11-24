@@ -20,35 +20,17 @@ class ProfileViewController: FormViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        tableView.contentInset.top = 0
-        tableView.contentInset.bottom = 60
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.moreVertical, style: .plain, target: self, action: #selector(editButtonPressed))
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        self.tableView.contentInset.top = 0
+        self.tableView.contentInset.bottom = 60
         
         Profile.sharedInstance.user = PFUser.current()
         Profile.sharedInstance.loadUser()
     }
     
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Profile"
-        tc.toolbar.detail = ""
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let editButton = IconButton(image: Icon.cm.edit)
-        editButton.tintColor = UIColor.white
-        editButton.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
-        if isWESST {
-            let logoutButton = IconButton(image: UIImage(named: "Logout")?.withRenderingMode(.alwaysTemplate), tintColor: UIColor.white)
-            logoutButton.addTarget(self, action: #selector(logoutButtonPressed), for: .touchUpInside)
-            appToolbarController.prepareToolbarMenu(right: [logoutButton, editButton])
-        } else {
-            appToolbarController.prepareToolbarMenu(right: [editButton])
-        }
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
-        prepareToolbar()
         former.removeAll()
         configure()
     }
@@ -162,7 +144,7 @@ class ProfileViewController: FormViewController  {
     // MARK: - User actions
     
     func editButtonPressed() {
-        appToolbarController.rotateRight(from: self, to: EditProfileViewController())
+        self.navigationController?.pushViewController(EditProfileViewController(), animated: true)
     }
     
     func logoutButtonPressed() {
@@ -183,5 +165,9 @@ class ProfileViewController: FormViewController  {
         alert.addAction(logout)
         
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func leftDrawerButtonPressed() {
+        self.evo_drawerController?.toggleDrawerSide(.left, animated: true, completion: nil)
     }
 }

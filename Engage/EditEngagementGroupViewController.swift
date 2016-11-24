@@ -25,32 +25,12 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Edit"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(saveButtonPressed))
         self.tableView.contentInset.top = 10
         self.tableView.contentInset.bottom = 100
         
-        configure()
-        prepareToolbar()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Edit"
-        tc.toolbar.detail = "\(Engagement.sharedInstance.name!)"
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        tc.toolbar.tintColor = UIColor.white
-        let saveButton = IconButton(image: Icon.cm.check)
-        saveButton.tintColor = UIColor.white
-        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [saveButton])
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.rotateLeft(from: self)
+        self.configure()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

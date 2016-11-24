@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import ChameleonFramework
+import DrawerController
 
 struct Constants {
     struct PF {
@@ -23,11 +24,10 @@ struct Constants {
 */
 
 /* App Settings */
-var VERSION = "1.0.2"
-var isWESST = true
+var VERSION = "1.1.0"
+var isWESST = false
 
-var appToolbarController = AppToolbarController()
-var appMenuController = AppMenuController()
+var drawerController: DrawerController!
 
 /* UI */
 // WESST Color UIColor(red: 153.0/255, green:62.0/255.0, blue:123.0/255, alpha: 1)

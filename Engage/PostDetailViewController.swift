@@ -28,8 +28,6 @@ class PostDetailViewController: FormViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        prepareToolbar()
-        appMenuController.menu.views.first?.isHidden = true
         tableView.contentInset.bottom = 100
         
         postUser = post?.object(forKey: "user") as? PFUser
@@ -60,23 +58,6 @@ class PostDetailViewController: FormViewController, UITextFieldDelegate {
         }
         
         configure()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = ""
-        tc.toolbar.detail = ""
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [])
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.pull(from: self)
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
@@ -161,13 +142,13 @@ class PostDetailViewController: FormViewController, UITextFieldDelegate {
                 if self.postUser?.objectId == PFUser.current()?.objectId {
                     let navVC = UINavigationController(rootViewController: editVC)
                     navVC.navigationBar.barTintColor = MAIN_COLOR!
-                    appToolbarController.show(navVC, sender: self)
+                    self.present(navVC, animated: true)
                 } else {
                     let profileVC = PublicProfileViewController()
                     profileVC.user = self.postUser
                     let navVC = UINavigationController(rootViewController: profileVC)
                     navVC.navigationBar.barTintColor = MAIN_COLOR!
-                    appToolbarController.show(navVC, sender: self)
+                    self.present(navVC, animated: true)
                 }
         }
         

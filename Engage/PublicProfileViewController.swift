@@ -46,7 +46,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         
         let messageVC = MessageViewController()
         messageVC.groupId = Messages.startPrivateChat(user1: user1, user2: user2!)
-        messageVC.title = user2!.value(forKey: PF_USER_FULLNAME) as! String
+        messageVC.title = user2!.value(forKey: PF_USER_FULLNAME) as? String
         
         self.navigationController?.pushViewController(messageVC, animated: true)
     }
@@ -353,10 +353,10 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
             if error == nil {
                 for post in posts! {
                     if (post[PF_POST_HAS_IMAGE] as? Bool) == true {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, view: self), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
+                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, target: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
                         self.rowCounter += 1
                     } else {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, view: self), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
+                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, target: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
                         self.rowCounter += 1
                     }
                 }

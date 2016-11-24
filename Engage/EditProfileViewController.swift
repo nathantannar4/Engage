@@ -26,30 +26,8 @@ final class EditProfileViewController: FormViewController, UIImagePickerControll
         tableView.contentInset.top = 20
         tableView.contentInset.bottom = 100
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(saveButtonPressed))
         configure()
-        prepareToolbar()
-    }
-    
-    private func prepareToolbar() {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.title = "Edit"
-        tc.toolbar.detail = "Profile for \(Engagement.sharedInstance.name!)"
-        tc.toolbar.backgroundColor = MAIN_COLOR
-        tc.toolbar.tintColor = UIColor.white
-        let saveButton = IconButton(image: Icon.cm.check)
-        saveButton.tintColor = UIColor.white
-        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-        let backButton = IconButton(image: Icon.cm.arrowBack)
-        backButton.tintColor = UIColor.white
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-        appToolbarController.prepareToolbarCustom(left: [backButton], right: [saveButton])
-    }
-    
-    @objc private func handleBackButton() {
-        appToolbarController.rotateLeft(from: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
