@@ -219,17 +219,17 @@ class ChatViewController: JSQMessagesViewController, UIActionSheetDelegate, UIIm
         actionSheetController.addAction(cancelAction)
         let takePictureAction: UIAlertAction = UIAlertAction(title: "Take Photo", style: .default)
         { action -> Void in
-            Camera.shouldStartCamera(target: self, canEdit: true, frontFacing: true)
+            _ = Camera.shouldStartCamera(target: self, canEdit: true, frontFacing: true)
         }
         actionSheetController.addAction(takePictureAction)
         let choosePictureAction: UIAlertAction = UIAlertAction(title: "Choose Photo", style: .default)
         { action -> Void in
-            Camera.shouldStartPhotoLibrary(target: self, canEdit: true)
+            _ = Camera.shouldStartPhotoLibrary(target: self, canEdit: true)
         }
         actionSheetController.addAction(choosePictureAction)
         let chooseVideoAction: UIAlertAction = UIAlertAction(title: "Choose Video", style: .default)
         { action -> Void in
-            Camera.shouldStartVideoLibrary(target: self, canEdit: true)
+            _ = Camera.shouldStartVideoLibrary(target: self, canEdit: true)
         }
         actionSheetController.addAction(chooseVideoAction)
         actionSheetController.popoverPresentationController?.sourceView = self.view

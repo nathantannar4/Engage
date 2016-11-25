@@ -36,7 +36,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         }
     
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        
+        self.prepareButton()
         configure()
     }
     
@@ -46,7 +46,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         
         let messageVC = ChatViewController()
         messageVC.groupId = Messages.startPrivateChat(user1: user1, user2: user2!)
-        messageVC.title = user2!.value(forKey: PF_USER_FULLNAME) as? String
+        messageVC.groupName = user2!.value(forKey: PF_USER_FULLNAME) as! String
         
         self.navigationController?.pushViewController(messageVC, animated: true)
     }
@@ -254,7 +254,6 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
                     mailComposeViewController.mailComposeDelegate = self
                     mailComposeViewController.setToRecipients([email!])
                     mailComposeViewController.setMessageBody("", isHTML: false)
-                    mailComposeViewController.view.tintColor = MAIN_COLOR
                     mailComposeViewController.navigationBar.barTintColor = MAIN_COLOR
                     if MFMailComposeViewController.canSendMail() {
                         self.present(mailComposeViewController, animated: true, completion: nil)
@@ -422,6 +421,32 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         Post.new.clear()
         imageRow.cellUpdate {
             $0.iconView.image = nil
+        }
+    }
+    
+    func prepareButton() {
+        button.frame = CGRect(x: self.view.frame.width - 75, y: self.view.frame.height - 150, width: 50, height: 50)
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
+        button.backgroundColor = MAIN_COLOR
+        button.addTarget(self, action: #selector(switchButton), for: .touchUpInside)
+        button.layer.shadowColor = UIColor.gray.cgColor
+        button.layer.shadowOpacity = 1.0
+        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+        button.layer.shadowRadius = 4
+        button.setImage(Icon.cm.add, for: .normal)
+        button.tintColor = UIColor.white
+        self.view.addSubview(button)
+    }
+    
+    func switchButton() {
+        if editorViewable {
+            cancelButtonPressed()
+            editorViewable = false
+            button.setImage(Icon.cm.add, for: .normal)
+        } else {
+            postButtonPressed()
+            editorViewable = true
+            button.setImage(Icon.cm.close, for: .normal)
         }
     }
     

@@ -21,6 +21,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
     var firstLoad = true
     var positionIDs = [String]()
     let memberQuery = PFUser.query()
+    var button = UIButton()
     var editorViewable = false
     var querySkip = 0
     var rowCounter = 0
@@ -34,6 +35,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         self.tableView.separatorStyle = .none
         self.getPositions()
         self.configure()
+        self.prepareButton()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -596,6 +598,32 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         Post.new.clear()
         imageRow.cellUpdate {
             $0.iconView.image = nil
+        }
+    }
+    
+    func prepareButton() {
+        button.frame = CGRect(x: self.view.frame.width - 75, y: self.view.frame.height - 150, width: 50, height: 50)
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
+        button.backgroundColor = MAIN_COLOR
+        button.addTarget(self, action: #selector(switchButton), for: .touchUpInside)
+        button.layer.shadowColor = UIColor.gray.cgColor
+        button.layer.shadowOpacity = 1.0
+        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+        button.layer.shadowRadius = 4
+        button.setImage(Icon.cm.add, for: .normal)
+        button.tintColor = UIColor.white
+        self.view.addSubview(button)
+    }
+    
+    func switchButton() {
+        if editorViewable {
+            cancelButtonPressed()
+            editorViewable = false
+            button.setImage(Icon.cm.add, for: .normal)
+        } else {
+            postButtonPressed()
+            editorViewable = true
+            button.setImage(Icon.cm.close, for: .normal)
         }
     }
     

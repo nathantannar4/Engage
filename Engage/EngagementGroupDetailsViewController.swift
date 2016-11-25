@@ -99,7 +99,6 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
                     mailComposeViewController.mailComposeDelegate = self
                     mailComposeViewController.setToRecipients([Engagement.sharedInstance.email!])
                     mailComposeViewController.setMessageBody("", isHTML: false)
-                    mailComposeViewController.view.tintColor = MAIN_COLOR
                     mailComposeViewController.navigationBar.barTintColor = MAIN_COLOR
                     if MFMailComposeViewController.canSendMail() {
                         self.present(mailComposeViewController, animated: true, completion: { UIApplication.shared.statusBarStyle = .lightContent })

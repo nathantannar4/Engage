@@ -252,7 +252,7 @@ final class EngagementsViewController: FormViewController {
                     myRows.append(joinRow)
                     myRows.append(aboutRow)
                     
-                    self.former.append(sectionFormer: SectionFormer(rowFormers: myRows).set(headerViewFormer: TableFunctions.createHeader(text: "My Groups")).set(footerViewFormer: TableFunctions.createFooter(text: "Engage - Version: \(VERSION)")))
+                    self.former.append(sectionFormer: SectionFormer(rowFormers: myRows).set(headerViewFormer: TableFunctions.createHeader(text: "My Engagements")).set(footerViewFormer: TableFunctions.createFooter(text: "Engage - Version: \(VERSION)")))
                     self.former.reload()
                     
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(self.createEngagement))

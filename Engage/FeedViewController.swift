@@ -19,11 +19,12 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     internal var addButton: FabButton!
     internal var posts = [PFObject]()
     internal var postImages = [String: UIImage]()
-    internal var menuOpen = false
+    internal var editorViewable = false
     internal var newPostView = UIView()
     internal var textField = UITextField()
     internal var postImageView = UIImageView()
     internal var addImageButton = UIButton()
+    internal var button = FabButton()
     
     // Comments
     internal var commentIndex = 0
@@ -35,9 +36,10 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         SVProgressHUD.dismiss()
         self.navigationItem.titleView = Utilities.setTitle(title: "Activity Feed", subtitle: "All Posts")
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(openNewPost))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.bell, style: .plain, target: self, action: #selector(rightDrawerButtonPressed))
         self.prepareTable()
         self.loadPosts()
+        self.prepareButton()
     }
     
     func handleRefresh(_ refreshControl: UIRefreshControl) {
@@ -55,7 +57,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if menuOpen {
+        if editorViewable {
             return 150
         } else {
             return 0
@@ -573,17 +575,40 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         }
     }
     
-    func openNewPost() {
-        menuOpen = true
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelPressed))
-        tableView.reloadData()
+    func prepareButton() {
+        button.frame = CGRect(x: self.navigationController!.view.frame.width - 75, y: self.navigationController!.view.frame.height - 75, width: 50, height: 50)
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
+        button.backgroundColor = MAIN_COLOR
+        button.addTarget(self, action: #selector(switchButton), for: .touchUpInside)
+        button.layer.shadowColor = UIColor.gray.cgColor
+        button.layer.shadowOpacity = 1.0
+        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+        button.layer.shadowRadius = 4
+        button.setImage(Icon.cm.add, for: .normal)
+        button.tintColor = UIColor.white
+        self.navigationController!.view.addSubview(button)
+    }
+    
+    func switchButton() {
+        if editorViewable {
+            cancelPressed()
+            editorViewable = false
+            button.setImage(Icon.cm.add, for: .normal)
+        } else {
+            editorViewable = true
+            tableView.reloadData()
+            button.setImage(Icon.cm.close, for: .normal)
+        }
     }
     
     func cancelPressed() {
         view.endEditing(true)
-        menuOpen = false
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(openNewPost))
+        editorViewable = false
         tableView.reloadData()
+    }
+    
+    func rightDrawerButtonPressed() {
+        self.evo_drawerController?.toggleDrawerSide(.right, animated: true, completion: nil)
     }
     
     func leftDrawerButtonPressed() {
