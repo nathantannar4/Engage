@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Material
 
 protocol SelectSingleFromSubGroupDelegate {
     func didSelectSingleUser(user: PFUser)
@@ -29,7 +30,7 @@ class SelectSingleFromSubGroupViewController: UITableViewController, UISearchBar
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         self.navigationItem.titleView = searchBar
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         
         self.searchBar.placeholder = "Search"
         self.searchBar.delegate = self
@@ -143,17 +144,17 @@ class SelectSingleFromSubGroupViewController: UITableViewController, UISearchBar
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         searchBar.setShowsCancelButton(false, animated: true)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         self.searchBarCancelled()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         self.searchBar.resignFirstResponder()
     }
     

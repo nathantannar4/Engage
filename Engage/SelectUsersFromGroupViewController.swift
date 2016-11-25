@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Material
 import SVProgressHUD
 
 protocol SelectUsersFromGroupDelegate {
@@ -23,8 +24,8 @@ class SelectUsersFromGroupViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(doneButtonPressed))
         
         self.loadUsers()
     }

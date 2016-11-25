@@ -12,6 +12,7 @@ import Former
 import Agrume
 import SVProgressHUD
 import ChameleonFramework
+import Material
 
 class CreateSubGroupViewController: FormViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -33,8 +34,8 @@ class CreateSubGroupViewController: FormViewController, UIImagePickerControllerD
         } else {
             title = "New Sponsor"
         }
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createButtonPressed))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(createButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         self.tableView.contentInset.top = 10
         self.tableView.contentInset.bottom = 100
         

@@ -10,6 +10,7 @@ import UIKit
 import Former
 import Parse
 import Agrume
+import Material
 import SVProgressHUD
 
 final class EngagementsViewController: FormViewController {
@@ -254,7 +255,7 @@ final class EngagementsViewController: FormViewController {
                     self.former.append(sectionFormer: SectionFormer(rowFormers: myRows).set(headerViewFormer: TableFunctions.createHeader(text: "My Groups")).set(footerViewFormer: TableFunctions.createFooter(text: "Engage - Version: \(VERSION)")))
                     self.former.reload()
                     
-                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Plus"), style: .plain, target: self, action: #selector(self.createEngagement))
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(self.createEngagement))
                 } else {
                     print("Will not refresh")
                 }

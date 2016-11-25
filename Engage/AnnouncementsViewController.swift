@@ -106,7 +106,6 @@ class AnnouncementsViewController: UITableViewController {
             let contentView = UILabel()
             contentView.numberOfLines = 0
             contentView.text = self.announcements[indexPath.row - 1].value(forKey: PF_POST_INFO) as? String
-            contentView.textAlignment = .justified
             contentView.font = RobotoFont.regular(with: 15)
             
             // Bottom Bar

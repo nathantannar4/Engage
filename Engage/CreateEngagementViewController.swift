@@ -12,6 +12,7 @@ import Parse
 import Former
 import Agrume
 import SVProgressHUD
+import Material
 import ChameleonFramework
 
 class CreateEngagementViewController: FormViewController {
@@ -25,8 +26,8 @@ class CreateEngagementViewController: FormViewController {
         
         // Configure UI
         self.navigationItem.titleView = Utilities.setTitle(title: "Create", subtitle: "New Engagement")
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createButtonPressed))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(createButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         self.tableView.contentInset.top = 10
         self.tableView.contentInset.bottom = 100
         
