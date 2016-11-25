@@ -65,7 +65,7 @@ final class Engagement {
     }
     
     
-    func save() {
+    func save(completion: Void) {
         if Engagement.sharedInstance.engagement != nil {
             UIApplication.shared.beginIgnoringInteractionEvents()
             SVProgressHUD.show(withStatus: "Saving")
@@ -102,7 +102,7 @@ final class Engagement {
                     responses = responses.replacingOccurrences(of: originalString + ",", with: "")
                     print(responses)
                 }
-            responses = responses.replacingOccurrences(of: " ", with: "")
+                responses = responses.replacingOccurrences(of: " ", with: "")
                 if responses != "" {
                     // Ignore double commas example: one,,three
                     fieldsArray.append(self.removeSpecialCharsFromString(text: responses.capitalized))
@@ -143,9 +143,11 @@ final class Engagement {
                     UIApplication.shared.endIgnoringInteractionEvents()
                     if !success {
                         SVProgressHUD.showError(withStatus: "Error Saving")
+                        completion
                     } else {
                         SVProgressHUD.showSuccess(withStatus: "Saved")
                         MAIN_COLOR = UIColor.init(hexString: Engagement.sharedInstance.color!)
+                        completion
                     }
                 }
         } else {

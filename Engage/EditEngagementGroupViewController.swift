@@ -38,7 +38,13 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
     }
     
     func saveButtonPressed() {
-        Engagement.sharedInstance.save()
+        Engagement.sharedInstance.save(completion: {
+            self.evo_drawerController?.leftDrawerViewController = EngagementMenuController()
+            self.evo_drawerController?.rightDrawerViewController = AnnouncementsViewController()
+            self.navigationController?.navigationBar.barTintColor = MAIN_COLOR
+            self.former.removeAll()
+            self.configure()
+        }())
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
@@ -339,7 +345,6 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
                     cell.textField.text = color.hexValue()
                 })
                 Engagement.sharedInstance.color = color.hexValue()
-                self.navigationController?.navigationBar.barTintColor = color
             }
             }.configure {
                 $0.rowHeight = 60

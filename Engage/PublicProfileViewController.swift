@@ -474,6 +474,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
             
         } else if Post.new.info != ""{
             Post.new.createPost(object: user!, completion: {
+                PushNotication.sendPushNotificationMessage(self.user!.objectId!, text: "\(Profile.sharedInstance.name!) posted to your profile in: \(Engagement.sharedInstance.name!)")
                 self.imageRow.cellUpdate {
                     $0.iconView.image = nil
                 }

@@ -651,6 +651,9 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             
         } else if Post.new.info != ""{
             Post.new.createPost(object: EngagementSubGroup.sharedInstance.subgroup!, completion: {
+                for user in EngagementSubGroup.sharedInstance.admins {
+                    PushNotication.sendPushNotificationMessage(user, text: "\(Profile.sharedInstance.name!) posted to your a subgroup you manage in: \(Engagement.sharedInstance.name!)")
+                }
                 self.imageRow.cellUpdate {
                     $0.iconView.image = nil
                 }

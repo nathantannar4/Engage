@@ -42,6 +42,15 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         self.prepareButton()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        self.prepareButton()
+        button.isHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        button.isHidden = true
+    }
+    
     func handleRefresh(_ refreshControl: UIRefreshControl) {
         querySkip = 0
         loadPosts()

@@ -57,7 +57,7 @@ final class Event {
             newEvent[PF_EVENTS_INVITE_TO] = Event.sharedInstance.inviteTo
             
             for user in Event.sharedInstance.inviteTo {
-                PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(PFUser.current()?.value(forKey: PF_USER_FULLNAME) as! String) invited you to their event: \(Event.sharedInstance.title!) on \(Event.sharedInstance.start!.mediumDateString!)")
+                PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(PFUser.current()?.value(forKey: PF_USER_FULLNAME) as! String) invited you to their event: \(Event.sharedInstance.title!) on \(Event.sharedInstance.start!.mediumDateString!), in: \(Engagement.sharedInstance.name!)")
             }
             
             newEvent[PF_EVENTS_CONFIRMED] = []
@@ -105,7 +105,7 @@ final class Event {
         object![PF_EVENTS_LATITUDE] = Event.sharedInstance.lat!
         
         for user in (object![PF_EVENTS_INVITE_TO] as! [PFUser]) {
-            PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(PFUser.current()?.value(forKey: PF_USER_FULLNAME) as! String) updated their event: \(Event.sharedInstance.title!)")
+            PushNotication.sendPushNotificationMessage(user.objectId!, text: "\(PFUser.current()?.value(forKey: PF_USER_FULLNAME) as! String) updated their event: \(Event.sharedInstance.title!), in: \(Engagement.sharedInstance.name!)")
         }
         
         UIApplication.shared.beginIgnoringInteractionEvents()

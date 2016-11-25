@@ -24,16 +24,9 @@ class Utilities {
     class func showEngagement(_ target: AnyObject) {
         PushNotication.parsePushUserAssign()
         
-        /*
-        appToolbarController = AppToolbarController(rootViewController: FeedViewController())
-        appMenuController = AppMenuController(rootViewController: appToolbarController)
-        let rootViewController = AppNavigationDrawerController(rootViewController: appMenuController, leftViewController: LeftMenuController(), rightViewController: RightAnnouncementsViewController())
-        target.present(rootViewController, animated: true, completion: nil)
-        */
-        
         let navigationController = UINavigationController(rootViewController: FeedViewController())
         navigationController.navigationBar.barTintColor = MAIN_COLOR
-        navigationController.restorationIdentifier = "ExampleCenterNavigationControllerRestorationKey"
+        navigationController.restorationIdentifier = "NavigationControllerRestorationKey"
         
         drawerController = DrawerController(centerViewController: navigationController, leftDrawerViewController: EngagementMenuController(), rightDrawerViewController: AnnouncementsViewController())
         drawerController.showsShadows = false
