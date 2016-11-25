@@ -65,91 +65,89 @@ final class Engagement {
     }
     
     
-    func save(completion: Void) {
+    func save() {
         if Engagement.sharedInstance.engagement != nil {
             UIApplication.shared.beginIgnoringInteractionEvents()
             SVProgressHUD.show(withStatus: "Saving")
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_INFO] = Engagement.sharedInstance.info
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_PHONE] = Engagement.sharedInstance.phone!
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_ADDRESS] = Engagement.sharedInstance.address!
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_EMAIL] = Engagement.sharedInstance.email!
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_URL] = Engagement.sharedInstance.url!
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_HIDDEN] = Engagement.sharedInstance.hidden!
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_PASSWORD] = Engagement.sharedInstance.password!
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_SUBGROUP_NAME] = Engagement.sharedInstance.subGroupName!
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENT_COLOR] = Engagement.sharedInstance.color!
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENT_SPONSOR] = Engagement.sharedInstance.sponsor!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_INFO] = Engagement.sharedInstance.info
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_PHONE] = Engagement.sharedInstance.phone!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_ADDRESS] = Engagement.sharedInstance.address!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_EMAIL] = Engagement.sharedInstance.email!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_URL] = Engagement.sharedInstance.url!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_HIDDEN] = Engagement.sharedInstance.hidden!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_PASSWORD] = Engagement.sharedInstance.password!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_SUBGROUP_NAME] = Engagement.sharedInstance.subGroupName!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENT_COLOR] = Engagement.sharedInstance.color!
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENT_SPONSOR] = Engagement.sharedInstance.sponsor!
             
             
-                // Custom Profile Fields
-                var responses = Engagement.sharedInstance.fieldInput!
-                var fieldsArray = [String]()
-                while responses.contains(",") {
-                    while responses[responses.startIndex] == " " {
-                        // Remove leading spaces
-                        responses.remove(at: responses.startIndex)
-                    }
-                    // Find comma
-                    let index = responses.characters.index(of: ",")
-                    // Create string to comma
-                    let originalString = responses.substring(to: index!)
-                    let stringToAdd = self.removeSpecialCharsFromString(text: responses.substring(to: index!).capitalized).replacingOccurrences(of: " ", with: "")
-                    print("Adding: \(stringToAdd)")
-                    if stringToAdd != "" {
-                        // Ignore double commas example: one,,three
-                        fieldsArray.append(stringToAdd)
-                    }
-                    responses = responses.replacingOccurrences(of: originalString + ",", with: "")
-                    print(responses)
+            // Custom Profile Fields
+            var responses = Engagement.sharedInstance.fieldInput!
+            var fieldsArray = [String]()
+            while responses.contains(",") {
+                while responses[responses.startIndex] == " " {
+                    // Remove leading spaces
+                    responses.remove(at: responses.startIndex)
                 }
-                responses = responses.replacingOccurrences(of: " ", with: "")
-                if responses != "" {
+                // Find comma
+                let index = responses.characters.index(of: ",")
+                // Create string to comma
+                let originalString = responses.substring(to: index!)
+                let stringToAdd = self.removeSpecialCharsFromString(text: responses.substring(to: index!).capitalized).replacingOccurrences(of: " ", with: "")
+                print("Adding: \(stringToAdd)")
+                if stringToAdd != "" {
                     // Ignore double commas example: one,,three
-                    fieldsArray.append(self.removeSpecialCharsFromString(text: responses.capitalized))
+                    fieldsArray.append(stringToAdd)
                 }
-                Engagement.sharedInstance.profileFields = fieldsArray
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_PROFILE_FIELDS] = fieldsArray
-                
-                // Custom Positions
-                responses = Engagement.sharedInstance.positionsField!
-                fieldsArray.removeAll()
-                while responses.contains(",") {
-                    while responses[responses.startIndex] == " " {
-                        // Remove leading spaces
-                        responses.remove(at: responses.startIndex)
-                    }
-                    // Find comma
-                    let index = responses.characters.index(of: ",")
-                    // Create string to comma
-                    let originalString = responses.substring(to: index!)
-                    let stringToAdd = self.removeSpecialCharsFromString(text: responses.substring(to: index!))
-                    print("Adding: \(stringToAdd)")
-                    if stringToAdd != "" {
-                        // Ignore double commas example: one,,three
-                        fieldsArray.append(stringToAdd)
-                    }
-                    responses = responses.replacingOccurrences(of: originalString + ",", with: "")
-                    print(responses)
+                responses = responses.replacingOccurrences(of: originalString + ",", with: "")
+                print(responses)
+            }
+            responses = responses.replacingOccurrences(of: " ", with: "")
+            if responses != "" {
+                // Ignore double commas example: one,,three
+                fieldsArray.append(self.removeSpecialCharsFromString(text: responses.capitalized))
+            }
+            Engagement.sharedInstance.profileFields = fieldsArray
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_PROFILE_FIELDS] = fieldsArray
+            
+            // Custom Positions
+            responses = Engagement.sharedInstance.positionsField!
+            fieldsArray.removeAll()
+            while responses.contains(",") {
+                while responses[responses.startIndex] == " " {
+                    // Remove leading spaces
+                    responses.remove(at: responses.startIndex)
                 }
-                if responses != "" {
+                // Find comma
+                let index = responses.characters.index(of: ",")
+                // Create string to comma
+                let originalString = responses.substring(to: index!)
+                let stringToAdd = self.removeSpecialCharsFromString(text: responses.substring(to: index!))
+                print("Adding: \(stringToAdd)")
+                if stringToAdd != "" {
                     // Ignore double commas example: one,,three
-                    fieldsArray.append(self.removeSpecialCharsFromString(text: responses))
+                    fieldsArray.append(stringToAdd)
                 }
-                Engagement.sharedInstance.positions = fieldsArray
-                Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_POSITIONS] = fieldsArray
-
-                
-                Engagement.sharedInstance.engagement!.saveInBackground { (success: Bool, error: Error?) in
-                    UIApplication.shared.endIgnoringInteractionEvents()
-                    if !success {
-                        SVProgressHUD.showError(withStatus: "Error Saving")
-                        completion
-                    } else {
-                        SVProgressHUD.showSuccess(withStatus: "Saved")
-                        MAIN_COLOR = UIColor.init(hexString: Engagement.sharedInstance.color!)
-                        completion
-                    }
+                responses = responses.replacingOccurrences(of: originalString + ",", with: "")
+                print(responses)
+            }
+            if responses != "" {
+                // Ignore double commas example: one,,three
+                fieldsArray.append(self.removeSpecialCharsFromString(text: responses))
+            }
+            Engagement.sharedInstance.positions = fieldsArray
+            Engagement.sharedInstance.engagement![PF_ENGAGEMENTS_POSITIONS] = fieldsArray
+            
+            
+            Engagement.sharedInstance.engagement!.saveInBackground { (success: Bool, error: Error?) in
+                UIApplication.shared.endIgnoringInteractionEvents()
+                if !success {
+                    SVProgressHUD.showError(withStatus: "Error Saving")
+                } else {
+                    SVProgressHUD.showSuccess(withStatus: "Saved")
+                    MAIN_COLOR = UIColor.init(hexString: Engagement.sharedInstance.color!)
                 }
+            }
         } else {
             print("engagement is nil")
         }

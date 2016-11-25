@@ -38,13 +38,11 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
     }
     
     func saveButtonPressed() {
-        Engagement.sharedInstance.save(completion: {
-            self.evo_drawerController?.leftDrawerViewController = EngagementMenuController()
-            self.evo_drawerController?.rightDrawerViewController = AnnouncementsViewController()
-            self.navigationController?.navigationBar.barTintColor = MAIN_COLOR
-            self.former.removeAll()
-            self.configure()
-        }())
+        Engagement.sharedInstance.save()
+        MAIN_COLOR = UIColor.init(hexString: Engagement.sharedInstance.color!)
+        self.evo_drawerController?.leftDrawerViewController = EngagementMenuController()
+        self.evo_drawerController?.rightDrawerViewController = AnnouncementsViewController()
+        self.navigationController?.navigationBar.barTintColor = MAIN_COLOR
     }
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
