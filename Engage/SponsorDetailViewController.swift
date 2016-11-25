@@ -13,6 +13,7 @@ import Agrume
 import SVProgressHUD
 import MessageUI
 import JSQWebViewController
+import Material
 
 class SponsorDetailViewController: FormViewController, MFMailComposeViewControllerDelegate, UINavigationControllerDelegate  {
     
@@ -65,9 +66,9 @@ class SponsorDetailViewController: FormViewController, MFMailComposeViewControll
             $0.selectionStyle = .none
             $0.title = "Info"
             $0.body = EngagementSubGroup.sharedInstance.info!
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             $0.date = ""
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
@@ -81,9 +82,9 @@ class SponsorDetailViewController: FormViewController, MFMailComposeViewControll
             $0.body = EngagementSubGroup.sharedInstance.url
             $0.date = ""
             $0.bodyColor = UIColor.black
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
             }.onSelected { _ in

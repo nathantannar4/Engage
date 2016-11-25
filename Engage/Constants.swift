@@ -19,10 +19,6 @@ struct Constants {
     }
 }
 
-/*
- curl -X POST -H "X-Parse-Application-Id: G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b" -H "X-Parse-Master-Key: Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq" -H "Content-Type: application/json" -d '{"where":{"user":{"$in":{"__type":"Pointer","className":"_User","_id":"J4lQK8XuOH"}}},"data":{"title":"Just for Nathan","alert":"default"}}' http://nathantannar.me:1337/parse/push
-*/
-
 /* App Settings */
 var VERSION = "1.1.0"
 var isWESST = false

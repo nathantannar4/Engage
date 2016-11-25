@@ -115,7 +115,7 @@ class ProfileViewController: FormViewController  {
                                 $0.titleLabel.text = field
                                 $0.titleLabel.textColor = MAIN_COLOR
                                 $0.displayLabel.text = user[field.lowercased()] as? String
-                                $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+                                $0.titleLabel.font = RobotoFont.medium(with: 15)
                                 $0.selectionStyle = .none
                                 })
                         }

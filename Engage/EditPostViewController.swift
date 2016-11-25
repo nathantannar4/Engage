@@ -137,7 +137,7 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
         
         let infoRow = TextViewRowFormer<FormTextViewCell>() { [weak self] in
             $0.textView.textColor = .formerSubColor()
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             $0.textView.inputAccessoryView = self?.formerInputAccessoryView
             }.configure {
                 $0.placeholder = "What's new?"

@@ -67,6 +67,7 @@
 		381D039C1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D039B1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift */; };
 		383E60721DA811220033012B /* TableFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383E60711DA811220033012B /* TableFunctions.swift */; };
 		384146191DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384146181DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift */; };
+		3841461D1DE8DB59001443CD /* DelegateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3841461C1DE8DB59001443CD /* DelegateProfileViewController.swift */; };
 		384C42441DD93536003CB577 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384C42431DD93536003CB577 /* Device.swift */; };
 		3874CA251D9E26A500C014F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CA241D9E26A500C014F3 /* AppDelegate.swift */; };
 		3874CA271D9E26A500C014F3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CA261D9E26A500C014F3 /* LoginViewController.swift */; };
@@ -103,7 +104,6 @@
 		3874CAB71DA064AA00C014F3 /* ProfileHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CAA61DA064AA00C014F3 /* ProfileHeaderCell.swift */; };
 		3874CAB81DA064AA00C014F3 /* ProfileLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CAA71DA064AA00C014F3 /* ProfileLabelCell.swift */; };
 		3874CACD1DA064B400C014F3 /* DelegateCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3874CAB91DA064B400C014F3 /* DelegateCellLeft.xib */; };
-		3874CACE1DA064B400C014F3 /* DelegateCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3874CABA1DA064B400C014F3 /* DelegateCellRight.xib */; };
 		3874CACF1DA064B400C014F3 /* DelegateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CABB1DA064B400C014F3 /* DelegateCell.swift */; };
 		3874CAD01DA064B400C014F3 /* EventPreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3874CABC1DA064B400C014F3 /* EventPreviewCell.xib */; };
 		3874CAD11DA064B400C014F3 /* EventPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3874CABD1DA064B400C014F3 /* EventPreviewCell.swift */; };
@@ -234,6 +234,7 @@
 		381D039B1DA34A6500B270C6 /* EngagementGroupDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngagementGroupDetailsViewController.swift; sourceTree = "<group>"; };
 		383E60711DA811220033012B /* TableFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableFunctions.swift; sourceTree = "<group>"; };
 		384146181DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleDrawerVisualStateManager.swift; sourceTree = "<group>"; };
+		3841461C1DE8DB59001443CD /* DelegateProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegateProfileViewController.swift; sourceTree = "<group>"; };
 		384C42431DD93536003CB577 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		3874CA211D9E26A500C014F3 /* Engage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Engage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3874CA241D9E26A500C014F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -276,7 +277,6 @@
 		3874CAA61DA064AA00C014F3 /* ProfileHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderCell.swift; sourceTree = "<group>"; };
 		3874CAA71DA064AA00C014F3 /* ProfileLabelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileLabelCell.swift; sourceTree = "<group>"; };
 		3874CAB91DA064B400C014F3 /* DelegateCellLeft.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DelegateCellLeft.xib; sourceTree = "<group>"; };
-		3874CABA1DA064B400C014F3 /* DelegateCellRight.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DelegateCellRight.xib; sourceTree = "<group>"; };
 		3874CABB1DA064B400C014F3 /* DelegateCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegateCell.swift; sourceTree = "<group>"; };
 		3874CABC1DA064B400C014F3 /* EventPreviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventPreviewCell.xib; sourceTree = "<group>"; };
 		3874CABD1DA064B400C014F3 /* EventPreviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventPreviewCell.swift; sourceTree = "<group>"; };
@@ -604,7 +604,6 @@
 				38CB5DD01DAB2B8700E71612 /* ColorListCell.xib */,
 				3874CAE11DA0660800C014F3 /* FormerInputAccessoryView.swift */,
 				3874CAB91DA064B400C014F3 /* DelegateCellLeft.xib */,
-				3874CABA1DA064B400C014F3 /* DelegateCellRight.xib */,
 				3874CABC1DA064B400C014F3 /* EventPreviewCell.xib */,
 				3874CABF1DA064B400C014F3 /* HeaderCell.xib */,
 				3874CAC21DA064B400C014F3 /* FeedCell.xib */,
@@ -696,6 +695,7 @@
 				38CB5DD51DAC336F00E71612 /* ConferenceViewController.swift */,
 				3810BB071DDAE2BF000198D5 /* DelegatePackageViewController.swift */,
 				3810BB091DDAE2C6000198D5 /* DelegatesViewController.swift */,
+				3841461C1DE8DB59001443CD /* DelegateProfileViewController.swift */,
 				38CB5DD61DAC336F00E71612 /* EditConferenceViewController.swift */,
 			);
 			name = Conference;
@@ -836,7 +836,6 @@
 				3874CA2C1D9E26A500C014F3 /* Assets.xcassets in Resources */,
 				38CB5DE01DB09E9300E71612 /* Engage-Wide.jpg in Resources */,
 				3874CA951DA0649400C014F3 /* ImageCell.xib in Resources */,
-				3874CACE1DA064B400C014F3 /* DelegateCellRight.xib in Resources */,
 				38F5CEE41DB4BC7100F64DF0 /* Engage-Wide-Gradient.jpg in Resources */,
 				38F5CEDA1DB49D0E00F64DF0 /* Walkthrough.storyboard in Resources */,
 				3874CA2A1D9E26A500C014F3 /* Main.storyboard in Resources */,
@@ -934,6 +933,7 @@
 				3874CA811DA05AEE00C014F3 /* Profile.swift in Sources */,
 				38CB5DD31DAC308600E71612 /* AppInfoViewController.swift in Sources */,
 				3874CA271D9E26A500C014F3 /* LoginViewController.swift in Sources */,
+				3841461D1DE8DB59001443CD /* DelegateProfileViewController.swift in Sources */,
 				38CB5DCF1DAB2B8000E71612 /* ColorListCell.swift in Sources */,
 				389036141DA365F200DCF82C /* CreateAdvancedEventViewController.swift in Sources */,
 				381D03831DA2F75000B270C6 /* CVCalendarWeekView.swift in Sources */,

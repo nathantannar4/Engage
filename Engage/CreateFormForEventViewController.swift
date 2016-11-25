@@ -11,6 +11,7 @@ import Former
 import Parse
 import SVProgressHUD
 import BRYXBanner
+import Material
 
 final class CreateFormForEventViewController: FormViewController {
     
@@ -100,7 +101,7 @@ final class CreateFormForEventViewController: FormViewController {
             $0.titleLabel.text = "Entries"
             $0.titleLabel.textColor = MAIN_COLOR
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.pickerItems = templateNames.map {
                     InlinePickerItem(title: $0)
@@ -194,7 +195,7 @@ final class CreateFormForEventViewController: FormViewController {
         rowCounter += 1
         return TextViewRowFormer<FormTextViewCell>() { [weak self] in
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             $0.textView.inputAccessoryView = self?.formerInputAccessoryView
             }.configure {
                 $0.placeholder = inputLabel
@@ -225,10 +226,10 @@ final class CreateFormForEventViewController: FormViewController {
             rowCounter += 1
             rows.append(InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
                 $0.titleLabel.text = label
-                $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+                $0.titleLabel.font = RobotoFont.medium(with: 15)
                 $0.titleLabel.textColor = MAIN_COLOR
                 $0.displayLabel.textColor = .formerSubColor()
-                $0.displayLabel.font = .systemFont(ofSize: 15)
+                $0.displayLabel.font = RobotoFont.regular(with: 15)
                 }.inlineCellSetup {
                     $0.datePicker.datePickerMode = .date
                 }.displayTextFromDate(String.mediumDateNoTime))
@@ -246,7 +247,7 @@ final class CreateFormForEventViewController: FormViewController {
         rowCounter += 1
         rows.append(CustomRowFormer<DynamicHeightCell>(instantiateType: .Nib(nibName: "DynamicHeightCell")) {
             $0.title = question
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.date = ""
             $0.body = info
             $0.titleColor = MAIN_COLOR
@@ -260,7 +261,7 @@ final class CreateFormForEventViewController: FormViewController {
             $0.titleLabel.text = "Response"
             $0.titleLabel.textColor = MAIN_COLOR
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.pickerItems = options.map {
                     InlinePickerItem(title: $0)
@@ -280,7 +281,7 @@ final class CreateFormForEventViewController: FormViewController {
         rowCounter += 1
         rows.append(CustomRowFormer<DynamicHeightCell>(instantiateType: .Nib(nibName: "DynamicHeightCell")) {
             $0.title = question
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.date = ""
             $0.body = info
             $0.titleColor = MAIN_COLOR
@@ -306,7 +307,7 @@ final class CreateFormForEventViewController: FormViewController {
         rowCounter += 1
         rows.append(CustomRowFormer<DynamicHeightCell>(instantiateType: .Nib(nibName: "DynamicHeightCell")) {
             $0.title = question
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.date = ""
             $0.body = info
             $0.titleColor = MAIN_COLOR
@@ -316,7 +317,7 @@ final class CreateFormForEventViewController: FormViewController {
             })
         rows.append(SegmentedRowFormer<FormSegmentedCell>() {
             $0.titleLabel.text = "Response"
-            $0.titleLabel.font = .systemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.regular(with: 15)
             $0.titleLabel.textColor = UIColor.gray
             $0.segmentedControl.tintColor = MAIN_COLOR
             }.configure {
@@ -335,7 +336,7 @@ final class CreateFormForEventViewController: FormViewController {
         return LabelRowFormer<ProfileImageCell>(instantiateType: .Nib(nibName: "ProfileImageCell")) {
             $0.iconView.backgroundColor = MAIN_COLOR
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .systemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.text = inputLabel
                 $0.rowHeight = 60

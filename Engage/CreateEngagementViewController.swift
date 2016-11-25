@@ -122,7 +122,7 @@ class CreateEngagementViewController: FormViewController {
         }
         let infoRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.textColor = .formerSubColor()
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.placeholder = "Group info..."
                 $0.rowHeight = 200

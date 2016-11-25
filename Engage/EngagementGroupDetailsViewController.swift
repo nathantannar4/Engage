@@ -53,9 +53,9 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             $0.selectionStyle = .none
             $0.title = "Info"
             $0.body = Engagement.sharedInstance.info!
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             $0.date = ""
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
@@ -66,9 +66,9 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             $0.body = Engagement.sharedInstance.url
             $0.date = ""
             $0.bodyColor = UIColor.black
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
             }.onSelected {_ in
@@ -85,9 +85,9 @@ class EngagementGroupDetailsViewController: FormViewController, MFMailComposeVie
             $0.body = Engagement.sharedInstance.email
             $0.date = ""
             $0.bodyColor = UIColor.black
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
             }.onSelected { _ in

@@ -277,7 +277,7 @@ final class EngagementsViewController: FormViewController {
             $0.titleLabel.text = "Reload"
             $0.titleLabel.textAlignment = .center
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             }.onSelected { [weak self] _ in
                 self?.former.deselect(animated: true)
                 self?.refresh(self!)

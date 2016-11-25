@@ -67,7 +67,7 @@ final class CreateAdvancedEventViewController: FormViewController, SelectMultipl
         
         let titleRow = TextFieldRowFormer<FormTextFieldCell>() {
             $0.textField.textColor = UIColor.black
-            $0.textField.font = .systemFont(ofSize: 15)
+            $0.textField.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.placeholder = "Event Title"
             }.onTextChanged {
@@ -75,7 +75,7 @@ final class CreateAdvancedEventViewController: FormViewController, SelectMultipl
         }
         let locationRow = TextFieldRowFormer<FormTextFieldCell>() {
             $0.textField.textColor = UIColor.black
-            $0.textField.font = .systemFont(ofSize: 15)
+            $0.textField.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.placeholder = "Location"
             }.onTextChanged {
@@ -85,9 +85,9 @@ final class CreateAdvancedEventViewController: FormViewController, SelectMultipl
         let endRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "End"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             AdvancedEvent.sharedInstance.end = NSDate()
             }.inlineCellSetup {
                 $0.datePicker.datePickerMode = .dateAndTime
@@ -98,9 +98,9 @@ final class CreateAdvancedEventViewController: FormViewController, SelectMultipl
         let startRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "Start"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             AdvancedEvent.sharedInstance.start = NSDate()
             }.inlineCellSetup {
                 $0.datePicker.datePickerMode = .dateAndTime
@@ -111,7 +111,7 @@ final class CreateAdvancedEventViewController: FormViewController, SelectMultipl
         let allDayRow = SwitchRowFormer<FormSwitchCell>() {
             $0.titleLabel.text = "All-day"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.switchButton.onTintColor = MAIN_COLOR
             }.onSwitchChanged { on in
                 startRow.update {
@@ -133,7 +133,7 @@ final class CreateAdvancedEventViewController: FormViewController, SelectMultipl
         }
         let urlRow = TextFieldRowFormer<FormTextFieldCell>() {
             $0.textField.textColor = UIColor.black
-            $0.textField.font = .systemFont(ofSize: 15)
+            $0.textField.font = RobotoFont.regular(with: 15)
             $0.textField.keyboardType = .alphabet
             }.configure {
                 $0.placeholder = "URL"
@@ -142,7 +142,7 @@ final class CreateAdvancedEventViewController: FormViewController, SelectMultipl
         }
         let noteRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.textColor = UIColor.black
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.placeholder = "Notes"
                 $0.rowHeight = 250
@@ -212,9 +212,9 @@ final class CreateAdvancedEventViewController: FormViewController, SelectMultipl
                 invitedUsers.append("\(user[PF_USER_FULLNAME] as! String)\n")
             }
             $0.body = invitedUsers
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             $0.date = ""
             $0.selectionStyle = .none
             }.configure {

@@ -96,7 +96,7 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
             $0.titleLabel.text = Event.sharedInstance.location
             $0.titleLabel.textAlignment = .left
             $0.titleLabel.textColor = UIColor.black
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.selectionStyle = .none
         }
     }()
@@ -107,7 +107,7 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         
         let titleRow = TextFieldRowFormer<FormTextFieldCell>() {
             $0.textField.textColor = UIColor.black
-            $0.textField.font = .systemFont(ofSize: 15)
+            $0.textField.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.placeholder = "Event Title"
             }.onTextChanged {
@@ -127,9 +127,9 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         let endRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "End"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.date = Event.sharedInstance.start as! Date
             }.inlineCellSetup {
@@ -142,9 +142,9 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         let startRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "Start"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.date = Event.sharedInstance.start as! Date
             }.inlineCellSetup {
@@ -161,7 +161,7 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         let allDayRow = SwitchRowFormer<FormSwitchCell>() {
             $0.titleLabel.text = "All-day"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.switchButton.onTintColor = MAIN_COLOR
             }.onSwitchChanged { on in
                 Event.sharedInstance.allDay = on
@@ -185,9 +185,9 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         let repeatRow = InlinePickerRowFormer<FormInlinePickerCell, Repeat>() {
             $0.titleLabel.text = "Repeat"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 let never = Repeat.Never
                 $0.pickerItems.append(
@@ -223,7 +223,7 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         
         let urlRow = TextFieldRowFormer<FormTextFieldCell>() {
             $0.textField.textColor = UIColor.black
-            $0.textField.font = .systemFont(ofSize: 15)
+            $0.textField.font = RobotoFont.regular(with: 15)
             $0.textField.keyboardType = .alphabet
             }.configure {
                 $0.placeholder = "URL"
@@ -232,7 +232,7 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         }
         let noteRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.textColor = UIColor.black
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.placeholder = "Notes"
                 $0.rowHeight = 250
@@ -287,9 +287,9 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
                 invitedUsers.append("\(user[PF_USER_FULLNAME] as! String)\n")
             }
             $0.body = invitedUsers
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             $0.date = ""
             $0.selectionStyle = .none
             }.configure {

@@ -115,14 +115,14 @@ final class EditProfileViewController: FormViewController, UIImagePickerControll
                 customRow.append(CustomRowFormer<TitleCell>(instantiateType: .Nib(nibName: "TitleCell")) {
                     $0.titleLabel.text = field
                     $0.titleLabel.textColor = MAIN_COLOR
-                    $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+                    $0.titleLabel.font = RobotoFont.medium(with: 15)
                     $0.selectionStyle = .none
                     })
                 
                 customRow.append(TextViewRowFormer<FormTextViewCell>() { [weak self] in
                     $0.textView.textColor = UIColor.black
                     
-                    $0.textView.font = .systemFont(ofSize: 15)
+                    $0.textView.font = RobotoFont.regular(with: 15)
                     $0.textView.inputAccessoryView = self?.formerInputAccessoryView
                     }.configure {
                         $0.placeholder = "Tap to edit..."

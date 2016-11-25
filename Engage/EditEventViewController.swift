@@ -138,7 +138,7 @@ final class EditEventViewController: FormViewController {
             $0.titleLabel.text = Event.sharedInstance.location
             $0.titleLabel.textAlignment = .left
             $0.titleLabel.textColor = UIColor.black
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.selectionStyle = .none
         }
     }()
@@ -150,7 +150,7 @@ final class EditEventViewController: FormViewController {
         
         let titleRow = TextFieldRowFormer<FormTextFieldCell>() {
             $0.textField.textColor = UIColor.black
-            $0.textField.font = .systemFont(ofSize: 15)
+            $0.textField.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.placeholder = "Event Title"
                 $0.text = Event.sharedInstance.title
@@ -172,9 +172,9 @@ final class EditEventViewController: FormViewController {
         let endRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "End"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.date = Event.sharedInstance.end! as Date
             }.inlineCellSetup {
@@ -186,9 +186,9 @@ final class EditEventViewController: FormViewController {
         let startRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "Start"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.date = Event.sharedInstance.end! as Date
             }.inlineCellSetup {
@@ -200,7 +200,7 @@ final class EditEventViewController: FormViewController {
         let allDayRow = SwitchRowFormer<FormSwitchCell>() {
             $0.titleLabel.text = "All-day"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.switchButton.onTintColor = MAIN_COLOR
             }.configure {
                 $0.switched = Event.sharedInstance.allDay
@@ -244,9 +244,9 @@ final class EditEventViewController: FormViewController {
         let repeatRow = InlinePickerRowFormer<FormInlinePickerCell, Repeat>() {
             $0.titleLabel.text = "Repeat"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 let never = Repeat.Never
                 $0.pickerItems.append(
@@ -282,7 +282,7 @@ final class EditEventViewController: FormViewController {
         
         let urlRow = TextFieldRowFormer<FormTextFieldCell>() {
             $0.textField.textColor = UIColor.black
-            $0.textField.font = .systemFont(ofSize: 15)
+            $0.textField.font = RobotoFont.regular(with: 15)
             $0.textField.keyboardType = .alphabet
             }.configure {
                 $0.placeholder = "URL"
@@ -292,7 +292,7 @@ final class EditEventViewController: FormViewController {
         }
         let noteRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.textColor = UIColor.black
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.placeholder = "Notes"
                 $0.rowHeight = 250

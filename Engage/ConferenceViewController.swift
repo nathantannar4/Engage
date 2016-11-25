@@ -115,9 +115,9 @@ class ConferenceViewController: FormViewController  {
             $0.selectionStyle = .none
             $0.title = "Info"
             $0.body = Conference.sharedInstance.info!
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             $0.date = ""
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
@@ -133,9 +133,9 @@ class ConferenceViewController: FormViewController  {
             $0.body = Conference.sharedInstance.hostSchool
             $0.date = ""
             $0.bodyColor = UIColor.black
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
             }.onSelected { [weak self] _ in
@@ -151,9 +151,9 @@ class ConferenceViewController: FormViewController  {
             $0.date = ""
             $0.bodyColor = UIColor.black
             
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
             }.onSelected { [weak self] _ in
@@ -168,9 +168,9 @@ class ConferenceViewController: FormViewController  {
             $0.body = "\(Conference.sharedInstance.start!.mediumDateString!) to \(Conference.sharedInstance.end!.mediumDateString!)"
             $0.date = ""
             $0.bodyColor = UIColor.black
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
             }.onSelected { [weak self] _ in
@@ -185,9 +185,9 @@ class ConferenceViewController: FormViewController  {
             $0.body = Conference.sharedInstance.url
             $0.date = ""
             $0.bodyColor = UIColor.black
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.bodyLabel.font = .systemFont(ofSize: 15)
+            $0.bodyLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.rowHeight = UITableViewAutomaticDimension
             }.onSelected { [weak self] _ in
@@ -203,13 +203,13 @@ class ConferenceViewController: FormViewController  {
     
     private func configure() {
         
-        let delegatePackageRow = createMenu("Delegate Package") { [weak self] in
+        let delegatePackageRow = createMenu("Delegate Portal") { [weak self] in
             self?.former.deselect(animated: true)
-            //self?.navigationController?.pushViewController(DelegatePackageViewController(), animated: true)
+            self?.navigationController?.pushViewController(DelegatePackageViewController(), animated: true)
         }
         
         self.former.append(sectionFormer: SectionFormer(rowFormer: onlyImageRow, infoRow, hostSchoolRow, locationRow, timeRow, urlRow))
-        if conference == "WECs" {
+        if conference == "WEC" {
             self.former.insert(rowFormer: delegatePackageRow, below: urlRow)
         }
         loadOC()

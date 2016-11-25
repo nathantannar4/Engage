@@ -1,9 +1,9 @@
 //
-//  PublicProfileViewController.swift
+//  DelegateProfileViewController.swift
 //  Engage
 //
-//  Created by Tannar, Nathan on 2016-07-10.
-//  Copyright © 2016 NathanTannar. All rights reserved.
+//  Created by Nathan Tannar on 11/25/16.
+//  Copyright © 2016 Nathan Tannar. All rights reserved.
 //
 
 import UIKit
@@ -15,9 +15,10 @@ import MessageUI
 import BRYXBanner
 import Material
 
-class PublicProfileViewController: FormViewController, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+class DelegateProfileViewController: FormViewController, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
     
     var user: PFObject?
+    var delegateInfo: PFObject?
     var button = UIButton()
     var editorViewable = false
     var querySkip = 0
@@ -34,8 +35,9 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
             messageButton.tintColor = UIColor.white
             navigationItem.rightBarButtonItems = [messageButton, infoButton]
         }
-    
+        
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        self.tableView.contentInset.bottom = 100
         self.prepareButton()
         configure()
     }
@@ -266,53 +268,35 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
                 }
         }
         
-        var customRow = [CustomRowFormer<ProfileLabelCell>]()
+        var delegateInfoRow = [CustomRowFormer<DynamicHeightCell>]()
         
-        if Engagement.sharedInstance.engagement != nil {
-            
-            SVProgressHUD.show(withStatus: "Loading")
-                // Query to find current data
-            let customQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_User")
-            customQuery.whereKey("user", equalTo: self.user!)
-            customQuery.includeKey("subgroup")
-            customQuery.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
-                SVProgressHUD.dismiss()
-                if error == nil {
-                    if let user = users!.first {
-                        
-                        let subgroup = user["subgroup"] as? PFObject
-                        if subgroup != nil {
-                            headerRow.cellUpdate({
-                                $0.schoolLabel.text = subgroup![PF_SUBGROUP_NAME] as? String
-                            })
-                        }
-                        
-                        for field in Engagement.sharedInstance.profileFields {
-                            customRow.append(CustomRowFormer<ProfileLabelCell>(instantiateType: .Nib(nibName: "ProfileLabelCell")) {
-                                $0.titleLabel.text = field
-                                $0.titleLabel.textColor = MAIN_COLOR
-                                $0.displayLabel.text = user[field.lowercased()] as? String
-                                $0.titleLabel.font = RobotoFont.medium(with: 15)
-                                $0.selectionStyle = .none
-                            })
-                        }
-                        self.former.insertUpdate(rowFormers: customRow, below: emailRow, rowAnimation: .fade)
-                    }
-                }
+        for field in delegateInfo!.allKeys {
+            delegateInfoRow.append(CustomRowFormer<DynamicHeightCell>(instantiateType: .Nib(nibName: "DynamicHeightCell")) {
+                $0.selectionStyle = .none
+                $0.title = field.replacingOccurrences(of: "_", with: "  ").capitalized
+                $0.body = self.delegateInfo![field] as? String
+                $0.date = ""
+                $0.bodyColor = UIColor.black
+                $0.titleLabel.font = RobotoFont.medium(with: 15)
+                $0.titleLabel.textColor = MAIN_COLOR
+                $0.bodyLabel.font = RobotoFont.regular(with: 15)
+                }.configure {
+                    $0.rowHeight = UITableViewAutomaticDimension
             })
         }
-
+        self.former.append(sectionFormer: SectionFormer(rowFormer: headerRow, phoneRow, emailRow))
+        self.former.append(sectionFormer: SectionFormer(rowFormers: delegateInfoRow).set(headerViewFormer: TableFunctions.createHeader(text: "Delegate Info")))
+        self.former.reload()
         
         // Add profile info rows to table
-        let zeroSection = SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: "Posts to \(user?[PF_USER_FULLNAME] as! String)"))
+        self.former.append(sectionFormer: SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: "Posts to \(user?[PF_USER_FULLNAME] as! String)")))
         
-        self.former.append(sectionFormer: SectionFormer(rowFormer: headerRow, phoneRow, emailRow), zeroSection)
-        self.former.reload()
         
         if PFUser.current()!.objectId! != user!.objectId! {
             self.loadPosts()
         }
     }
+
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         self.dismiss(animated: true, completion: nil)
@@ -504,3 +488,4 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         }
     }()
 }
+

@@ -69,7 +69,7 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
         }
         let infoRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.textColor = .formerSubColor()
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.text = Conference.sharedInstance.info!
                 $0.placeholder = "Conference info..."
@@ -98,9 +98,9 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
         let endRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "End"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.date = Conference.sharedInstance.end! as Date
             }.inlineCellSetup {
@@ -112,9 +112,9 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
         let startRow = InlineDatePickerRowFormer<FormInlineDatePickerCell>() {
             $0.titleLabel.text = "Start"
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.medium(with: 15)
             $0.displayLabel.textColor = .formerSubColor()
-            $0.displayLabel.font = .systemFont(ofSize: 15)
+            $0.displayLabel.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.date = Conference.sharedInstance.start! as Date
             }.inlineCellSetup {
@@ -153,7 +153,7 @@ class EditConferenceViewController: FormViewController, SelectSingleViewControll
         }
         let positionFieldsRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.textColor = .formerSubColor()
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             }.configure {
                 var currentFields = ""
                 for field in Conference.sharedInstance.positions {

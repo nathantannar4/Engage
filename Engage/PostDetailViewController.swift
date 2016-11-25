@@ -63,7 +63,7 @@ class PostDetailViewController: FormViewController, UITextFieldDelegate {
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
         return LabelRowFormer<FormLabelCell>() {
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = .systemFont(ofSize: 15)
+            $0.titleLabel.font = RobotoFont.regular(with: 15)
             $0.accessoryType = .disclosureIndicator
             }.configure {
                 $0.text = text

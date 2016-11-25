@@ -55,6 +55,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Enable or disable features based on authorization.
         }
         application.registerForRemoteNotifications()
+        
+        
+        
 
         return true
     }

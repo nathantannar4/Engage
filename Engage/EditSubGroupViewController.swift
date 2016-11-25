@@ -170,7 +170,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
         
         let infoRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.textColor = .formerSubColor()
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             }.configure {
                 $0.text = EngagementSubGroup.sharedInstance.info
                 $0.placeholder = "Group info..."
@@ -193,7 +193,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
         }
         let positionFieldsRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.textColor = .formerSubColor()
-            $0.textView.font = .systemFont(ofSize: 15)
+            $0.textView.font = RobotoFont.regular(with: 15)
             }.configure {
                 var currentFields = ""
                 for field in EngagementSubGroup.sharedInstance.positions {
@@ -358,9 +358,9 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
                             invitedUsers.append("\(user[PF_USER_FULLNAME] as! String)\n")
                         }
                         $0.body = invitedUsers
-                        $0.titleLabel.font = .boldSystemFont(ofSize: 15)
+                        $0.titleLabel.font = RobotoFont.medium(with: 15)
                         $0.titleLabel.textColor = MAIN_COLOR
-                        $0.bodyLabel.font = .systemFont(ofSize: 15)
+                        $0.bodyLabel.font = RobotoFont.regular(with: 15)
                         $0.date = ""
                         $0.selectionStyle = .none
                         }.configure {
