@@ -96,7 +96,7 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
     // MARK: - User actions
     
     func openChat(groupId: String, title: String) {
-        let messageVC = MessageViewController()
+        let messageVC = ChatViewController()
         messageVC.groupId = groupId
         messageVC.groupName = title
         self.navigationController?.pushViewController(messageVC, animated: true)

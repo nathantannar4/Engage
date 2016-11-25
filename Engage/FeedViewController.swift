@@ -33,7 +33,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
         super.viewDidLoad()
         
         SVProgressHUD.dismiss()
-        self.title = "Activity Feed"
+        self.navigationItem.titleView = Utilities.setTitle(title: "Activity Feed", subtitle: "All Posts")
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(openNewPost))
         self.prepareTable()

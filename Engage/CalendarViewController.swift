@@ -18,8 +18,8 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     
     private let listView: UITableView = {
         let listView = UITableView(frame: CGRect.zero, style: .grouped)
+        listView.bounces = false
         listView.backgroundColor = .clear
-        listView.contentInset.bottom = 10
         listView.sectionHeaderHeight = 0
         listView.sectionFooterHeight = 0
         listView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.01))
@@ -81,7 +81,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = CVDate(date: NSDate() as Date).globalDescription
+        self.navigationItem.titleView = Utilities.setTitle(title: "Events", subtitle: CVDate(date: NSDate() as Date).globalDescription)
         self.menuView.backgroundColor = MAIN_COLOR
         self.tableView.separatorStyle = .none
         
@@ -97,7 +97,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
         Event.sharedInstance.clear()
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(createEvent))
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(image: Icon.cm.add, style: .plain, target: self, action: #selector(createEvent)), UIBarButtonItem(image: Icon.cm.shuffle, style: .plain, target: self, action: #selector(switchView))]
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -240,10 +240,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     }
     
     func presentedDateUpdated(_ date: CVDate) {
-        guard let tc = toolbarController else {
-            return
-        }
-        tc.toolbar.detail = date.globalDescription
+        self.navigationItem.titleView = Utilities.setTitle(title: "Events", subtitle: date.globalDescription)
     }
     
     func topMarker(shouldDisplayOnDayView dayView: CVCalendarDayView) -> Bool {

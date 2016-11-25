@@ -18,7 +18,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Public Group Chats"
+        self.navigationItem.titleView = Utilities.setTitle(title: "Public Group Chats", subtitle: "of \(Engagement.sharedInstance.name!)")
         self.refreshControl = UIRefreshControl()
         self.refreshControl!.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl!.addTarget(self, action: #selector(GroupsViewController.loadGroups), for: .valueChanged)
@@ -144,7 +144,7 @@ class GroupsViewController: UITableViewController, UIAlertViewDelegate {
         
         Messages.createMessageItem(user: PFUser.current()!, groupId: groupId, description: group[PF_GROUPS_NAME] as! String)
         
-        let messageVC = MessageViewController()
+        let messageVC = ChatViewController()
         messageVC.groupId = groupId
         messageVC.groupName = group[PF_GROUPS_NAME] as! String
         self.navigationController?.pushViewController(messageVC, animated: true)

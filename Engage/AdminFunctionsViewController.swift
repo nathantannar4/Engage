@@ -21,13 +21,16 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Admin Functions"
-        self.tableView.contentInset.top = 10
-        self.tableView.contentInset.bottom = 60
-        
         if userIds.count == 0 {
             userIds = Engagement.sharedInstance.members
         }
+        
+        self.title = "Admin Functions"
+        self.navigationItem.titleView = Utilities.setTitle(title: "Admin Function", subtitle: "\(userIds.count) Members")
+        self.tableView.contentInset.top = 10
+        self.tableView.contentInset.bottom = 60
+        
+        
         
         self.configure()
     }

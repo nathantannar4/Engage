@@ -24,7 +24,7 @@ class CreateEngagementViewController: FormViewController {
         super.viewDidLoad()
         
         // Configure UI
-        title = "New Group"
+        self.navigationItem.titleView = Utilities.setTitle(title: "Create", subtitle: "New Engagement")
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createButtonPressed))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonPressed))
         self.tableView.contentInset.top = 10

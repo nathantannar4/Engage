@@ -41,7 +41,6 @@ class SubGroupsViewController: FormViewController {
     override func viewDidAppear(_ animated: Bool) {
         EngagementSubGroup.sharedInstance.clear()
         if firstLoad {
-            SVProgressHUD.show(withStatus: "Loading")
             firstLoad = false
         } else {
             SVProgressHUD.show(withStatus: "Refreshing")
@@ -80,6 +79,7 @@ class SubGroupsViewController: FormViewController {
         subGroupQuery.order(byAscending: PF_SUBGROUP_NAME)
         subGroupQuery.findObjectsInBackground { (subGroups: [PFObject]?, error: Error?) in
             UIApplication.shared.endIgnoringInteractionEvents()
+            SVProgressHUD.dismiss()
             if error == nil {
                 for subGroup in subGroups! {
                     subGroupRows.append(self.createMenu(subGroup[PF_SUBGROUP_NAME] as! String) { [weak self] in

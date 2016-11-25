@@ -21,7 +21,11 @@ class ProfileViewController: FormViewController  {
         super.viewDidLoad()
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.moreVertical, style: .plain, target: self, action: #selector(editButtonPressed))
+        if isWESST {
+            self.navigationItem.rightBarButtonItems = [UIBarButtonItem(image: Icon.cm.edit, style: .plain, target: self, action: #selector(editButtonPressed)), UIBarButtonItem(image: UIImage(named: "Logout"), style: .plain, target: self, action: #selector(logoutButtonPressed))]
+        } else {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.edit, style: .plain, target: self, action: #selector(editButtonPressed))
+        }
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         self.tableView.contentInset.top = 0
         self.tableView.contentInset.bottom = 60

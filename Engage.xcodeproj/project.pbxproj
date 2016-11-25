@@ -28,7 +28,7 @@
 		381D034A1DA225FE00B270C6 /* EngagementSubGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03491DA225FE00B270C6 /* EngagementSubGroup.swift */; };
 		381D034C1DA22A0F00B270C6 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D034B1DA22A0F00B270C6 /* CalendarViewController.swift */; };
 		381D034E1DA22CC300B270C6 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D034D1DA22CC300B270C6 /* Event.swift */; };
-		381D03511DA22F4200B270C6 /* LeftMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03501DA22F4200B270C6 /* LeftMenuController.swift */; };
+		381D03511DA22F4200B270C6 /* EngagementMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03501DA22F4200B270C6 /* EngagementMenuController.swift */; };
 		381D03701DA2F75000B270C6 /* CVAuxiliaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03521DA2F74F00B270C6 /* CVAuxiliaryView.swift */; };
 		381D03711DA2F75000B270C6 /* CVCalendarContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03541DA2F74F00B270C6 /* CVCalendarContentViewController.swift */; };
 		381D03721DA2F75000B270C6 /* CVCalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381D03551DA2F74F00B270C6 /* CVCalendarDayView.swift */; };
@@ -147,7 +147,7 @@
 		38AFE87A1DA101C700B52032 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AFE8751DA101C700B52032 /* EditPostViewController.swift */; };
 		38AFE87E1DA18B5500B52032 /* Plus-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 38AFE87C1DA18B5500B52032 /* Plus-512.png */; };
 		38AFE87F1DA18B5500B52032 /* Nathan.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 38AFE87D1DA18B5500B52032 /* Nathan.jpg */; };
-		38C468491DD440E00016C7C6 /* RightAnnouncementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C468431DD440E00016C7C6 /* RightAnnouncementsViewController.swift */; };
+		38C468491DD440E00016C7C6 /* AnnouncementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C468431DD440E00016C7C6 /* AnnouncementsViewController.swift */; };
 		38CB5DCA1DAAD4F100E71612 /* Engage-Logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 38CB5DC91DAAD4F100E71612 /* Engage-Logo.jpg */; };
 		38CB5DCC1DAAE6BE00E71612 /* Engage-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 38CB5DCB1DAAE6BE00E71612 /* Engage-Logo.png */; };
 		38CB5DCF1DAB2B8000E71612 /* ColorListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CB5DCE1DAB2B8000E71612 /* ColorListCell.swift */; };
@@ -194,7 +194,7 @@
 		381D03491DA225FE00B270C6 /* EngagementSubGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngagementSubGroup.swift; sourceTree = "<group>"; };
 		381D034B1DA22A0F00B270C6 /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		381D034D1DA22CC300B270C6 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		381D03501DA22F4200B270C6 /* LeftMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftMenuController.swift; sourceTree = "<group>"; };
+		381D03501DA22F4200B270C6 /* EngagementMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngagementMenuController.swift; sourceTree = "<group>"; };
 		381D03521DA2F74F00B270C6 /* CVAuxiliaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVAuxiliaryView.swift; sourceTree = "<group>"; };
 		381D03531DA2F74F00B270C6 /* CVCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVCalendar.h; sourceTree = "<group>"; };
 		381D03541DA2F74F00B270C6 /* CVCalendarContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarContentViewController.swift; sourceTree = "<group>"; };
@@ -324,7 +324,7 @@
 		38AFE8751DA101C700B52032 /* EditPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
 		38AFE87C1DA18B5500B52032 /* Plus-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Plus-512.png"; sourceTree = "<group>"; };
 		38AFE87D1DA18B5500B52032 /* Nathan.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Nathan.jpg; sourceTree = "<group>"; };
-		38C468431DD440E00016C7C6 /* RightAnnouncementsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightAnnouncementsViewController.swift; sourceTree = "<group>"; };
+		38C468431DD440E00016C7C6 /* AnnouncementsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnouncementsViewController.swift; sourceTree = "<group>"; };
 		38CB5DC91DAAD4F100E71612 /* Engage-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Engage-Logo.jpg"; sourceTree = "<group>"; };
 		38CB5DCB1DAAE6BE00E71612 /* Engage-Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Engage-Logo.png"; sourceTree = "<group>"; };
 		38CB5DCE1DAB2B8000E71612 /* ColorListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorListCell.swift; sourceTree = "<group>"; };
@@ -524,7 +524,7 @@
 				3874CA4D1D9E3AEB00C014F3 /* Constants.swift */,
 				38CB5DD21DAC308600E71612 /* AppInfoViewController.swift */,
 				3841461A1DE69DB9001443CD /* Login/Register */,
-				38C4684C1DD447D80016C7C6 /* Menu Controllers */,
+				38C4684C1DD447D80016C7C6 /* Drawer Controllers */,
 				381D03471DA2222F00B270C6 /* User Selection Delegates */,
 				38AFE87B1DA101D700B52032 /* Feed */,
 				3874CA931DA0642E00C014F3 /* Engagement */,
@@ -679,14 +679,14 @@
 			name = Feed;
 			sourceTree = "<group>";
 		};
-		38C4684C1DD447D80016C7C6 /* Menu Controllers */ = {
+		38C4684C1DD447D80016C7C6 /* Drawer Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				384146181DE69D1D001443CD /* ExampleDrawerVisualStateManager.swift */,
-				381D03501DA22F4200B270C6 /* LeftMenuController.swift */,
-				38C468431DD440E00016C7C6 /* RightAnnouncementsViewController.swift */,
+				381D03501DA22F4200B270C6 /* EngagementMenuController.swift */,
+				38C468431DD440E00016C7C6 /* AnnouncementsViewController.swift */,
 			);
-			name = "Menu Controllers";
+			name = "Drawer Controllers";
 			sourceTree = "<group>";
 		};
 		38CB5DDA1DADDFB300E71612 /* Conference */ = {
@@ -938,7 +938,7 @@
 				389036141DA365F200DCF82C /* CreateAdvancedEventViewController.swift in Sources */,
 				381D03831DA2F75000B270C6 /* CVCalendarWeekView.swift in Sources */,
 				381D03891DA2F75000B270C6 /* CVSet.swift in Sources */,
-				38C468491DD440E00016C7C6 /* RightAnnouncementsViewController.swift in Sources */,
+				38C468491DD440E00016C7C6 /* AnnouncementsViewController.swift in Sources */,
 				3874CAD71DA064B400C014F3 /* FeedCell.swift in Sources */,
 				389036281DA4A6F700DCF82C /* MessageViewController.swift in Sources */,
 				3874CA871DA0604400C014F3 /* Utilities.swift in Sources */,
@@ -1022,7 +1022,7 @@
 				38AFE8791DA101C700B52032 /* PostDetailViewController.swift in Sources */,
 				3810BB0A1DDAE2C6000198D5 /* DelegatesViewController.swift in Sources */,
 				381D03971DA34A1800B270C6 /* CreateSubGroupViewController.swift in Sources */,
-				381D03511DA22F4200B270C6 /* LeftMenuController.swift in Sources */,
+				381D03511DA22F4200B270C6 /* EngagementMenuController.swift in Sources */,
 				381D034C1DA22A0F00B270C6 /* CalendarViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

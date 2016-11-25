@@ -20,13 +20,13 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
     var adminMembers = [String]()
     var isSub = false
     
-    @IBOutlet weak var searchBar: UISearchBar!
+    var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Configure UI
-        title = "Members"
+        self.navigationItem.titleView = Utilities.setTitle(title: "Members", subtitle: "\(searchMembers.count)")
         tableView.contentInset.top = 40
         self.searchBar.delegate = self
         self.searchBar.tintColor = MAIN_COLOR

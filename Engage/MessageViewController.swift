@@ -171,7 +171,6 @@ extension MessageViewController {
     func configureDataSource() {
         
         if self.isLoading == false {
-            SVProgressHUD.show(withStatus: "Loading Messages")
             self.isLoading = true
             let lastMessage = messages.last
             

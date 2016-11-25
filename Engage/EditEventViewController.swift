@@ -20,7 +20,7 @@ final class EditEventViewController: FormViewController {
         super.viewDidLoad()
         
         // Configure UI
-        title = "Edit Event"
+        self.navigationItem.titleView = Utilities.setTitle(title: "Edit", subtitle: "Event")
         tableView.contentInset.top = 10
         tableView.contentInset.bottom = 50
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(saveButtonPressed))

@@ -12,7 +12,7 @@ import Parse
 import Agrume
 import Material
 
-class RightAnnouncementsViewController: UITableViewController {
+class AnnouncementsViewController: UITableViewController {
     
     internal var querySkip = 0
     internal var announcements = [PFObject]()
@@ -26,7 +26,7 @@ class RightAnnouncementsViewController: UITableViewController {
         tableView.backgroundColor = MAIN_COLOR
         refreshControl = UIRefreshControl()
         refreshControl?.tintColor = UIColor.white
-        refreshControl?.addTarget(self, action: #selector(RightAnnouncementsViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        refreshControl?.addTarget(self, action: #selector(AnnouncementsViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
         tableView.addSubview(self.refreshControl!)
         loadAnnouncements()
     }
@@ -106,6 +106,7 @@ class RightAnnouncementsViewController: UITableViewController {
             let contentView = UILabel()
             contentView.numberOfLines = 0
             contentView.text = self.announcements[indexPath.row - 1].value(forKey: PF_POST_INFO) as? String
+            contentView.textAlignment = .justified
             contentView.font = RobotoFont.regular(with: 15)
             
             // Bottom Bar
@@ -130,7 +131,7 @@ class RightAnnouncementsViewController: UITableViewController {
             card.bottomBar = bottomBar
             card.bottomBarEdgeInsetsPreset = .wideRectangle2
             
-            // Configure Cell
+            /* Configure Cell
             if UIDevice.current.modelName == "iPhone 6 Plus" || UIDevice.current.modelName == "iPhone 6s Plus" || UIDevice.current.modelName == "iPhone 7 Plus" {
                 // 5.5 Inch Screen
                 cell.contentView.layout(card).horizontally(left: 10, right: 140).center()
@@ -140,7 +141,8 @@ class RightAnnouncementsViewController: UITableViewController {
             } else {
                 // 4 Inch Screen & Simulator
                 cell.contentView.layout(card).horizontally(left: 10, right: 47).center()
-            }
+            } */
+            cell.contentView.layout(card).horizontally(left: 10, right: 10).center()
             cell.selectionStyle = .none
             cell.backgroundColor = MAIN_COLOR
             

@@ -26,9 +26,9 @@ class CreateSubGroupViewController: FormViewController, UIImagePickerControllerD
         // Configure UI
         if !isSponsor {
             if Engagement.sharedInstance.subGroupName != "" {
-                title = "New \(Engagement.sharedInstance.subGroupName!)"
+                self.navigationItem.titleView = Utilities.setTitle(title: "Create", subtitle: "New \(Engagement.sharedInstance.subGroupName!)")
             } else {
-                title = "New Subgroup"
+                self.navigationItem.titleView = Utilities.setTitle(title: "Create", subtitle: "New Subgroup")
             }
         } else {
             title = "New Sponsor"

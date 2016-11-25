@@ -19,7 +19,7 @@ final class CreateSimpleEventViewController: FormViewController, SelectMultipleV
         super.viewDidLoad()
         
         // Configure UI
-        title = "New Event"
+        self.navigationItem.titleView = Utilities.setTitle(title: "Create", subtitle: "New Event")
         tableView.contentInset.top = 10
         tableView.contentInset.bottom = 50
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(createButtonPressed))

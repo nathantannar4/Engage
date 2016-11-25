@@ -25,7 +25,7 @@ class EditEngagementGroupViewController: FormViewController, SelectUsersFromGrou
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Edit"
+        self.navigationItem.titleView = Utilities.setTitle(title: "Edit", subtitle: Engagement.sharedInstance.name!)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(saveButtonPressed))
         self.tableView.contentInset.top = 10
         self.tableView.contentInset.bottom = 100

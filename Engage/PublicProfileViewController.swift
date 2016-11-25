@@ -44,7 +44,7 @@ class PublicProfileViewController: FormViewController, MFMailComposeViewControll
         let user1 = PFUser.current()!
         let user2 = user! as? PFUser
         
-        let messageVC = MessageViewController()
+        let messageVC = ChatViewController()
         messageVC.groupId = Messages.startPrivateChat(user1: user1, user2: user2!)
         messageVC.title = user2!.value(forKey: PF_USER_FULLNAME) as? String
         

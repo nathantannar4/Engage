@@ -12,7 +12,7 @@ import Parse
 import Agrume
 import Material
 
-class LeftMenuController: FormViewController {
+class EngagementMenuController: FormViewController {
     
     var menuItems = [String]()
     let feedVC = FeedViewController()

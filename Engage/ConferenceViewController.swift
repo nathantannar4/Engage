@@ -29,7 +29,8 @@ class ConferenceViewController: FormViewController  {
         tableView.contentInset.top = 0
         tableView.contentInset.bottom = 60
         tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-        title = conference
+        self.navigationItem.titleView = Utilities.setTitle(title: conference!, subtitle: "Conference")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.menu, style: .plain, target: self, action: #selector(leftDrawerButtonPressed))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.moreVertical, style: .plain, target: self, action: #selector(settingsButtonPressed))
         
         Conference.sharedInstance.clear()
@@ -226,7 +227,7 @@ class ConferenceViewController: FormViewController  {
                     for user in users! {
                         if self.positionIDs.contains(user.objectId!) {
                             members.append(LabelRowFormer<ProfileImageDetailCell>(instantiateType: .Nib(nibName: "ProfileImageDetailCell")) {
-                                $0.accessoryType = .disclosureIndicator
+                                $0.accessoryType = .detailButton
                                 $0.iconView.backgroundColor = MAIN_COLOR
                                 $0.iconView.layer.borderWidth = 1
                                 $0.iconView.layer.borderColor = MAIN_COLOR?.cgColor
@@ -243,6 +244,7 @@ class ConferenceViewController: FormViewController  {
                                 }.onSelected { [weak self] _ in
                                     self?.former.deselect(animated: true)
                                     let profileVC = PublicProfileViewController()
+                                    profileVC.user = user
                                     let navVC = UINavigationController(rootViewController: profileVC)
                                     navVC.navigationBar.barTintColor = MAIN_COLOR!
                                     self?.present(navVC, animated: true, completion: nil)
@@ -326,6 +328,10 @@ class ConferenceViewController: FormViewController  {
             $0.displayImage.loadInBackground()
         }
         self.former.reload()
+    }
+    
+    func leftDrawerButtonPressed() {
+        self.evo_drawerController?.toggleDrawerSide(.left, animated: true, completion: nil)
     }
 }
 

@@ -31,8 +31,8 @@ enum DrawerAnimationType: Int {
 }
 
 class ExampleDrawerVisualStateManager: NSObject {
-    var leftDrawerAnimationType: DrawerAnimationType = .parallax
-    var rightDrawerAnimationType: DrawerAnimationType = .parallax
+    var leftDrawerAnimationType: DrawerAnimationType = .slide
+    var rightDrawerAnimationType: DrawerAnimationType = .slide
     
     class var sharedManager: ExampleDrawerVisualStateManager {
     struct Static {

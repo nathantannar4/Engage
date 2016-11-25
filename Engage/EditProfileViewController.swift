@@ -22,8 +22,8 @@ final class EditProfileViewController: FormViewController, UIImagePickerControll
         super.viewDidLoad()
         
         // Configure UI
-        title = "Edit Profile"
-        tableView.contentInset.top = 20
+        self.navigationItem.titleView = Utilities.setTitle(title: "Edit", subtitle: "Profile")
+        tableView.contentInset.top = 10
         tableView.contentInset.bottom = 100
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.cm.check, style: .plain, target: self, action: #selector(saveButtonPressed))
