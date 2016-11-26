@@ -84,7 +84,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
             $0.displayImage.file = EngagementSubGroup.sharedInstance.subgroup![PF_SUBGROUP_COVER_PHOTO] as? PFFile
             $0.displayImage.loadInBackground()
-            $0.displayImage.contentMode = UIViewContentMode.scaleAspectFill
+            $0.displayImage.contentMode = UIViewContentMode.scaleAspectFit
             }.configure {
                 $0.rowHeight = 200
             }.onSelected({ _ in
