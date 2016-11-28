@@ -45,6 +45,7 @@ class DelegatesViewController: FormViewController  {
                     for object in objects! {
                         members.append(CustomRowFormer<DelegateCell>(instantiateType: .Nib(nibName: "DelegateCellLeft")) {
                             $0.accessoryType = .detailButton
+                            $0.tintColor = MAIN_COLOR
                             $0.iconView.backgroundColor = MAIN_COLOR
                             $0.iconView.layer.borderWidth = 1
                             $0.iconView.layer.borderColor = MAIN_COLOR?.cgColor

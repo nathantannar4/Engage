@@ -134,12 +134,12 @@ class DelegatePackageViewController: FormViewController  {
             })
         }
     
-        let introSection = SectionFormer(rowFormer: onlyImageRow, infoRow, schoolRow)
+        let introSection = SectionFormer(rowFormer: onlyImageRow, schoolRow)
         let activitiesSection = SectionFormer(rowFormer: mapRow).set(headerViewFormer: TableFunctions.createHeader(text: "Activities and Amenities"))
         
         let competitionSection = SectionFormer(rowFormers: competitonRows).set(headerViewFormer: TableFunctions.createHeader(text: "Competitions"))
         
-        self.former.append(sectionFormer: introSection, activitiesSection, competitionSection)
+        self.former.append(sectionFormer: introSection, competitionSection)
     }
     
     override func didReceiveMemoryWarning() {

@@ -74,6 +74,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>M13PDFKit-M13PDFKitResources.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>M13PDFKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Material-io.cosmicmind.material.fonts.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -114,6 +124,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>TTOpenInAppActivity.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>TextFieldEffects.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -132,6 +147,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>0D068AEDE2FC10166687AFD01A5D05EA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>16FB872D0D2D4BA0F378AB34D47CF95F</key>
 		<dict>
 			<key>primary</key>
@@ -152,12 +172,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2C8AA1BAF35413BDB954A1DF93576ED1</key>
+		<key>29D771E7C734730F442C6FAC556F2EF9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2DEA63043EEA20BDE5246DCB6642FEB3</key>
+		<key>2C8AA1BAF35413BDB954A1DF93576ED1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -167,17 +187,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>4CCCC48B5F0CD1FE2B236E5AC74B4AA9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5056C707EE63FCBCB465F1E387B9404D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>5172ACAB7FEA22813859DC97CA0AA16F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>52B55F6D02C14B45F8DDB86E0D52F98A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>5695E7FD59B6024888EED347421AA4CC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -192,17 +212,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7B0BCD7969159A8782D304C45437DF88</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>7EF98BACAC16BB71AE0E9591FCC195D1</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>8BE9D4B6FF6D92923152CB0534F2BB94</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>91F1F4749CA0745DFC238AFAC513C26C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>932C2BBB5BD730E61475947CF8BAC7D4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -217,17 +237,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9D98668DE1A2E68382DC84FFE88C6E01</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>A371D9F716AF507FF01A593DD0D9DFDF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>BC911AFCCCAA952028F27336441D755A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CF658A88E8561D9864067744094F7B54</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -247,12 +267,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>F00929F63488E023D3C2116CA664D1BB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>F38B647C5DBBAFCE7F3947812A26C3F2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>F4F24B85D8121D1F5F07D8B9AAD4F5D0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F9F7273646B9124BEA3C0548331F4CFA</key>
 		<dict>
 			<key>primary</key>
 			<true/>

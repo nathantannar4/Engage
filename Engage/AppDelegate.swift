@@ -21,9 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
-            ParseMutableClientConfiguration.applicationId = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b";
-            ParseMutableClientConfiguration.clientKey = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq";
-            ParseMutableClientConfiguration.server = "http://159.203.3.130:1337/parse";
+            ParseMutableClientConfiguration.applicationId = APPLICATION_ID
+            ParseMutableClientConfiguration.clientKey = CLIENT_KEY
+            ParseMutableClientConfiguration.server = SERVER_URL
         });
         Parse.initialize(with: config) 
         
@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         application.registerForRemoteNotifications()
         
-        /*
+        /*  
         let memberQuery = PFQuery(className: "WESST_WEC_Delegates")
         memberQuery.includeKey("user")
         memberQuery.limit = 300

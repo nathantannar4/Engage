@@ -19,16 +19,18 @@ struct Constants {
     }
 }
 
-/* App Settings */
-var VERSION = "1.1.0"
-var isWESST = false
+/* Config */
+var VERSION = "2.0.1"
+var isWESST = true
+let APPLICATION_ID = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b"
+let CLIENT_KEY = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq"
+let SERVER_URL = "http://159.203.3.130:1337/parse"
 
 var drawerController: DrawerController!
 
-/* UI */
-// WESST Color UIColor(red: 153.0/255, green:62.0/255.0, blue:123.0/255, alpha: 1)
-var MAIN_COLOR                          = UIColor.flatSkyBlueColorDark()  //UIColor(red: 24.0/255, green:139.0/255.0, blue:208.0/255, alpha: 1) as UIColor!
-let SUB_COLOR                           = UIColor.black //UIColor(red: 119/255, green: 188/255, blue: 67/255, alpha: 1)
+/* Color */
+var MAIN_COLOR                          = UIColor.flatSkyBlueColorDark()
+let SUB_COLOR                           = UIColor.black
 let HIGHLIGHTED_COLOR                   = UIColor(red: 1, green: 0.7, blue: 0.12, alpha: 1)
 
 /* Installation */

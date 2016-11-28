@@ -35,6 +35,7 @@ pod 'ChameleonFramework/Swift'
 pod 'FontAwesomeKit'
 pod 'TextFieldEffects'
 pod 'BRYXBanner'
+pod 'M13PDFKit'
 # pod 'SnapKit'
 
 end

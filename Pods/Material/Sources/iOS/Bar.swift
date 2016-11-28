@@ -32,7 +32,7 @@ import UIKit
 
 @objc(ContentViewAlignment)
 public enum ContentViewAlignment: Int {
-    case any
+    case full
     case center
 }
 
@@ -47,7 +47,7 @@ open class Bar: View {
     }
     
     /// Should center the contentView.
-    open var contentViewAlignment = ContentViewAlignment.any {
+    open var contentViewAlignment = ContentViewAlignment.full {
         didSet {
             layoutSubviews()
         }
@@ -102,7 +102,7 @@ open class Bar: View {
     }
     
     /// ContentView that holds the any desired subviews.
-    open fileprivate(set) lazy var contentView = UIView()
+    open let contentView = UIView()
     
     /// Left side UIViews.
     open var leftViews: [UIView] {

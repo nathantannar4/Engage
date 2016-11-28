@@ -489,7 +489,7 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         }
         onlyImageRow.cellUpdate {
             $0.displayImage.image = EngagementSubGroup.sharedInstance.coverPhoto
-            $0.displayImage.contentMode = UIViewContentMode.scaleAspectFill
+            $0.displayImage.contentMode = UIViewContentMode.scaleAspectFit
         }
         self.former.reload()
     }
@@ -618,8 +618,6 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
     func switchButton() {
         if editorViewable {
             cancelButtonPressed()
-            editorViewable = false
-            button.setImage(Icon.cm.add, for: .normal)
         } else {
             postButtonPressed()
             editorViewable = true
@@ -633,9 +631,8 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
             let infoRow = TextViewRowFormer<FormTextViewCell>() { [weak self] in
                 $0.textView.textColor = .formerSubColor()
                 $0.textView.font = RobotoFont.regular(with: 15)
-                $0.textView.inputAccessoryView = self?.formerInputAccessoryView
+                self?.addToolBar(textView: $0.textView)
                 }.configure {
-                    $0.placeholder = "What's new?"
                     $0.text = Post.new.info
                 }.onTextChanged {
                     Post.new.info = $0
@@ -666,10 +663,28 @@ class SubGroupDetailViewController: FormViewController, MFMailComposeViewControl
         Post.new.clear()
         self.former.remove(section: 1)
         self.former.reload()
+        editorViewable = false
+        button.setImage(Icon.cm.add, for: .normal)
         
         imageRow.cellUpdate {
             $0.iconView.image = nil
         }
+    }
+    
+    func addToolBar(textView: UITextView){
+        let toolBar = UIToolbar()
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = MAIN_COLOR
+        let doneButton = UIBarButtonItem(title: "Post", style: UIBarButtonItemStyle.done, target: self, action: #selector(postButtonPressed))
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(cancelButtonPressed))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        toolBar.sizeToFit()
+        
+        //textView.delegate = self
+        textView.inputAccessoryView = toolBar
     }
     
     private lazy var loadMoreSection: SectionFormer = {

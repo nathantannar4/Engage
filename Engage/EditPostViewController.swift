@@ -124,7 +124,7 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
             }.onSelected { _ in
                 self.former.deselect(animated: true)
                 self.post!.deleteInBackground()
-                self.navigationController!.popToRootViewController(animated: true)
+                self.dismiss(animated: true)
                 SVProgressHUD.showSuccess(withStatus: "Post Deleted")
         }
         return SectionFormer(rowFormer: removePhotoRow)

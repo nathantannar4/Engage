@@ -1157,7 +1157,7 @@
 				INFOPLIST_FILE = Engage/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.Engage;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.WESST;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1178,7 +1178,7 @@
 				INFOPLIST_FILE = Engage/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.Engage;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.WESST;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

@@ -126,7 +126,7 @@ open class RootController: UIViewController {
 	open func transition(to viewController: UIViewController, duration: TimeInterval = 0.5, options: UIViewAnimationOptions = [], animations: (() -> Void)? = nil, completion: ((Bool) -> Void)? = nil) {
 		rootViewController.willMove(toParentViewController: nil)
 		addChildViewController(viewController)
-		viewController.view.frame = rootViewController.view.bounds
+		viewController.view.frame = rootViewController.view.frame
         transition(from: rootViewController,
             to: viewController,
 			duration: duration,
@@ -191,6 +191,7 @@ extension RootController {
         addChildViewController(v)
         container.addSubview(v.view)
         v.didMove(toParentViewController: self)
+        v.view.frame = container.bounds
         v.view.clipsToBounds = true
         v.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         v.view.contentScaleFactor = Screen.scale

@@ -137,6 +137,8 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "messagesCell") as! MessagesCell
         cell.bindData(message: self.messages[indexPath.row])
+        cell.accessoryType = .detailButton
+        cell.tintColor = MAIN_COLOR
         return cell
     }
     
@@ -144,13 +146,29 @@ class MessagesViewController: UITableViewController, UIActionSheetDelegate, Sele
         return true
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath:
-        IndexPath) {
-        Messages.deleteMessageItem(message: self.messages[indexPath.row])
-        self.messages.remove(at: indexPath.row)
-        self.tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.fade)
-        self.updateEmptyView()
-        self.updateTabCounter()
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let actionSheetController: UIAlertController = UIAlertController(title: "Delete?", message: "", preferredStyle: .alert)
+        actionSheetController.view.tintColor = MAIN_COLOR
+        
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+            //Do some stuff
+        }
+        actionSheetController.addAction(cancelAction)
+        //Create and an option action
+        let nextAction: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+            Messages.deleteMessageItem(message: self.messages[indexPath.row])
+            self.messages.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.fade)
+            self.updateEmptyView()
+            self.updateTabCounter()
+        }
+        actionSheetController.addAction(nextAction)
+        //Add a text field
+        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
+        //Present the AlertController
+        self.present(actionSheetController, animated: true, completion: nil)
     }
     
     // MARK: - UITableViewDelegate

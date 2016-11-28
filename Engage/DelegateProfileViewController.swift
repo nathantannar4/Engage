@@ -14,15 +14,13 @@ import SVProgressHUD
 import MessageUI
 import BRYXBanner
 import Material
+import M13PDFKit
 
-class DelegateProfileViewController: FormViewController, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+class DelegateProfileViewController: FormViewController, MFMailComposeViewControllerDelegate, UINavigationControllerDelegate  {
     
     var user: PFObject?
     var delegateInfo: PFObject?
     var button = UIButton()
-    var editorViewable = false
-    var querySkip = 0
-    var rowCounter = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +36,6 @@ class DelegateProfileViewController: FormViewController, MFMailComposeViewContro
         
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         self.tableView.contentInset.bottom = 100
-        self.prepareButton()
         configure()
     }
     
@@ -284,17 +281,42 @@ class DelegateProfileViewController: FormViewController, MFMailComposeViewContro
                     $0.rowHeight = UITableViewAutomaticDimension
             })
         }
+        
+        let resumeRow = self.createMenu("View Resume") { [weak self] in
+            self?.former.deselect(animated: true)
+            
+            let resume = self?.user!.value(forKey: "resume") as? PFFile
+            if resume != nil {
+                resume?.getDataDownloadStreamInBackground(progressBlock: { (progress: Int32) in
+                    SVProgressHUD.showProgress(Float(progress), status: "Downloading")
+                    if progress == 100 {
+                        print("Downloaded Resume")
+                        if resume != nil {
+                            let viewer = PDFKBasicPDFViewer()
+                            let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0].appending("/Caches/Parse/PFFileCache/\(resume!.name)")
+                            let document: PDFKDocument = PDFKDocument(contentsOfFile: path, password: nil)
+                            SVProgressHUD.dismiss()
+                            viewer.loadDocument(document)
+                            let navVC = UINavigationController(rootViewController: viewer)
+                            navVC.navigationBar.barTintColor = MAIN_COLOR
+                            viewer.navigationItem.titleView = Utilities.setTitle(title: "\(self?.user!.value(forKey: PF_USER_FULLNAME) as! String)'s", subtitle: "Resume") 
+                            self?.present(navVC, animated: true)
+                        } else {
+                            SVProgressHUD.showError(withStatus: "An Error Occurred")
+                        }
+                    }
+                })
+            } else {
+                SVProgressHUD.showError(withStatus: "No Resume Exists")
+            }
+            
+        }
+        
         self.former.append(sectionFormer: SectionFormer(rowFormer: headerRow, phoneRow, emailRow))
+        self.former.append(sectionFormer: SectionFormer(rowFormer: resumeRow).set(headerViewFormer: TableFunctions.createHeader(text: "Resume")))
         self.former.append(sectionFormer: SectionFormer(rowFormers: delegateInfoRow).set(headerViewFormer: TableFunctions.createHeader(text: "Delegate Info")))
         self.former.reload()
         
-        // Add profile info rows to table
-        self.former.append(sectionFormer: SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: "Posts to \(user?[PF_USER_FULLNAME] as! String)")))
-        
-        
-        if PFUser.current()!.objectId! != user!.objectId! {
-            self.loadPosts()
-        }
     }
 
     
@@ -302,190 +324,17 @@ class DelegateProfileViewController: FormViewController, MFMailComposeViewContro
         self.dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Subgroup Posts
-    
-    private func loadPosts() {
-        
-        SVProgressHUD.show(withStatus: "Loading Posts")
-        let query = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Posts")
-        query.limit = 5
-        query.skip = querySkip
-        query.order(byDescending: "createdAt")
-        query.includeKey(PF_POST_USER)
-        query.whereKeyExists(PF_POST_TO_USER)
-        query.includeKey(PF_POST_TO_USER)
-        query.whereKey(PF_POST_TO_USER, equalTo: user!)
-        query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) in
-            UIApplication.shared.endIgnoringInteractionEvents()
-            SVProgressHUD.dismiss()
-            if error == nil {
-                for post in posts! {
-                    if (post[PF_POST_HAS_IMAGE] as? Bool) == true {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCellPhoto(user: post[PF_POST_USER] as! PFUser, post: post, target: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
-                        self.rowCounter += 1
-                    } else {
-                        self.former.insertUpdate(rowFormer: TableFunctions.createFeedCell(user: post[PF_POST_USER] as! PFUser, post: post, target: self.navigationController!), toIndexPath: IndexPath(row: self.rowCounter, section: 1), rowAnimation: .fade)
-                        self.rowCounter += 1
-                    }
-                }
-                if self.querySkip == 0 && (posts?.count)! > 0 {
-                    self.former.insertUpdate(sectionFormer: self.loadMoreSection, toSection: 2)
-                } else {
-                    self.tableView.scrollToRow(at: IndexPath(row: self.querySkip, section: 1), at: UITableViewScrollPosition.bottom, animated: false)
-                }
-            } else {
-                print(error.debugDescription)
-                SVProgressHUD.showError(withStatus: "Network Error")
-            }
-        }
-    }
-    
-    // MARK: - UIImagePickerDelegate
-    
-    private func presentImagePicker() {
-        let picker = UIImagePickerController()
-        picker.navigationBar.barTintColor = MAIN_COLOR
-        picker.delegate = self
-        picker.sourceType = .photoLibrary
-        picker.allowsEditing = false
-        present(picker, animated: true, completion: nil)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            Post.new.image = image
-            Post.new.hasImage = true
-            imageRow.cellUpdate {
-                $0.iconView.image = image
-            }
-        } else{
-            print("Something went wrong")
-            SVProgressHUD.showError(withStatus: "An Error Occurred")
-        }
-    }
-    
-    // MARK: - Subgroup Post Functions
-    
-    private lazy var formerInputAccessoryView: FormerInputAccessoryView = FormerInputAccessoryView(former: self.former)
-    
-    func refresh(sender:AnyObject)
-    {
-        // Updating your data here...
-        UIApplication.shared.beginIgnoringInteractionEvents()
-        while self.former.sectionFormers.count > 1 {
-            self.former.remove(section: 1)
-            self.former.reload()
-        }
-        rowCounter = 0
-        querySkip = 0
-        let zeroRow = LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")).configure {
-            $0.rowHeight = 0
-        }
-        
-        let zeroSection = SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: "Posts to \(user?[PF_USER_FULLNAME] as! String)"))
-        self.former.append(sectionFormer: zeroSection)
-        self.former.reload()
-        loadPosts()
-        Post.new.clear()
-        imageRow.cellUpdate {
-            $0.iconView.image = nil
-        }
-    }
-    
-    func prepareButton() {
-        button.frame = CGRect(x: self.view.frame.width - 75, y: self.view.frame.height - 150, width: 50, height: 50)
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.backgroundColor = MAIN_COLOR
-        button.addTarget(self, action: #selector(switchButton), for: .touchUpInside)
-        button.layer.shadowColor = UIColor.gray.cgColor
-        button.layer.shadowOpacity = 1.0
-        button.layer.shadowOffset = CGSize(width: 2, height: 2)
-        button.layer.shadowRadius = 4
-        button.setImage(Icon.cm.add, for: .normal)
-        button.tintColor = UIColor.white
-        self.view.addSubview(button)
-    }
-    
-    func switchButton() {
-        if editorViewable {
-            cancelButtonPressed()
-            editorViewable = false
-            button.setImage(Icon.cm.add, for: .normal)
-        } else {
-            postButtonPressed()
-            editorViewable = true
-            button.setImage(Icon.cm.close, for: .normal)
-        }
-    }
-    
-    func postButtonPressed() {
-        if !editorViewable {
-            Post.new.clear()
-            let infoRow = TextViewRowFormer<FormTextViewCell>() { [weak self] in
-                $0.textView.textColor = .formerSubColor()
-                $0.textView.font = RobotoFont.regular(with: 15)
-                $0.textView.inputAccessoryView = self?.formerInputAccessoryView
-                }.configure {
-                    $0.placeholder = "What's new?"
-                    $0.text = Post.new.info
-                }.onTextChanged {
-                    Post.new.info = $0
-            }
-            
-            let newPostSection = SectionFormer(rowFormer: infoRow, imageRow).set(headerViewFormer: TableFunctions.createHeader(text: "New post to \(user?[PF_USER_FULLNAME] as! String)"))
-            
-            self.former.insert(sectionFormer: newPostSection, toSection: 1)
-                .onCellSelected { [weak self] _ in
-                    self?.formerInputAccessoryView.update()
-            }
-            self.former.reload()
-            
-        } else if Post.new.info != ""{
-            Post.new.createPost(object: user!, completion: {
-                PushNotication.sendPushNotificationMessage(self.user!.objectId!, text: "\(Profile.sharedInstance.name!) posted to your profile in: \(Engagement.sharedInstance.name!)")
-                self.imageRow.cellUpdate {
-                    $0.iconView.image = nil
-                }
-                self.refresh(sender: self)
-            })
-        }
-    }
-    
-    func cancelButtonPressed() {
-        Post.new.clear()
-        self.former.remove(section: 1)
-        self.former.reload()
-        
-        imageRow.cellUpdate {
-            $0.iconView.image = nil
-        }
-    }
-    
-    private lazy var loadMoreSection: SectionFormer = {
-        let loadMoreRow = CustomRowFormer<TitleCell>(instantiateType: .Nib(nibName: "TitleCell")) {
-            $0.titleLabel.text = "Load More"
-            $0.titleLabel.textAlignment = .center
+    let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
+        return LabelRowFormer<FormLabelCell>() {
+            $0.tintColor = MAIN_COLOR
             $0.titleLabel.textColor = MAIN_COLOR
-            $0.titleLabel.font = RobotoFont.medium(with: 15)
-            }.onSelected { [weak self] _ in
-                self?.former.deselect(animated: true)
-                self!.querySkip += 5
-                self!.loadPosts()
-        }
-        return SectionFormer(rowFormer: loadMoreRow)
-    }()
-    
-    private lazy var imageRow: LabelRowFormer<ProfileImageCell> = {
-        LabelRowFormer<ProfileImageCell>(instantiateType: .Nib(nibName: "ProfileImageCell")) {
-            $0.iconView.image = Post.new.image
+            $0.titleLabel.font = .boldSystemFont(ofSize: 16)
+            $0.accessoryType = .detailButton
             }.configure {
-                $0.text = "Add image to post"
-                $0.rowHeight = 60
-            }.onSelected { [weak self] _ in
-                self?.former.deselect(animated: true)
-                self?.presentImagePicker()
+                $0.text = text
+            }.onSelected { _ in
+                onSelected?()
         }
-    }()
+    }
 }
 

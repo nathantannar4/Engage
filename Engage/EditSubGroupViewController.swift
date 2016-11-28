@@ -103,6 +103,7 @@ class EditSubGroupViewController: FormViewController, SelectUsersFromSubGroupDel
     private lazy var onlyImageRow: LabelRowFormer<ImageCell> = {
         LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
             $0.displayImage.image = EngagementSubGroup.sharedInstance.coverPhoto
+            $0.displayImage.contentMode = UIViewContentMode.scaleAspectFit
             }.configure {
                 $0.rowHeight = 200
             }.onSelected({ _ in
