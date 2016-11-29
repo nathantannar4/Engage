@@ -35,7 +35,6 @@ class RegisterViewController: UITableViewController, UITextFieldDelegate {
     }
     
     // MARK: - User Actions
-    
     @IBAction func registerButtonPressed(_ sender: AnyObject) {
         self.dismissKeyboard()
         

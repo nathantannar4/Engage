@@ -20,49 +20,18 @@ class AnnouncementsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Configure UI
-        tableView.separatorStyle = .none
-        tableView.contentInset.top = 10
-        tableView.backgroundColor = MAIN_COLOR
-        refreshControl = UIRefreshControl()
-        refreshControl?.tintColor = UIColor.white
-        refreshControl?.addTarget(self, action: #selector(AnnouncementsViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
-        tableView.addSubview(self.refreshControl!)
-        loadAnnouncements()
+        self.prepareTable()
+        self.loadAnnouncements()
     }
     
-    func handleRefresh(_ refreshControl: UIRefreshControl) {
-        querySkip = 0
-        loadAnnouncements()
-        refreshControl.endRefreshing()
+    // MARK: - UITableView Refresh Control
+    internal func handleRefresh(_ refreshControl: UIRefreshControl) {
+        self.querySkip = 0
+        self.loadAnnouncements()
+        self.refreshControl?.endRefreshing()
     }
     
-    private func loadAnnouncements() {
-        let query = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Announcements")
-        query.limit = 20
-        query.skip = self.querySkip
-        query.order(byDescending: "createdAt")
-        //query.includeKey(PF_POST_USER)
-        query.findObjectsInBackground { (loadedPosts: [PFObject]?, error: Error?) in
-            if error == nil {
-                if self.querySkip == 0 {
-                    self.announcements.removeAll()
-                }
-                if loadedPosts != nil && (loadedPosts?.count)! > 0 {
-                    for post in loadedPosts! {
-                        self.announcements.append(post)
-                    }
-                    if loadedPosts!.count != 20 {
-                        self.querySkip -= (20 - loadedPosts!.count)
-                    }
-                    self.tableView.reloadData()
-                }
-            } else {
-                print(error.debugDescription)
-            }
-        }
-    }
-    
+    // MARK: - UITableView Delegate Functions
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -92,7 +61,7 @@ class AnnouncementsViewController: UITableViewController {
             let header = UITableViewCell()
             header.textLabel?.text = "Announcements"
             header.textLabel?.textColor = UIColor.white
-            header.textLabel?.font = RobotoFont.bold(with: 20.0)
+            header.textLabel?.font = MAIN_FONT_TITLE
             header.textLabel?.textAlignment = .right
             header.backgroundColor = MAIN_COLOR
             header.selectionStyle = .none
@@ -119,7 +88,6 @@ class AnnouncementsViewController: UITableViewController {
             dateLabel.text = dateFormatter.string(from: self.announcements[indexPath.row - 1].createdAt!)
             dateLabel.textAlignment = .right
             
-            
             // Bottom Bar
             let bottomBar = Bar()
             bottomBar.rightViews = [dateLabel]
@@ -130,17 +98,6 @@ class AnnouncementsViewController: UITableViewController {
             card.bottomBar = bottomBar
             card.bottomBarEdgeInsetsPreset = .wideRectangle2
             
-            /* Configure Cell
-            if UIDevice.current.modelName == "iPhone 6 Plus" || UIDevice.current.modelName == "iPhone 6s Plus" || UIDevice.current.modelName == "iPhone 7 Plus" {
-                // 5.5 Inch Screen
-                cell.contentView.layout(card).horizontally(left: 10, right: 140).center()
-            } else if UIDevice.current.modelName == "iPhone 6" || UIDevice.current.modelName == "iPhone 6s" || UIDevice.current.modelName == "iPhone 7" || UIDevice.current.modelName == "i386" || UIDevice.current.modelName == "x86_64" {
-                // 4.7 Inch Screen & Simulator
-                cell.contentView.layout(card).horizontally(left: 10, right: 100).center()
-            } else {
-                // 4 Inch Screen & Simulator
-                cell.contentView.layout(card).horizontally(left: 10, right: 47).center()
-            } */
             cell.contentView.layout(card).horizontally(left: 10, right: 10).center()
             cell.selectionStyle = .none
             cell.backgroundColor = MAIN_COLOR
@@ -149,7 +106,9 @@ class AnnouncementsViewController: UITableViewController {
         }
     }
     
+    // MARK: - UIScrollView Delegate Functions
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // Load more when user scrolls to bottom of table
         let offset = scrollView.contentOffset
         let bounds = scrollView.bounds
         let size = scrollView.contentSize
@@ -158,9 +117,45 @@ class AnnouncementsViewController: UITableViewController {
         let h = size.height
         if(y > h) {
             if self.announcements.count >= (20 + querySkip) {
-                print("load more rows")
-                querySkip += 20
-                loadAnnouncements()
+                self.querySkip += 20
+                self.loadAnnouncements()
+            }
+        }
+    }
+    
+    // MARK: - Preperation Functions
+    private func prepareTable() {
+        self.tableView.separatorStyle = .none
+        self.tableView.contentInset.top = 20
+        self.tableView.backgroundColor = MAIN_COLOR
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.tintColor = UIColor.white
+        self.refreshControl?.addTarget(self, action: #selector(AnnouncementsViewController.handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        self.tableView.addSubview(self.refreshControl!)
+    }
+    
+    // MARK: - Database Connection Functions
+    private func loadAnnouncements() {
+        let query = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Announcements")
+        query.limit = 20
+        query.skip = self.querySkip
+        query.order(byDescending: "createdAt")
+        query.findObjectsInBackground { (loadedPosts: [PFObject]?, error: Error?) in
+            if error == nil {
+                if self.querySkip == 0 {
+                    self.announcements.removeAll()
+                }
+                if loadedPosts != nil && (loadedPosts?.count)! > 0 {
+                    for post in loadedPosts! {
+                        self.announcements.append(post)
+                    }
+                    if loadedPosts!.count != 20 {
+                        self.querySkip -= (20 - loadedPosts!.count)
+                    }
+                    self.tableView.reloadData()
+                }
+            } else {
+                print(error.debugDescription)
             }
         }
     }

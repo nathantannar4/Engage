@@ -31,13 +31,10 @@ class EngagementMenuController: UITableViewController {
             self.menuItems = ["Menu", "Activity Feed", "\(Engagement.sharedInstance.name!)", "Subgroups", "Profile", "Messages", "Events", "Engineering Competition", "AGM & Retreat", "Executives Meeting"]
         }
         
-        self.tableView.contentInset.top = 20
-        self.tableView.separatorStyle = .none
-        self.tableView.bounces = false
-        self.tableView.backgroundColor = MAIN_COLOR
-        self.tableView.estimatedRowHeight = 44
+        self.prepareTable()
     }
     
+    // MARK: - UITableView Delegate Functions
     override func numberOfSections(in tableView: UITableView) -> Int {
         if isWESST {
             return 1
@@ -161,6 +158,16 @@ class EngagementMenuController: UITableViewController {
         }
     }
     
+    // MARK: - Preperation Functions
+    private func prepareTable() {
+        self.tableView.contentInset.top = 20
+        self.tableView.separatorStyle = .none
+        self.tableView.bounces = false
+        self.tableView.backgroundColor = MAIN_COLOR
+        self.tableView.estimatedRowHeight = 44
+    }
+    
+    // MARK: - Navigation
     private func switchToView(target: UIViewController) {
         let navVC = UINavigationController(rootViewController: target)
         navVC.navigationBar.barTintColor = MAIN_COLOR
