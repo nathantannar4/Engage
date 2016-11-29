@@ -24,11 +24,6 @@ class SelectSingleFromSubGroupViewController: UITableViewController, UISearchBar
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         self.navigationItem.titleView = searchBar
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         
@@ -37,15 +32,8 @@ class SelectSingleFromSubGroupViewController: UITableViewController, UISearchBar
         self.loadUsers()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    
-    // MARK: - Backend methods
-    
-    func loadUsers() {
+    // MARK: - Backend Function
+    private func loadUsers() {
         let query = PFQuery(className: PF_USER_CLASS_NAME)
         query.whereKey(PF_USER_OBJECTID, containedIn: EngagementSubGroup.sharedInstance.members)
         query.order(byAscending: PF_USER_FULLNAME)
@@ -70,7 +58,7 @@ class SelectSingleFromSubGroupViewController: UITableViewController, UISearchBar
         }
     }
     
-    func searchUsers(searchLower: String) {
+    private func searchUsers(searchLower: String) {
         let query = PFQuery(className: PF_USER_CLASS_NAME)
         query.whereKey(PF_USER_OBJECTID, containedIn: EngagementSubGroup.sharedInstance.members)
         query.whereKey(PF_USER_FULLNAME_LOWER, contains: searchLower)
@@ -89,22 +77,16 @@ class SelectSingleFromSubGroupViewController: UITableViewController, UISearchBar
     }
     
     // MARK: - User actions
-    
     func cancelButtonPressed(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Table view data source
-    
+    // MARK: - UITableView Functions
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
         return self.users.count
     }
     
@@ -117,8 +99,6 @@ class SelectSingleFromSubGroupViewController: UITableViewController, UISearchBar
         return cell
     }
     
-    // MARK: - Table view delegate
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true, completion: { () -> Void in
@@ -129,7 +109,6 @@ class SelectSingleFromSubGroupViewController: UITableViewController, UISearchBar
     }
     
     // MARK: - UISearchBar Delegate
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.characters.count > 0 {
             self.searchUsers(searchLower: searchText.lowercased())

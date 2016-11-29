@@ -30,14 +30,9 @@ class SelectUsersFromGroupViewController: UITableViewController {
         self.loadUsers()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
-    // MARK: - Backend methods
-    
-    func loadUsers() {
+    // MARK: - Backend Functions
+    private func loadUsers() {
         let memberQuery = PFUser.query()
         memberQuery!.whereKey(PF_USER_OBJECTID, containedIn: Engagement.sharedInstance.members)
         memberQuery!.whereKey(PF_USER_OBJECTID, notContainedIn: Engagement.sharedInstance.admins)
@@ -58,8 +53,7 @@ class SelectUsersFromGroupViewController: UITableViewController {
         })
     }
     
-    // MARK: - User actions
-    
+    // MARK: - User Actions
     func cancelButtonPressed(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -82,21 +76,17 @@ class SelectUsersFromGroupViewController: UITableViewController {
         }
     }
     
+    // MARK: - UIScrollView Functions
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         SVProgressHUD.dismiss()
     }
     
-    // MARK: - Table view data source
-    
+    // MARK: - UITableView Functions
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
         return self.users.count
     }
     
@@ -111,8 +101,6 @@ class SelectUsersFromGroupViewController: UITableViewController {
         
         return cell
     }
-    
-    // MARK: - Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath as IndexPath, animated: true)
@@ -129,6 +117,4 @@ class SelectUsersFromGroupViewController: UITableViewController {
         
         self.tableView.reloadData()
     }
-    
-    
 }

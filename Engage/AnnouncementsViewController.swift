@@ -134,7 +134,7 @@ class AnnouncementsViewController: UITableViewController {
         self.tableView.addSubview(self.refreshControl!)
     }
     
-    // MARK: - Database Connection Functions
+    // MARK: - Backend Functions
     private func loadAnnouncements() {
         let query = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_Announcements")
         query.limit = 20

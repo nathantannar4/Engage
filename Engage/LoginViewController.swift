@@ -77,7 +77,8 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
             logo.isHidden = true
         }
     }
-
+    
+    // MARK: - User Actions
     @IBAction func loginButtonPressed(_ sender: AnyObject) {
         self.dismissKeyboard()
         
@@ -135,8 +136,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
         self.resetForm()
     }
     
-    // MARK - UITextFieldDelegate methods
-    
+    // MARK: - UITextFieldDelegate methods
     internal func textFieldDidChange(sender: AnyObject) {
         
         // Highlight text field colors based on valid entries

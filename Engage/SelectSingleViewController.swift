@@ -24,11 +24,6 @@ class SelectSingleViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         self.navigationItem.titleView = searchBar
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.cm.close, style: .plain, target: self, action: #selector(cancelButtonPressed))
         
@@ -36,16 +31,9 @@ class SelectSingleViewController: UITableViewController, UISearchBarDelegate {
         self.searchBar.delegate = self
         self.loadUsers()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     
     // MARK: - Backend methods
-    
-    func loadUsers() {
+    private func loadUsers() {
         let query = PFQuery(className: PF_USER_CLASS_NAME)
         query.whereKey(PF_USER_OBJECTID, containedIn: Engagement.sharedInstance.members)
         query.order(byAscending: PF_USER_FULLNAME)
@@ -88,22 +76,16 @@ class SelectSingleViewController: UITableViewController, UISearchBarDelegate {
     }
     
     // MARK: - User actions
-    
     func cancelButtonPressed(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Table view data source
-    
+    // MARK: - UITableView Functions
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
         return self.users.count
     }
 
@@ -117,8 +99,6 @@ class SelectSingleViewController: UITableViewController, UISearchBarDelegate {
         return cell
     }
     
-    // MARK: - Table view delegate
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath as IndexPath, animated: true)
         self.dismiss(animated: true, completion: { () -> Void in
@@ -128,8 +108,7 @@ class SelectSingleViewController: UITableViewController, UISearchBarDelegate {
         })
     }
     
-    // MARK: - UISearchBar Delegate
-    
+    // MARK: - UISearchBar Functions
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.characters.count > 0 {
             self.searchUsers(searchLower: searchText.lowercased())
