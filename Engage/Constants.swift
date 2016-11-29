@@ -29,6 +29,7 @@ let HIGHLIGHTED_COLOR                   = UIColor(red: 1, green: 0.7, blue: 0.12
 
 /* Font */
 let MAIN_FONT_TITLE = RobotoFont.medium(with: 17.0)
+let MAIN_FONT_SUBTITLE = RobotoFont.medium(with: 15.0)
 
 /* Installation */
 let PF_INSTALLATION_CLASS_NAME			= "_Installation"           //	Class name

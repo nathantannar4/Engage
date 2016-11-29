@@ -34,6 +34,7 @@ class Utilities {
         drawerController.restorationIdentifier = "Drawer"
         drawerController.showsShadows = true
         drawerController.shouldStretchDrawer = false
+        drawerController.maximumLeftDrawerWidth = 220.0
         drawerController.maximumRightDrawerWidth = 280.0
         drawerController.openDrawerGestureModeMask = .all
         drawerController.closeDrawerGestureModeMask = .all

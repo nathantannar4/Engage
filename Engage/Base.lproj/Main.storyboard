@@ -193,19 +193,6 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="" id="Mm5-Uj-JJW" userLabel="Yoshiko">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="177" id="muk-c3-Ndq">
-                                        <rect key="frame" x="0.0" y="454" width="375" height="177"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="muk-c3-Ndq" id="Bkc-0X-ueo">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="177"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="Juq-PW-r9k" id="HGK-OE-2Ax"/>
@@ -739,7 +726,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="RyW-wu-GDh" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="9ZX-eg-3vl">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="9ZX-eg-3vl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

@@ -30,7 +30,8 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
         if !(UserDefaults.standard.value(forKey: "walkthroughPresented") != nil) && !isWESST {
             self.showWalkthrough()
         }
-            
+        
+        // Check if session token already exists
         if PFUser.current() != nil {
             
             // A session token already exists
@@ -56,6 +57,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
             }
         }
         
+        // Prepare Form
         self.prepareForm()
     }
     
