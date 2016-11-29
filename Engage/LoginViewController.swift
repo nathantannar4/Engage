@@ -10,7 +10,6 @@ import UIKit
 import TextFieldEffects
 import Parse
 import SVProgressHUD
-import Former
 
 class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthroughViewControllerDelegate {
     
@@ -20,49 +19,16 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var logo: UIImageView!
-    var firstLoad = true
     
-    var validEmail = false
-    var validPassword = false
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if PFUser.current() == nil {
-            titleLabel.isHidden = false
-            emailTextField.isHidden = false
-            passwordTextField.isHidden = false
-            loginButton.isHidden = false
-            registerButton.isHidden = false
-            logo.isHidden = false
-        } else {
-            emailTextField.isHidden = true
-            passwordTextField.isHidden = true
-            loginButton.isHidden = true
-            registerButton.isHidden = true
-            logo.isHidden = true
-        }
-    }
+    internal var firstLoad = true
+    internal var validEmail = false
+    internal var validPassword = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         if !(UserDefaults.standard.value(forKey: "walkthroughPresented") != nil) && !isWESST {
-            
-            showWalkthrough()
-            
-            let dict:[String:Bool] = ["walkthroughPresented":true]
-            UserDefaults.standard.set(dict, forKey: "walkthroughPresented")
-        }
-        
-        if isWESST {
-            logo.image = UIImage(named: "WESST-Logo.png")
-            if !(UserDefaults.standard.value(forKey: "newServer") != nil) {
-                let dict:[String:Bool] = ["newServer":true]
-                UserDefaults.standard.set(dict, forKey: "newServer")
-                PFUser.logOut()
-            }
-        } else {
-            logo.image = UIImage(named: "Engage-Logo.png")
+            self.showWalkthrough()
         }
             
         if PFUser.current() != nil {
@@ -90,54 +56,47 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
             }
         }
         
-        // Configure Title
-        if !isWESST {
-            titleLabel.text = "Engage"
+        self.prepareForm()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if PFUser.current() == nil {
+            titleLabel.isHidden = false
+            emailTextField.isHidden = false
+            passwordTextField.isHidden = false
+            loginButton.isHidden = false
+            registerButton.isHidden = false
+            logo.isHidden = false
         } else {
-            titleLabel.text = "Western Engineering Students' Socities Team"
-            titleLabel.adjustsFontSizeToFitWidth = true
+            emailTextField.isHidden = true
+            passwordTextField.isHidden = true
+            loginButton.isHidden = true
+            registerButton.isHidden = true
+            logo.isHidden = true
         }
-        titleLabel.textColor = MAIN_COLOR!
-        
-        // Configure Colors
-        resetForm()
-        registerButton.setTitleColor(MAIN_COLOR, for: .normal)
-        registerButton.layer.borderColor = MAIN_COLOR?.cgColor
-        registerButton.layer.borderWidth = 1.0
-        
-        // Add observers to text fields
-        emailTextField.addTarget(self, action: #selector(LoginViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
-        passwordTextField.addTarget(self, action: #selector(LoginViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
-        
-        // Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     @IBAction func loginButtonPressed(_ sender: AnyObject) {
-        dismissKeyboard()
-        print("Logging In")
+        self.dismissKeyboard()
+        
+        // Freeze user interaction
         UIApplication.shared.beginIgnoringInteractionEvents()
         SVProgressHUD.show(withStatus: "Logging In")
+        
+        // Send login data to server to request session token
         PFUser.logInWithUsername(inBackground: emailTextField.text!, password: passwordTextField.text!) { (user, error) -> Void in
             UIApplication.shared.endIgnoringInteractionEvents()
             if user != nil {
+                // Login Successful
                 SVProgressHUD.showSuccess(withStatus: "Success")
-                print("Success")
+                
+                // Fetch user profile data in backgroun and cache results
                 Profile.sharedInstance.user = PFUser.current()
                 Profile.sharedInstance.loadUser()
                 
-                self.emailTextField.activeBorderColor = UIColor.flatGreen()
-                self.emailTextField.textColor = UIColor.flatGreen()
-                
-                self.passwordTextField.activeBorderColor = UIColor.flatGreen()
-                
-                self.passwordTextField.textColor = UIColor.flatGreen()
-                
+                // Visual representation of a successful login
+                self.textFieldsTo(color: UIColor.flatGreen())
+        
                 // Add a deley before showing next view for design purposes
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                     
@@ -162,21 +121,21 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
                     self.resetForm()
                 }
             } else {
+                // Login Error
                 SVProgressHUD.showError(withStatus: "Invalid Login")
                 print(error.debugDescription)
-                
             }
         }
     }
  
     @IBAction func registerButtonPressed(_ sender: AnyObject) {
-        dismissKeyboard()
-        resetForm()
+        self.dismissKeyboard()
+        self.resetForm()
     }
     
     // MARK - UITextFieldDelegate methods
     
-    func textFieldDidChange(sender: AnyObject) {
+    internal func textFieldDidChange(sender: AnyObject) {
         
         // Highlight text field colors based on valid entries
         let textField = sender as! UITextField
@@ -194,49 +153,106 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
                 validPassword = false
             }
         }
-        print(validEmail)
-        print(validPassword)
-        print("-------")
         if (validEmail && validPassword) {
+            // Activate button when both login fields have possible valid strings
             loginButton.setTitleColor(MAIN_COLOR, for: .normal)
             loginButton.layer.borderColor = MAIN_COLOR?.cgColor
             loginButton.layer.borderWidth = 1.0
             loginButton.isEnabled = true
         } else {
+            // Disable login button to prevent useless login calls
             loginButton.setTitleColor(UIColor.darkGray, for: .normal)
             loginButton.layer.borderWidth = 0.0
             loginButton.isEnabled = false
         }
     }
     
-    // MARK - Other Functions
-    
-    func resetForm() {
-        // Reset login form
-        emailTextField.text = ""
-        passwordTextField.text = ""
-        validEmail = false
-        validPassword = false
-        loginButton.setTitleColor(UIColor.darkGray, for: .normal)
-        loginButton.layer.borderWidth = 0.0
-        loginButton.isEnabled = false
-        emailTextField.activeBorderColor = MAIN_COLOR!
-        emailTextField.textColor = MAIN_COLOR!
-        passwordTextField.activeBorderColor = MAIN_COLOR!
-        passwordTextField.textColor = MAIN_COLOR!
+    private func addToolBar(textField: UITextField){
+        let toolBar = UIToolbar()
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = MAIN_COLOR
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.done, target: self, action: #selector(dismissKeyboard))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        toolBar.setItems([spaceButton, doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        toolBar.sizeToFit()
+        textField.delegate = self
+        textField.inputAccessoryView = toolBar
     }
     
-    func isValidEmail(_ testStr:String) -> Bool {
+    internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.dismissKeyboard()
+        return true
+    }
+    
+    // MARK: - Form Functions
+    private func prepareForm() {
+        self.addToolBar(textField: self.emailTextField)
+        self.addToolBar(textField: self.passwordTextField)
+        self.resetForm()
+        
+        // Configure form title
+        if !isWESST {
+            self.titleLabel.text = "Engage"
+        } else {
+            self.titleLabel.text = "Western Engineering Students' Socities Team"
+            self.titleLabel.adjustsFontSizeToFitWidth = true
+        }
+        self.titleLabel.textColor = MAIN_COLOR!
+        
+        // Configure form logo
+        if isWESST {
+            logo.image = UIImage(named: "WESST-Logo.png")
+        } else {
+            logo.image = UIImage(named: "Engage-Logo.png")
+        }
+        
+        // Add observers to text fields
+        self.emailTextField.addTarget(self, action: #selector(LoginViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
+        self.passwordTextField.addTarget(self, action: #selector(LoginViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
+    }
+    
+    private func resetForm() {
+        // Reset login form
+        self.emailTextField.text = ""
+        self.passwordTextField.text = ""
+        self.validEmail = false
+        self.validPassword = false
+        self.loginButton.setTitleColor(UIColor.darkGray, for: .normal)
+        self.loginButton.layer.borderWidth = 0.0
+        self.loginButton.isEnabled = false
+        self.emailTextField.activeBorderColor = MAIN_COLOR!
+        self.emailTextField.textColor = MAIN_COLOR!
+        self.passwordTextField.activeBorderColor = MAIN_COLOR!
+        self.passwordTextField.textColor = MAIN_COLOR!
+        self.registerButton.setTitleColor(MAIN_COLOR, for: .normal)
+        self.registerButton.layer.borderColor = MAIN_COLOR?.cgColor
+        self.registerButton.layer.borderWidth = 1.0
+    }
+    
+    private func textFieldsTo(color: UIColor) {
+        self.emailTextField.activeBorderColor = color
+        self.emailTextField.textColor = color
+        self.passwordTextField.activeBorderColor = color
+        self.passwordTextField.textColor = color
+    }
+    
+    // MARK: - Validation Functions
+    
+    private func isValidEmail(_ testStr:String) -> Bool {
         let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
         return emailPredicate.evaluate(with: testStr)
     }
     
     func dismissKeyboard() {
-        view.endEditing(true)
+        self.view.endEditing(true)
     }
     
-    func showWalkthrough() {
+    // MARK: - Walkthough
+    
+    private func showWalkthrough() {
         let stb = UIStoryboard(name: "Walkthrough", bundle: nil)
         let walkthrough = stb.instantiateViewController(withIdentifier: "walk") as! BWWalkthroughViewController
         let page_zero = stb.instantiateViewController(withIdentifier: "walk0")
@@ -252,9 +268,12 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
         walkthrough.addViewController(page_zero)
         
         self.present(walkthrough, animated: false, completion: nil)
+        
+        let dict:[String:Bool] = ["walkthroughPresented":true]
+        UserDefaults.standard.set(dict, forKey: "walkthroughPresented")
     }
     
-    func walkthroughCloseButtonPressed() {
+    internal func walkthroughCloseButtonPressed() {
         self.dismiss(animated: true, completion: {
             if PFUser.current() != nil {
                 print("User Logged In")

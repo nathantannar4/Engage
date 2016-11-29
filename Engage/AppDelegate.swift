@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Change navbar color
         let navbar = UINavigationBar.appearance()
         navbar.barTintColor = MAIN_COLOR
-        navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName: RobotoFont.medium(with: 17)]
+        navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName: MAIN_FONT_TITLE]
         navbar.tintColor = UIColor.white
         navbar.isTranslucent = false
         
@@ -45,8 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         barAppearace.setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -60), for:UIBarMetrics.default)
         
         // Remove shadow from navigation bar
-        UINavigationBar.appearance().shadowImage = UIImage()
-        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        navbar.shadowImage = UIImage()
+        navbar.setBackgroundImage(UIImage(), for: .default)
 
         
         // Register for push notifications
@@ -55,49 +55,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Enable or disable features based on authorization.
         }
         application.registerForRemoteNotifications()
-        
-        /*  
-        let memberQuery = PFQuery(className: "WESST_WEC_Delegates")
-        memberQuery.includeKey("user")
-        memberQuery.limit = 300
-        memberQuery.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
-            if error == nil {
-                if objects != nil {
-                    for object in objects! {
-                        let userQuery = PFQuery(className: "WESST_User")
-                        userQuery.whereKey("user", equalTo: object["user"] as! PFUser)
-                        userQuery.limit = 1
-                        do {
-                            let userExtension = try userQuery.findObjects().first
-                            
-                            
-                            var school = object["school"] as! String
-                            if school.contains("University of Victoria") {
-                                school = "University of Victoria"
-                            }
-                            let subgroupQuery = PFQuery(className: "WESST_SubGroup")
-                            subgroupQuery.whereKey("name", equalTo: school)
-                            do {
-                                let subgroup = try subgroupQuery.findObjects().first
-                                if subgroup != nil {
-                                    var subgroupMembers = subgroup?["members"] as! [String]
-                                    subgroupMembers.append((object["user"] as! PFUser).objectId!)
-                                    subgroup?["members"] = subgroupMembers
-                                    subgroup?.saveInBackground()
-                                    userExtension?["subgroup"] = subgroup
-                                    userExtension?.saveInBackground()
-                                }
-                            }
-                            
-                        } catch _ {
-                            print("An error occurred")
-                        }
-                        
-                    }
-                }
-            }
-        }
-        */
  
         return true
     }

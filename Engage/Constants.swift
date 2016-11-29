@@ -10,18 +10,12 @@ import UIKit
 import Foundation
 import ChameleonFramework
 import DrawerController
-
-struct Constants {
-    struct PF {
-        struct Installation {
-            static let ClassName = "_Installation"
-        }
-    }
-}
+import Material
+import FontAwesomeKit
 
 /* Config */
-var VERSION = "2.0.1"
-var isWESST = true
+var VERSION = "1.1.0"
+var isWESST = false
 let APPLICATION_ID = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b"
 let CLIENT_KEY = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq"
 let SERVER_URL = "http://159.203.3.130:1337/parse"
@@ -32,6 +26,9 @@ var drawerController: DrawerController!
 var MAIN_COLOR                          = UIColor.flatSkyBlueColorDark()
 let SUB_COLOR                           = UIColor.black
 let HIGHLIGHTED_COLOR                   = UIColor(red: 1, green: 0.7, blue: 0.12, alpha: 1)
+
+/* Font */
+let MAIN_FONT_TITLE = RobotoFont.medium(with: 17.0)
 
 /* Installation */
 let PF_INSTALLATION_CLASS_NAME			= "_Installation"           //	Class name

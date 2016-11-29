@@ -12,7 +12,7 @@ import Parse
 import SVProgressHUD
 import JSQWebViewController
 
-class RegisterViewController: UITableViewController {
+class RegisterViewController: UITableViewController, UITextFieldDelegate {
     
     @IBOutlet weak var emailTextField: YoshikoTextField!
     @IBOutlet weak var passwordTextField: YoshikoTextField!
@@ -22,54 +22,24 @@ class RegisterViewController: UITableViewController {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var termsButton: UIButton!
     
-    var validEmail = false
-    var validPassword = false
-    var validPasswordAgain = false
-    var validName = false
+    internal var validEmail = false
+    internal var validPassword = false
+    internal var validPasswordAgain = false
+    internal var validName = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
-        // Configure Colors
-        emailTextField.activeBorderColor = MAIN_COLOR!
-        emailTextField.textColor = MAIN_COLOR
-        emailTextField.addTarget(self, action: #selector(RegisterViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
-        
-        passwordTextField.activeBorderColor = MAIN_COLOR!
-        passwordTextField.textColor = MAIN_COLOR
-        passwordTextField.addTarget(self, action: #selector(RegisterViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
-        
-        passwordAgainTextField.activeBorderColor = MAIN_COLOR!
-        passwordAgainTextField.textColor = MAIN_COLOR
-        passwordAgainTextField.addTarget(self, action: #selector(RegisterViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
-        
-        nameTextField.activeBorderColor = MAIN_COLOR!
-        nameTextField.textColor = MAIN_COLOR
-        nameTextField.addTarget(self, action: #selector(RegisterViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
-        
-        registerButton.setTitleColor(UIColor.darkGray, for: .normal)
-        registerButton.isEnabled = false
-        
-        cancelButton.setTitleColor(MAIN_COLOR, for: .normal)
-        cancelButton.layer.borderColor = MAIN_COLOR?.cgColor
-        cancelButton.layer.borderWidth = 1.0
-        
-        termsButton.setTitleColor(MAIN_COLOR, for: .normal)
-        termsButton.setSubstituteFontName("Avenir Next")
-        
-        //Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(RegisterViewController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
+        // Prepare Form
+        self.prepareForm()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    // MARK: - User Actions
+    
     @IBAction func registerButtonPressed(_ sender: AnyObject) {
-        dismissKeyboard()
-        print("Registering")
+        self.dismissKeyboard()
+        
+        // Freeze user interaction
         SVProgressHUD.show(withStatus: "Registering")
         UIApplication.shared.beginIgnoringInteractionEvents()
         
@@ -88,21 +58,19 @@ class RegisterViewController: UITableViewController {
         user.signUpInBackground { (succeeded, error) -> Void in
             UIApplication.shared.endIgnoringInteractionEvents()
             if error == nil {
+                
                 SVProgressHUD.showSuccess(withStatus: "Success")
-                print("Success")
+                
+                // Cache user
+                Profile.sharedInstance.user = user
                 Profile.sharedInstance.loadUser()
                 
-                self.passwordTextField.activeBorderColor = UIColor.flatGreen()
-                self.passwordTextField.textColor = UIColor.flatGreen()
-                
-                self.passwordAgainTextField.activeBorderColor = UIColor.flatGreen()
-                self.passwordAgainTextField.textColor = UIColor.flatGreen()
-                
-                self.nameTextField.activeBorderColor = UIColor.flatGreen()
-                self.nameTextField.textColor = UIColor.flatGreen()
+                // Visual representation of a successful login
+                self.textFieldsTo(color: UIColor.flatGreen())
                 
                 // Add a deley before showing next view for design purposes
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    
                     if !isWESST {
                         Utilities.userLoggedIn(self)
                     } else {
@@ -129,90 +97,8 @@ class RegisterViewController: UITableViewController {
         }
     }
     
-    @IBAction func cancelButtonPressed(_ sender: AnyObject) {
-        // Cancel registration
-        self.navigationController!.popToRootViewController(animated: true)
-    }
-    
-    // MARK - UITextFieldDelegate methods
-    
-    func textFieldDidChange(sender: AnyObject) {
-        
-        // Highlight text field colors based on valid entries
-        let textField = sender as! UITextField
-        if textField.placeholder == "Email" {
-            if isValidEmail(testStr: emailTextField.text!) {
-                validEmail = true
-                let emailQuery = PFQuery(className: PF_USER_CLASS_NAME)
-                emailQuery.whereKey(PF_USER_EMAIL, equalTo: emailTextField.text!)
-                emailQuery.findObjectsInBackground(block: { (users, error) in
-                    if users?.count == 0 {
-                        self.emailTextField.activeBorderColor = UIColor.flatGreen()
-                        self.emailTextField.textColor = UIColor.flatGreen()
-                    } else {
-                        self.emailTextField.activeBorderColor = UIColor.flatRed()
-                        self.emailTextField.textColor = UIColor.flatRed()
-                        self.validEmail = false
-                    }
-                })
-            } else {
-                validEmail = false
-                emailTextField.activeBorderColor = MAIN_COLOR!
-                emailTextField.textColor = MAIN_COLOR
-            }
-        }
-        if textField.placeholder == "Password" {
-            if passwordTextField.text!.characters.count >= 6 {
-                validPassword = true
-            } else {
-                validPassword = false
-            }
-            passwordAgainTextField.activeBorderColor = MAIN_COLOR!
-            passwordAgainTextField.textColor = MAIN_COLOR
-            if passwordAgainTextField.text != "" {
-                passwordAgainTextField.text = ""
-            }
-        }
-        if textField.placeholder == "Password Again" {
-            if passwordTextField.text! == passwordAgainTextField.text! {
-                validPasswordAgain = true
-                passwordAgainTextField.activeBorderColor = UIColor.flatGreen()
-                passwordAgainTextField.textColor = UIColor.flatGreen()
-            } else if passwordTextField.text! == "" {
-                validPasswordAgain = false
-                passwordAgainTextField.activeBorderColor = MAIN_COLOR!
-                passwordAgainTextField.textColor = MAIN_COLOR
-            } else {
-                validPasswordAgain = false
-                passwordAgainTextField.activeBorderColor = UIColor.flatRed()
-                passwordAgainTextField.textColor = UIColor.flatRed()
-            }
-        }
-        if textField.placeholder == "Name" {
-            if nameTextField.text!.characters.count >= 2 {
-                validName = true
-            } else {
-                validName = false
-            }
-        }
-        print(validEmail)
-        print(validPassword)
-        print(validPasswordAgain)
-        print(validName)
-        print("-------")
-        if (validEmail && validPassword && validPasswordAgain && validName) {
-            registerButton.setTitleColor(MAIN_COLOR, for: .normal)
-            registerButton.layer.borderColor = MAIN_COLOR?.cgColor
-            registerButton.layer.borderWidth = 1.0
-            registerButton.isEnabled = true
-        } else {
-            registerButton.setTitleColor(UIColor.darkGray, for: .normal)
-            registerButton.layer.borderWidth = 0.0
-            registerButton.isEnabled = false
-        }
-    }
-    
     @IBAction func showTerms(_ sender: AnyObject) {
+        // Create HTML based text view controller for the EULA agreement
         let vc = EULAViewController()
         vc.view.backgroundColor = self.tableView.backgroundColor
         let label = UITextView(frame: vc.view.frame)
@@ -220,7 +106,7 @@ class RegisterViewController: UITableViewController {
         if let filepath = Bundle.main.path(forResource: "EULA", ofType: "html") {
             do {
                 let str = try NSAttributedString(data: String(contentsOfFile: filepath)
-.data(using: String.Encoding.unicode, allowLossyConversion: true)!, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType], documentAttributes: nil)
+                    .data(using: String.Encoding.unicode, allowLossyConversion: true)!, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType], documentAttributes: nil)
                 label.textColor = MAIN_COLOR
                 label.attributedText = str
                 let navVC = UINavigationController(rootViewController: vc)
@@ -233,23 +119,149 @@ class RegisterViewController: UITableViewController {
         }
     }
     
-    func dismiss(sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
+    @IBAction func cancelButtonPressed(_ sender: AnyObject) {
+        self.navigationController!.popToRootViewController(animated: true)
     }
     
+    // MARK: - UITextFieldDelegate methods
     
-    // MARK - Other Functions
+    internal func textFieldDidChange(sender: AnyObject) {
+        
+        // Highlight text field colors based on valid entries
+        let textField = sender as! UITextField
+        if textField.placeholder == "Email" {
+            if isValidEmail(testStr: emailTextField.text!) {
+                self.validEmail = false
+                let emailQuery = PFQuery(className: PF_USER_CLASS_NAME)
+                emailQuery.whereKey(PF_USER_EMAIL, equalTo: emailTextField.text!)
+                emailQuery.findObjectsInBackground(block: { (users, error) in
+                    if users?.count == 0 {
+                        self.validEmail = true
+                        self.textFieldTo(color: UIColor.flatGreen(), textField: self.emailTextField)
+                    } else {
+                        self.textFieldTo(color: UIColor.flatRed(), textField: self.emailTextField)
+                    }
+                })
+            } else {
+                self.textFieldTo(color: MAIN_COLOR!, textField: self.emailTextField)
+            }
+        }
+        if textField.placeholder == "Password" {
+            if passwordTextField.text!.characters.count >= 6 {
+                validPassword = true
+            } else {
+                validPassword = false
+            }
+            self.textFieldTo(color: MAIN_COLOR!, textField: self.passwordAgainTextField)
+            if passwordAgainTextField.text != "" {
+                passwordAgainTextField.text = ""
+            }
+        }
+        if textField.placeholder == "Password Again" {
+            if passwordTextField.text! == passwordAgainTextField.text! {
+                validPasswordAgain = true
+                self.textFieldTo(color: UIColor.flatGreen(), textField: self.passwordAgainTextField)
+            } else if passwordTextField.text! == "" {
+                validPasswordAgain = false
+                self.textFieldTo(color: MAIN_COLOR!, textField: self.passwordAgainTextField)
+            } else {
+                validPasswordAgain = false
+                self.textFieldTo(color: UIColor.flatRed(), textField: self.passwordAgainTextField)
+            }
+        }
+        if textField.placeholder == "Name" {
+            if nameTextField.text!.characters.count >= 2 {
+                validName = true
+            } else {
+                validName = false
+            }
+        }
+        if (validEmail && validPassword && validPasswordAgain && validName) {
+            // Activate button when both login fields have possible valid strings
+            self.registerButton.setTitleColor(MAIN_COLOR, for: .normal)
+            self.registerButton.layer.borderColor = MAIN_COLOR?.cgColor
+            self.registerButton.layer.borderWidth = 1.0
+            self.registerButton.isEnabled = true
+        } else {
+            // Disable login button to prevent useless login calls
+            self.registerButton.setTitleColor(UIColor.darkGray, for: .normal)
+            self.registerButton.layer.borderWidth = 0.0
+            self.registerButton.isEnabled = false
+        }
+    }
     
-    func isValidEmail(testStr:String) -> Bool {
+    private func addToolBar(textField: UITextField){
+        let toolBar = UIToolbar()
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = MAIN_COLOR
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.done, target: self, action: #selector(dismissKeyboard))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        toolBar.setItems([spaceButton, doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        toolBar.sizeToFit()
+        textField.delegate = self
+        textField.inputAccessoryView = toolBar
+    }
+    
+    internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.dismissKeyboard()
+        return true
+    }
+    
+    // MARK: - Form Functions
+    private func prepareForm() {
+        
+        self.prepareTextFields()
+        
+        registerButton.setTitleColor(UIColor.darkGray, for: .normal)
+        registerButton.isEnabled = false
+        
+        cancelButton.setTitleColor(MAIN_COLOR, for: .normal)
+        cancelButton.layer.borderColor = MAIN_COLOR?.cgColor
+        cancelButton.layer.borderWidth = 1.0
+        
+        termsButton.setTitleColor(MAIN_COLOR, for: .normal)
+        termsButton.setSubstituteFontName("Avenir Next")
+    }
+    
+    private func prepareTextFields() {
+        for textField in [self.emailTextField, self.passwordTextField, self.passwordAgainTextField, self.nameTextField] {
+            textField!.addTarget(self, action: #selector(RegisterViewController.textFieldDidChange(sender:)), for: UIControlEvents.editingChanged)
+            self.textFieldTo(color: MAIN_COLOR!, textField: textField!)
+        }
+    }
+    
+    private func textFieldsTo(color: UIColor) {
+        self.emailTextField.activeBorderColor = color
+        self.emailTextField.textColor = color
+        self.passwordTextField.activeBorderColor = color
+        self.passwordTextField.textColor = color
+        self.passwordAgainTextField.activeBorderColor = color
+        self.passwordAgainTextField.textColor = color
+        self.nameTextField.activeBorderColor = color
+        self.nameTextField.textColor = color
+    }
+    
+    private func textFieldTo(color: UIColor, textField: YoshikoTextField) {
+        textField.activeBorderColor = color
+        textField.textColor = color
+    }
+    
+    // MARK: - Validation Functions
+    
+    private func isValidEmail(testStr:String) -> Bool {
         let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
         return emailPredicate.evaluate(with: testStr)
     }
     
-    //Calls this function when the tap is recognized.
     func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        view.endEditing(true)
+        self.view.endEditing(true)
+    }
+    
+    func dismiss(sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
     }
 }
 
