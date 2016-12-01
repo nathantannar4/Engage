@@ -66,7 +66,7 @@ class UserListViewController: FormViewController, UISearchBarDelegate {
                                 $0.iconView.layer.borderColor = MAIN_COLOR?.cgColor
                                 $0.iconView.image = UIImage(named: "profile_blank")
                                 $0.iconView.file = user[PF_USER_PICTURE] as? PFFile
-                                //$0.iconView.loadInBackground()
+                                $0.iconView.loadInBackground()
                                 $0.titleLabel.textColor = UIColor.black
                                 $0.detailLabel.textColor = UIColor.gray
                                 let index = self.positionIDs.index(of: user.objectId!)

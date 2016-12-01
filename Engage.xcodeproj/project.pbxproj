@@ -678,9 +678,9 @@
 		38AFE87B1DA101D700B52032 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
-				38AFE8711DA101C700B52032 /* FeedViewController.swift */,
 				38AFE8721DA101C700B52032 /* Post.swift */,
 				38AFE8731DA101C700B52032 /* Comment.swift */,
+				38AFE8711DA101C700B52032 /* FeedViewController.swift */,
 				38AFE8741DA101C700B52032 /* PostDetailViewController.swift */,
 				38AFE8751DA101C700B52032 /* EditPostViewController.swift */,
 			);

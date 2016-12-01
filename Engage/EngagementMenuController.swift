@@ -25,10 +25,15 @@ class EngagementMenuController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Menu"
+        
         if Engagement.sharedInstance.subGroupName != "" {
-            self.menuItems = ["Menu", "Activity Feed", "\(Engagement.sharedInstance.name!)", "\(Engagement.sharedInstance.subGroupName!)", "Profile", "Messages", "Events", "Engineering Competition", "AGM & Retreat", "Executives Meeting"]
+            self.menuItems = ["Menu", "Activity Feed", "\(Engagement.sharedInstance.name!)", "\(Engagement.sharedInstance.subGroupName!)", "Profile", "Messages", "Events"]
         } else {
-            self.menuItems = ["Menu", "Activity Feed", "\(Engagement.sharedInstance.name!)", "Subgroups", "Profile", "Messages", "Events", "Engineering Competition", "AGM & Retreat", "Executives Meeting"]
+            self.menuItems = ["Menu", "Activity Feed", "\(Engagement.sharedInstance.name!)", "Subgroups", "Profile", "Messages", "Events"]
+        }
+        if Engagement.sharedInstance.name == "WESST" {
+            self.menuItems.append(contentsOf: ["Engineering Competition", "AGM & Retreat", "Executives Meeting"])
         }
         
         self.prepareTable()

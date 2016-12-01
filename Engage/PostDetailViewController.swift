@@ -24,18 +24,19 @@ class PostDetailViewController: FormViewController, UITextFieldDelegate {
     var commentsDates = [String]()
     var commentStrings = [String]()
     var image: UIImage?
-    
+
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+ 
         tableView.contentInset.bottom = 100
-        
+ 
         postUser = post?.object(forKey: "user") as? PFUser
-        
+ 
         comments = post?.object(forKey: "comments") as? [String]
         commentsUser = post?.object(forKey: "commentsUser") as? [PFUser]
         commentsDate = post?.object (forKey: "commentsDate") as? [NSDate]
-        
+ 
         if (comments?.count)! > 0 {
             for user in commentsUser! {
                 let userQuery = PFUser.query()

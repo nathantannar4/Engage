@@ -180,6 +180,7 @@ final class Engagement {
         if color != nil {
             MAIN_COLOR = UIColor.init(hexString: color)
         } else {
+            MAIN_COLOR = UIColor.flatSkyBlueColorDark()
             color = UIColor.flatSkyBlueColorDark().hexValue()
         }
         if engagement![PF_ENGAGEMENTS_COVER_PHOTO] != nil {

@@ -12,6 +12,7 @@ import Former
 import BRYXBanner
 import DrawerController
 import Material
+import Parse
 
 class Utilities {
     
@@ -21,7 +22,7 @@ class Utilities {
         target.present(navVC, animated: false, completion: nil)
     }
     
-    class func showEngagement(_ target: AnyObject) {
+    class func showEngagement(_ target: AnyObject, animated: Bool) {
         PushNotication.parsePushUserAssign()
         
         let navigationController = UINavigationController(rootViewController: FeedViewController())
@@ -29,12 +30,11 @@ class Utilities {
         navigationController.restorationIdentifier = "NavigationControllerRestorationKey"
         
         drawerController = DrawerController(centerViewController: navigationController, leftDrawerViewController: EngagementMenuController(), rightDrawerViewController: AnnouncementsViewController())
-        drawerController.showsShadows = false
         
         drawerController.restorationIdentifier = "Drawer"
         drawerController.showsShadows = true
         drawerController.shouldStretchDrawer = false
-        drawerController.maximumLeftDrawerWidth = 220.0
+        drawerController.maximumLeftDrawerWidth = 200.0
         drawerController.maximumRightDrawerWidth = 280.0
         drawerController.openDrawerGestureModeMask = .all
         drawerController.closeDrawerGestureModeMask = .all
@@ -43,7 +43,7 @@ class Utilities {
             let block = ExampleDrawerVisualStateManager.sharedManager.drawerVisualStateBlock(for: drawerSide)
             block?(drawerController, drawerSide, percentVisible)
         }        
-        target.present(drawerController, animated: true, completion: nil)
+        target.present(drawerController, animated: animated, completion: nil)
     }
     
     class func showBanner(title: String, subtitle: String, duration: Double) {

@@ -101,7 +101,7 @@ final class FindEngagementsViewController: FormViewController {
                                             
                                             Engagement.sharedInstance.join(newUser: PFUser.current()!)
                                         }
-                                        Utilities.showEngagement(self!)
+                                        Utilities.showEngagement(self!, animated: true)
                                     } else {
                                         SVProgressHUD.showError(withStatus: "Incorrect Passwod")
                                     }
@@ -126,7 +126,7 @@ final class FindEngagementsViewController: FormViewController {
                                 //Create and an option action
                                 let nextAction: UIAlertAction = UIAlertAction(title: "Yes", style: .default) { action -> Void in
                                     Engagement.sharedInstance.join(newUser: PFUser.current()!)
-                                    Utilities.showEngagement(self!)
+                                    Utilities.showEngagement(self!, animated: true)
                                 }
                                 actionSheetController.addAction(nextAction)
                                 

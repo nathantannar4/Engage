@@ -26,10 +26,6 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     internal var addImageButton = UIButton()
     internal var button = FabButton()
     
-    // Comments
-    internal var commentIndex = 0
-    internal var commentObjects = [commentObject()]
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -183,41 +179,7 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         if tableView.isEditing {
-            let card = Card()
             
-            // Content
-            //***********
-            let contentView = UILabel()
-            contentView.numberOfLines = 0
-            contentView.text = self.commentObjects[commentIndex].getComment()
-            contentView.font = RobotoFont.regular(with: 15)
-            
-            // Toolbar Bar
-            //***********
-            let dateLabel = UILabel()
-            dateLabel.font = RobotoFont.regular(with: 13)
-            dateLabel.textColor = Color.gray
-            dateLabel.text = self.commentObjects[commentIndex].getDateString()
-            dateLabel.textAlignment = .right
-            
-            let usernameLabel = UILabel()
-            usernameLabel.font = RobotoFont.regular(with: 15)
-            usernameLabel.textColor = MAIN_COLOR
-            usernameLabel.text = self.commentObjects[commentIndex].getUsername()
-            usernameLabel.textAlignment = .left
-            
-            let toolbar = Toolbar()
-            toolbar.rightViews = [dateLabel]
-            toolbar.leftViews = [usernameLabel]
-            
-            // Configure Card
-            card.contentView = contentView
-            card.contentViewEdgeInsetsPreset = .wideRectangle2
-            card.toolbar = toolbar
-            card.toolbarEdgeInsetsPreset = .wideRectangle2
-            cell.contentView.layout(card).horizontally(left: 10, right: 10).center()
-            
-            commentIndex += 1
         } else {
             let card = PresenterCard()
             let postObject = self.posts[indexPath.row]
@@ -308,7 +270,6 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
             commentButton.object = self.posts[indexPath.row]
             commentButton.isEnabled = false
             commentButton.setTitle(" \(postObject.value(forKey: PF_POST_REPLIES) as! Int)", for: .normal)
-            commentButton.addTarget(self, action: #selector(handleComment(sender:)), for: .touchUpInside)
             
             // Bottom Bar
             let bottomBar = Bar()
@@ -419,43 +380,6 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
             actionSheetController.popoverPresentationController?.sourceView = self.view
             //Present the AlertController
             self.present(actionSheetController, animated: true, completion: nil)
-        }
-    }
-    
-    func handleComment(sender: IconButtonWithObject) {
-        commentIndex = 0
-        var comments = sender.object.value(forKey: "comments") as? [String]
-        let commentsUser = sender.object.value(forKey: "commentsUser") as? [PFUser]
-        var commentsDate = sender.object.value (forKey: "commentsDate") as? [Date]
-        
-        if (comments!.count) > 0 {
-            var index = 0
-            var userIds = [String]()
-            for user in commentsUser! {
-                userIds.append(user.objectId!)
-            }
-            let userQuery = PFUser.query()
-            userQuery?.whereKey(PF_USER_OBJECTID, containedIn: userIds)
-            userQuery?.findObjectsInBackground(block: { (users: [PFObject]?, error: Error?) in
-                if error == nil {
-                    if let users = users {
-                        self.commentObjects.removeAll()
-                        for user in users {
-                            let downloadedComment = commentObject()
-                            print(user)
-                            downloadedComment.initialize(commentString: comments![index], usernnameString: user.value(forKey: PF_USER_FULLNAME) as! String, userIdString: user.objectId!, commentDate: commentsDate![index])
-                            self.commentObjects.append(downloadedComment)
-                            index += 1
-                        }
-                        // Reload Table
-                        //self.tableView.beginUpdates()
-                        self.tableView.reloadData()
-                        //self.tableView.endUpdates()
-                    }
-                } else {
-                    SVProgressHUD.showError(withStatus: "Network Error")
-                }
-            })
         }
     }
     
@@ -627,34 +551,4 @@ class FeedViewController: UITableViewController, UIImagePickerControllerDelegate
 
 class IconButtonWithObject: IconButton {
     var object: PFObject!
-}
-
-class commentObject {
-    private var comment: String!
-    private var username: String!
-    private var userId: String!
-    private var date: Date!
-    
-    func initialize(commentString: String, usernnameString: String, userIdString: String, commentDate: Date) {
-        comment = commentString
-        username = usernnameString
-        userId = userIdString
-        date = commentDate
-    }
-    
-    func getComment() -> String {
-        return comment
-    }
-    
-    func getUsername() -> String {
-        return username
-    }
-    
-    func getUserId() -> String {
-        return userId
-    }
-    
-    func getDateString() -> String {
-        return Utilities.dateToString(time: date as NSDate)
-    }
 }

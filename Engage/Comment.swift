@@ -25,3 +25,33 @@ final class Comment {
     }
 
 }
+
+class CommentObject {
+    private var comment: String!
+    private var username: String!
+    private var userId: String!
+    private var date: Date!
+    
+    func initialize(commentString: String, usernnameString: String, userIdString: String, commentDate: Date) {
+        comment = commentString
+        username = usernnameString
+        userId = userIdString
+        date = commentDate
+    }
+    
+    func getComment() -> String {
+        return comment
+    }
+    
+    func getUsername() -> String {
+        return username
+    }
+    
+    func getUserId() -> String {
+        return userId
+    }
+    
+    func getDateString() -> String {
+        return Utilities.dateToString(time: date as NSDate)
+    }
+}

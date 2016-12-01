@@ -51,7 +51,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
                         if !Engagement.sharedInstance.members.contains(PFUser.current()!.objectId!) {
                             Engagement.sharedInstance.join(newUser: PFUser.current()!)
                         }
-                        Utilities.showEngagement(self)
+                        Utilities.showEngagement(self, animated: false)
                     }
                 }
             }
@@ -117,7 +117,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
                                 if !Engagement.sharedInstance.members.contains(PFUser.current()!.objectId!) {
                                     Engagement.sharedInstance.join(newUser: PFUser.current()!)
                                 }
-                                Utilities.showEngagement(self)
+                                Utilities.showEngagement(self, animated: false)
                             }
                         }
                     }

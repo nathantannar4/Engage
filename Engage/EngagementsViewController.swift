@@ -60,7 +60,6 @@ final class EngagementsViewController: FormViewController {
         UIApplication.shared.isStatusBarHidden = false
         UIApplication.shared.statusBarStyle = .lightContent
         Engagement.sharedInstance.clear()
-        MAIN_COLOR = UIColor.flatSkyBlueColorDark()
         refresh(self)
     }
     
@@ -105,7 +104,7 @@ final class EngagementsViewController: FormViewController {
     
     // MARK: Private
 
-    fileprivate func queryEngagements() {
+    private func queryEngagements() {
         
         var myRows = [RowFormer]()
         let engagementsQuery = PFQuery(className: PF_ENGAGEMENTS_CLASS_NAME)
@@ -152,7 +151,7 @@ final class EngagementsViewController: FormViewController {
                                     // Send to Group
                                     Engagement.sharedInstance.engagement = engagement
                                     Engagement.sharedInstance.unpack()
-                                    Utilities.showEngagement(self!)
+                                    Utilities.showEngagement(self!, animated: true)
                             })
 
                         }
@@ -201,7 +200,7 @@ final class EngagementsViewController: FormViewController {
                                                     if !Profile.sharedInstance.engagements.contains(engagements![0].objectId!) {
                                                         Engagement.sharedInstance.join(newUser: PFUser.current()!)
                                                     }
-                                                    Utilities.showEngagement(self!)
+                                                    Utilities.showEngagement(self!, animated: true)
                                                 } else {
                                                     SVProgressHUD.showError(withStatus: "Incorrect Password")
                                                 }
@@ -220,7 +219,7 @@ final class EngagementsViewController: FormViewController {
                                             if !Profile.sharedInstance.engagements.contains(engagements![0].objectId!) {
                                                 Engagement.sharedInstance.join(newUser: PFUser.current()!)
                                             }
-                                            Utilities.showEngagement(self!)
+                                            Utilities.showEngagement(self!, animated: true)
                                         }
                                         
                                     } else {
