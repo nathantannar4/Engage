@@ -1,8 +1,7 @@
+# ![pageres](Engage-Wide copy.jpg)
+
 # Engage
 Engage is currently an iOS exclusive app that allows you to create your own social networking space! Designed specifically to help clubs, organizations and student societies to improve the communication and organization. 
-
-# ![pageres](Engage-Wide copy.jpg)
- 
 Create your own social network! <a href="https://appsto.re/ca/TmlJfb.i">Download Link</a>
 
 ## Some of the core features include:
