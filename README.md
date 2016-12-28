@@ -23,6 +23,7 @@ This app has been a personal project of mine and I thank you for your support!
 - [x] Enhance UI
 - [x] Optimize UI
 - [x] Full Push Notification integration
+- [x] Facebook Login Support
 
 ## Team
 
