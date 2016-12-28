@@ -49,18 +49,33 @@ extension UIViewController {
 }
 
 open class StatusBarController: RootController {
-	/// A reference to the statusBar.
-    open let statusBar = UIView()
-	
-    /// A boolean that indicates to hide the statusBar on rotation.
-    open var shouldHideStatusBarOnRotation = true
+    /// Device status bar style.
+    open var statusBarStyle: UIStatusBarStyle {
+        get {
+            return Application.statusBarStyle
+        }
+        set(value) {
+            Application.statusBarStyle = value
+        }
+    }
     
-    open override var isStatusBarHidden: Bool {
-        didSet {
+    /// Device visibility state.
+    open var isStatusBarHidden: Bool {
+        get {
+            return Application.isStatusBarHidden
+        }
+        set(value) {
+            Application.isStatusBarHidden = value
             statusBar.isHidden = isStatusBarHidden
         }
     }
     
+    /// A boolean that indicates to hide the statusBar on rotation.
+    open var shouldHideStatusBarOnRotation = true
+    
+    /// A reference to the statusBar.
+    open let statusBar = UIView()
+	
 	/**
      To execute in the order of the layout chain, override this
      method. LayoutSubviews should be called immediately, unless you
@@ -87,11 +102,13 @@ open class StatusBarController: RootController {
         super.prepare()
 		prepareStatusBar()
 	}
-	
-	/// Prepares the statusBar.
-	private func prepareStatusBar() {
-		statusBar.backgroundColor = .white
+}
+
+extension StatusBarController {
+    /// Prepares the statusBar.
+    fileprivate func prepareStatusBar() {
+        statusBar.backgroundColor = .white
         statusBar.height = 20
-		view.addSubview(statusBar)
-	}
+        view.addSubview(statusBar)
+    }
 }

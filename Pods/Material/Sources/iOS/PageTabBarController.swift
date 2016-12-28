@@ -101,6 +101,7 @@ public protocol PageTabBarControllerDelegate {
 @objc(PageTabBarController)
 open class PageTabBarController: RootController {
     /// Reference to the PageTabBar.
+    @IBInspectable
     open let pageTabBar = PageTabBar()
     
     /// A boolean that indicates whether bounce is enabled.
@@ -159,7 +160,7 @@ open class PageTabBarController: RootController {
         prepare()
     }
     
-    public init(viewControllers: [UIViewController], selectedIndex: Int) {
+    public init(viewControllers: [UIViewController], selectedIndex: Int = 0) {
         isBounceEnabled = true
         super.init(rootViewController: UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
         self.selectedIndex = selectedIndex

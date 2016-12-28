@@ -31,13 +31,17 @@
 import UIKit
 
 open class View: UIView {
-	/**
+    open override var intrinsicContentSize: CGSize {
+        return CGSize(width: width, height: height)
+    }
+    
+    /**
      A CAShapeLayer used to manage elements that would be affected by
      the clipToBounds property of the backing layer. For example, this
      allows the dropshadow effect on the backing layer, while clipping
      the image to a desired shape within the visualLayer.
      */
-	open internal(set) var visualLayer = CAShapeLayer()
+	open let visualLayer = CAShapeLayer()
 	
 	/**
      A property that manages an image for the visualLayer's contents
@@ -105,7 +109,7 @@ open class View: UIView {
 	
 	/// A Preset for the contentsGravity property.
 	@IBInspectable
-    open var contentsGravityPreset = Gravity.resize {
+    open var contentsGravityPreset: Gravity {
 		didSet {
 			contentsGravity = GravityToValue(gravity: contentsGravityPreset)
 		}
@@ -135,6 +139,7 @@ open class View: UIView {
      - Parameter aDecoder: A NSCoder instance.
      */
 	public required init?(coder aDecoder: NSCoder) {
+        contentsGravityPreset = .resizeAspectFill
 		super.init(coder: aDecoder)
 		prepare()
 	}
@@ -146,7 +151,8 @@ open class View: UIView {
      - Parameter frame: A CGRect instance.
      */
 	public override init(frame: CGRect) {
-		super.init(frame: frame)
+		contentsGravityPreset = .resizeAspectFill
+        super.init(frame: frame)
 		prepare()
 	}
     
@@ -156,14 +162,10 @@ open class View: UIView {
         prepare()
     }
 	
-	open override func layoutSublayers(of layer: CALayer) {
-		super.layoutSublayers(of: layer)
-        layoutShape()
-        layoutVisualLayer()
-	}
-	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
+        layoutShape()
+        layoutVisualLayer()
         layoutShadowPath()
 	}
 	

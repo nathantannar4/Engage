@@ -112,6 +112,7 @@ final class Profile {
             user[PF_USER_FULLNAME_LOWER] = fullName!.lowercased()
             user[PF_USER_PHONE] = Profile.sharedInstance.phoneNumber
             user[PF_USER_BLOCKED] = Profile.sharedInstance.blockedUsers
+            user.email = Profile.sharedInstance.email
             user.saveInBackground(block: { (succeeded: Bool, error: Error?) -> Void in
                 UIApplication.shared.endIgnoringInteractionEvents()
                 

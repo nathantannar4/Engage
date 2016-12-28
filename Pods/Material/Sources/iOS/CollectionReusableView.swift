@@ -41,7 +41,7 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
     open let visualLayer = CAShapeLayer()
     
     /// A Pulse reference.
-    open fileprivate(set) var pulse: Pulse!
+    fileprivate var pulse: Pulse!
     
     /// PulseAnimation value.
     open var pulseAnimation: PulseAnimation {
@@ -93,7 +93,8 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
      much greater flexibility than the contentsGravity property in
      terms of how the image is cropped and stretched.
      */
-	@IBInspectable open var contentsRect: CGRect {
+	@IBInspectable
+    open var contentsRect: CGRect {
 		get {
 			return visualLayer.contentsRect
 		}
@@ -106,7 +107,8 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
      A CGRect that defines a stretchable region inside the visualLayer
      with a fixed border around the edge.
      */
-	@IBInspectable open var contentsCenter: CGRect {
+	@IBInspectable
+    open var contentsCenter: CGRect {
 		get {
 			return visualLayer.contentsCenter
 		}
@@ -120,7 +122,8 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
      dimensions of the visualLayer's contents property and the size
      of the view. By default, this value is set to the Screen.scale.
      */
-	@IBInspectable open var contentsScale: CGFloat {
+	@IBInspectable
+    open var contentsScale: CGFloat {
 		get {
 			return visualLayer.contentsScale
 		}
@@ -137,7 +140,8 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
 	}
 	
 	/// Determines how content should be aligned within the visualLayer's bounds.
-	@IBInspectable open var contentsGravity: String {
+	@IBInspectable
+    open var contentsGravity: String {
 		get {
 			return visualLayer.contentsGravity
 		}
@@ -157,7 +161,8 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
 	}
 	
 	/// A reference to EdgeInsets.
-	@IBInspectable open var contentEdgeInsets: UIEdgeInsets {
+	@IBInspectable
+    open var contentEdgeInsets: UIEdgeInsets {
 		get {
 			return grid.contentEdgeInsets
 		}
@@ -174,7 +179,8 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
 	}
 	
 	/// A wrapper around grid.interimSpace.
-	@IBInspectable open var interimSpace: InterimSpace {
+	@IBInspectable
+    open var interimSpace: InterimSpace {
 		get {
 			return grid.interimSpace
 		}
@@ -184,7 +190,8 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
 	}
 	
 	/// A property that accesses the backing layer's background
-	@IBInspectable open override var backgroundColor: UIColor? {
+	@IBInspectable
+    open override var backgroundColor: UIColor? {
 		didSet {
 			layer.backgroundColor = backgroundColor?.cgColor
 		}
@@ -217,15 +224,11 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
 		self.init(frame: .zero)
 	}
 	
-	open override func layoutSublayers(of layer: CALayer) {
-		super.layoutSublayers(of: layer)
-        layoutShape()
-        layoutVisualLayer()
-	}
-	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
-		layoutShadowPath()
+        layoutShape()
+        layoutVisualLayer()
+        layoutShadowPath()
 	}
 	
     /**
@@ -234,14 +237,11 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
      from the center.
      */
     open func pulse(point: CGPoint? = nil) {
-        let p = nil == point ? CGPoint(x: CGFloat(width / 2), y: CGFloat(height / 2)) : point!
+        let p = point ?? center
         
         pulse.expandAnimation(point: p)
         Motion.delay(time: 0.35) { [weak self] in
-            guard let s = self else {
-                return
-            }
-            s.pulse.contractAnimation()
+            self?.pulse.contractAnimation()
         }
     }
     
@@ -287,7 +287,6 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
      */
 	open func prepare() {
 		contentScaleFactor = Screen.scale
-		pulseAnimation = .none
 		prepareVisualLayer()
         preparePulse()
     }
@@ -297,6 +296,7 @@ extension CollectionReusableView {
     /// Prepares the pulse motion.
     fileprivate func preparePulse() {
         pulse = Pulse(pulseView: self, pulseLayer: visualLayer)
+        pulseAnimation = .none
     }
     
     /// Prepares the visualLayer property.

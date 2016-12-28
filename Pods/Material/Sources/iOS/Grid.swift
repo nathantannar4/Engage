@@ -204,13 +204,13 @@ public struct Grid {
             }
         }
         
-        guard 0 < canvas.width && 0 < canvas.height else {
-            return
-        }
-        
         let count = views.count
         
         guard 0 < count else {
+            return
+        }
+        
+        guard 0 < canvas.width && 0 < canvas.height else {
             return
         }
         

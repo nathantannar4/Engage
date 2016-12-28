@@ -37,7 +37,7 @@ open class NavigationBar: UINavigationBar {
     }
     
     open override var intrinsicContentSize: CGSize {
-        return CGSize(width: Screen.width, height: height)
+        return CGSize(width: width, height: height)
     }
 	
 	/// A preset wrapper around contentEdgeInsets.
@@ -132,13 +132,9 @@ open class NavigationBar: UINavigationBar {
 		return intrinsicContentSize
 	}
     
-    open override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        layoutShape()
-    }
-	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
+        layoutShape()
         layoutShadowPath()
 		
         if let v = topItem {

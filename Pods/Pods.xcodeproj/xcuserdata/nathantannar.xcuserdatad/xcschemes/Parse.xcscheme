@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '2C8AA1BAF35413BDB954A1DF93576ED1'
+               BlueprintIdentifier = '51CB0AF616C6306147B99C320EB6D3ED'
                BlueprintName = 'Parse'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Parse.framework'>

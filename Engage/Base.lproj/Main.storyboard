@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="RyW-wu-GDh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="RyW-wu-GDh">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -193,6 +193,37 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="" id="CgI-VZ-w45" userLabel="Yoshiko">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="40" id="gDw-9Q-y3l">
+                                        <rect key="frame" x="0.0" y="454" width="375" height="40"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gDw-9Q-y3l" id="UhQ-VJ-QNM">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZaN-wQ-Kf7">
+                                                    <rect key="frame" x="8" y="0.0" width="359" height="40"/>
+                                                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
+                                                    <state key="normal" title="  Login with Facebook" image="Facebook Logo">
+                                                        <color key="titleColor" red="0.08235294118" green="0.30980392159999998" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="facebookLogin:" destination="Juq-PW-r9k" eventType="touchUpInside" id="Quj-dI-OyQ"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstItem="ZaN-wQ-Kf7" firstAttribute="trailing" secondItem="UhQ-VJ-QNM" secondAttribute="trailingMargin" id="0NP-IU-ucL"/>
+                                                <constraint firstAttribute="bottom" secondItem="ZaN-wQ-Kf7" secondAttribute="bottom" id="841-qf-0QF"/>
+                                                <constraint firstItem="ZaN-wQ-Kf7" firstAttribute="leading" secondItem="UhQ-VJ-QNM" secondAttribute="leadingMargin" id="keu-Zm-BeT"/>
+                                                <constraint firstItem="ZaN-wQ-Kf7" firstAttribute="top" secondItem="UhQ-VJ-QNM" secondAttribute="top" id="yVp-Rs-fg5"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="Juq-PW-r9k" id="HGK-OE-2Ax"/>
@@ -202,6 +233,7 @@
                     <navigationItem key="navigationItem" id="10b-56-jOh"/>
                     <connections>
                         <outlet property="emailTextField" destination="VfP-6C-VgW" id="b9T-EH-trM"/>
+                        <outlet property="facebookButton" destination="ZaN-wQ-Kf7" id="NJf-q5-F0x"/>
                         <outlet property="loginButton" destination="6lN-0u-fxc" id="uvp-tX-MxD"/>
                         <outlet property="logo" destination="5JL-X2-Fd3" id="Ii5-Eb-JhV"/>
                         <outlet property="passwordTextField" destination="KUJ-MA-3Ia" id="Fvh-5a-lLU"/>
@@ -211,7 +243,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xBw-Jj-ZDb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="790" y="300"/>
+            <point key="canvasLocation" x="465" y="300"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="yOc-EG-W5f">
@@ -512,7 +544,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bu4-LG-er3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1216" y="300"/>
+            <point key="canvasLocation" x="1108" y="300"/>
         </scene>
         <!--User List View Controller-->
         <scene sceneID="QhW-hD-bcT">
@@ -601,7 +633,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 new" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UNF-ni-q1e">
-                                            <rect key="frame" x="285" y="31" width="82" height="30"/>
+                                            <rect key="frame" x="285" y="31" width="82" height="29"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="82" id="0KB-5T-1Md"/>
                                             </constraints>
@@ -610,7 +642,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QOm-Wk-AQK">
-                                            <rect key="frame" x="8" y="31" width="269" height="30"/>
+                                            <rect key="frame" x="8" y="31" width="269" height="29"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.53257948160000002" green="0.53254371879999995" blue="0.53256458039999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
@@ -726,7 +758,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="RyW-wu-GDh" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="9ZX-eg-3vl">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="9ZX-eg-3vl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -737,10 +769,11 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZYe-Sc-t9G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="372" y="300"/>
+            <point key="canvasLocation" x="-169" y="300"/>
         </scene>
     </scenes>
     <resources>
         <image name="Engage-Logo.png" width="450" height="449"/>
+        <image name="Facebook Logo" width="25" height="25"/>
     </resources>
 </document>

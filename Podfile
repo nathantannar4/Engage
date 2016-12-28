@@ -11,6 +11,7 @@ use_frameworks!
 # Database Pods
 pod 'Parse'
 pod 'ParseUI'
+pod 'ParseFacebookUtilsV4'
 pod 'Bolts'
 
 # View Controller Pods

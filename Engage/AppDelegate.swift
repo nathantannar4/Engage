@@ -10,6 +10,8 @@ import UIKit
 import Parse
 import UserNotifications
 import Material
+import ParseFacebookUtilsV4
+import FBSDKCoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,6 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ParseMutableClientConfiguration.server = SERVER_URL
         });
         Parse.initialize(with: config) 
+        FBSDKSettings.setAppID(FACEBOOK_APPLICATION_ID)
+        PFFacebookUtils.initializeFacebook(applicationLaunchOptions: launchOptions)
+        PFUser.enableRevocableSessionInBackground()
         
         if isWESST {
             MAIN_COLOR = UIColor(red: 153.0/255, green:62.0/255.0, blue:123.0/255, alpha: 1) as UIColor!
@@ -55,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         application.registerForRemoteNotifications()
  
-        return true
+        return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
     // Mark - Push Notification methods
@@ -86,6 +91,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Data was nil")
         }
     }
+    
+    // MARK: - Facebook Login
+    func application(_ application: UIApplication,
+                     open url: URL,
+                     sourceApplication: String?,
+                     annotation: Any) -> Bool {
+        return FBSDKApplicationDelegate.sharedInstance().application(application,
+                                                                     open: url,
+                                                                     sourceApplication: sourceApplication,
+                                                                     annotation: annotation)
+    }
+
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

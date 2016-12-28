@@ -58,11 +58,6 @@ public protocol TextFieldDelegate: UITextFieldDelegate {
 }
 
 open class TextField: UITextField {
-    /// Will layout the view.
-    open var willLayout: Bool {
-        return 0 < width && 0 < height && nil != superview
-    }
-    
     /// Default size when using AutoLayout.
     open override var intrinsicContentSize: CGSize {
         return CGSize(width: width, height: 32)
@@ -77,7 +72,7 @@ open class TextField: UITextField {
 	
     /// A boolean indicating whether the text is empty.
     open var isEmpty: Bool {
-        return true == text?.isEmpty
+        return 0 == text?.utf16.count
     }
     
     open override var leftView: UIView? {
@@ -372,13 +367,18 @@ open class TextField: UITextField {
 	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
+        guard !isAnimating else {
+            return
+        }
+        
+        layoutShape()
         reload()
 	}
 	
-	open override func layoutSublayers(of layer: CALayer) {
-		super.layoutSublayers(of: layer)
-        layoutShape()
-	}
+    open override func becomeFirstResponder() -> Bool {
+        layoutSubviews()
+        return super.becomeFirstResponder()
+    }
     
 	/**
      Prepares the view instance when intialized. When subclassing,
@@ -402,10 +402,6 @@ open class TextField: UITextField {
     
 	/// Ensures that the components are sized correctly.
 	open func reload() {
-        guard willLayout && !isAnimating else {
-            return
-        }
-        
         layoutPlaceholderLabel()
         layoutDetailLabel()
         layoutButton(button: clearIconButton)
@@ -479,12 +475,13 @@ extension TextField {
         let w = leftViewWidth
         let h = 0 == height ? intrinsicContentSize.height : height
         
+        placeholderLabel.transform = CGAffineTransform.identity
+        
         guard isEditing || !isEmpty || !isPlaceholderAnimated else {
             placeholderLabel.frame = CGRect(x: w, y: 0, width: width - w, height: h)
             return
         }
         
-        placeholderLabel.transform = CGAffineTransform.identity
         placeholderLabel.frame = CGRect(x: w, y: 0, width: width - w, height: h)
         placeholderLabel.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
         
@@ -502,7 +499,7 @@ extension TextField {
     /// Layout the detailLabel.
     fileprivate func layoutDetailLabel() {
         let c = dividerContentEdgeInsets
-        detailLabel.sizeToFit()
+        detailLabel.height = detailLabel.sizeThatFits(CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)).height
         detailLabel.x = c.left
         detailLabel.y = height + detailVerticalOffset
         detailLabel.width = width - c.left - c.right
@@ -510,10 +507,6 @@ extension TextField {
     
     /// Layout the a button.
     fileprivate func layoutButton(button: UIButton?) {
-        guard 0 < width && 0 < height else {
-            return
-        }
-        
         button?.frame = CGRect(x: width - height, y: 0, width: height, height: height)
     }
     

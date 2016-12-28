@@ -27,9 +27,7 @@ open class CVCalendarContentViewController: UIViewController {
 
     open var currentPage = 1
     open var pageChanged: Bool {
-        get {
-            return currentPage == 1 ? false : true
-        }
+        return currentPage == 1 ? false : true
     }
 
     open var pageLoadingEnabled = true
@@ -159,8 +157,8 @@ extension CVCalendarContentViewController {
 
 extension CVCalendarContentViewController {
     public func dateBeforeDate(_ date: Foundation.Date) -> Foundation.Date {
-        var components = Manager.componentsForDate(date)
-        let calendar = Calendar.current
+        let calendar = self.calendarView.delegate?.calendar?() ?? Calendar.current
+        var components = Manager.componentsForDate(date, calendar: calendar)
 
         components.month! -= 1
 
@@ -170,8 +168,8 @@ extension CVCalendarContentViewController {
     }
 
     public func dateAfterDate(_ date: Foundation.Date) -> Foundation.Date {
-        var components = Manager.componentsForDate(date)
-        let calendar = Calendar.current
+        let calendar = self.calendarView.delegate?.calendar?() ?? Calendar.current
+        var components = Manager.componentsForDate(date, calendar: calendar)
 
         components.month! += 1
 

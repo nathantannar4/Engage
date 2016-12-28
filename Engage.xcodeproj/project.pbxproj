@@ -592,7 +592,6 @@
 			children = (
 				38CB5DCE1DAB2B8000E71612 /* ColorListCell.swift */,
 				38CB5DD01DAB2B8700E71612 /* ColorListCell.xib */,
-				3874CAE11DA0660800C014F3 /* FormerInputAccessoryView.swift */,
 				3874CAB91DA064B400C014F3 /* DelegateCellLeft.xib */,
 				3874CABC1DA064B400C014F3 /* EventPreviewCell.xib */,
 				3874CABF1DA064B400C014F3 /* HeaderCell.xib */,
@@ -600,21 +599,16 @@
 				3890360A1DA3635300DCF82C /* ProfileImageCell.xib */,
 				3890360B1DA3635300DCF82C /* ProfileImageDetailCell.xib */,
 				38AB6C7C1DA198ED006B5104 /* FeedCellPhoto.xib */,
+				3874CAE11DA0660800C014F3 /* FormerInputAccessoryView.swift */,
 				3874CAC41DA064B400C014F3 /* DynamicHeightCell.xib */,
 				3874CAC51DA064B400C014F3 /* ProfileFieldCell.xib */,
 				3874CAC81DA064B400C014F3 /* TitleCell.xib */,
 				3874CAC91DA064B400C014F3 /* ProfileLabelCell.xib */,
 				3874CACA1DA064B400C014F3 /* ProfileHeaderCell.xib */,
-				38AFE86D1DA0843000B52032 /* DetailLeftLabelCell.xib */,
 				3874CACB1DA064B400C014F3 /* EventFeedCell.xib */,
 				3874CA971DA064AA00C014F3 /* MapCell.xib */,
-				3874CA981DA064AA00C014F3 /* DetailPostCell.xib */,
 				3874CABB1DA064B400C014F3 /* DelegateCell.swift */,
-				3874CABD1DA064B400C014F3 /* EventPreviewCell.swift */,
 				3874CABE1DA064B400C014F3 /* HeaderCell.swift */,
-				3874CAC11DA064B400C014F3 /* FeedCellPhoto.swift */,
-				3874CAC31DA064B400C014F3 /* FeedCell.swift */,
-				3874CA991DA064AA00C014F3 /* MapCell.swift */,
 				3874CA9B1DA064AA00C014F3 /* ImageCell.swift */,
 				3874CA9C1DA064AA00C014F3 /* EventFeedCell.swift */,
 				3874CA9D1DA064AA00C014F3 /* TitleCell.swift */,
@@ -627,6 +621,12 @@
 				3874CAA61DA064AA00C014F3 /* ProfileHeaderCell.swift */,
 				3874CAA71DA064AA00C014F3 /* ProfileLabelCell.swift */,
 				3874CA941DA0649400C014F3 /* ImageCell.xib */,
+				38AFE86D1DA0843000B52032 /* DetailLeftLabelCell.xib */,
+				3874CA981DA064AA00C014F3 /* DetailPostCell.xib */,
+				3874CABD1DA064B400C014F3 /* EventPreviewCell.swift */,
+				3874CAC11DA064B400C014F3 /* FeedCellPhoto.swift */,
+				3874CAC31DA064B400C014F3 /* FeedCell.swift */,
+				3874CA991DA064AA00C014F3 /* MapCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -866,7 +866,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		847A67EBBBD1BDA5202B6A59 /* [CP] Embed Pods Frameworks */ = {
@@ -1165,7 +1165,7 @@
 				INFOPLIST_FILE = Engage/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.WESST;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.Engage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1186,7 +1186,7 @@
 				INFOPLIST_FILE = Engage/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.WESST;
+				PRODUCT_BUNDLE_IDENTIFIER = com.NathanTannar.Engage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

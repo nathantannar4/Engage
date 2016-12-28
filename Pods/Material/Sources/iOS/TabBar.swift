@@ -81,6 +81,7 @@ open class TabBar: Bar {
 	}
     
     /// A boolean to animate the line when touched.
+    @IBInspectable
     open var isLineAnimated = true {
         didSet {
             for b in buttons {
@@ -142,6 +143,7 @@ open class TabBar: Bar {
                 prepareLineAnimationHandler(button: b)
             }
         }
+        contentView.grid.axis.columns = buttons.count
         contentView.grid.reload()
             
         if nil == selected {
@@ -151,12 +153,64 @@ open class TabBar: Bar {
         line.frame = CGRect(x: selected!.x, y: .bottom == lineAlignment ? height - lineHeight : 0, width: selected!.width, height: lineHeight)
 	}
 	
-	/// Handles the button touch event.
+    /**
+     Prepares the view instance when intialized. When subclassing,
+     it is recommended to override the prepare method
+     to initialize property values and other setup operations.
+     The super.prepare method should always be called immediately
+     when subclassing.
+     */
+    open override func prepare() {
+        super.prepare()
+        contentEdgeInsetsPreset = .none
+        interimSpacePreset = .none
+        prepareLine()
+        prepareDivider()
+    }
+}
+
+extension TabBar {
+    // Prepares the line.
+    fileprivate func prepareLine() {
+        line = UIView()
+        line.zPosition = 6000
+        lineColor = Color.blueGrey.lighten3
+        lineHeight = 3
+        addSubview(line)
+    }
+    
+    /// Prepares the divider.
+    fileprivate func prepareDivider() {
+        dividerAlignment = .top
+    }
+    
+    /**
+     Prepares the line animation handlers.
+     - Parameter button: A UIButton.
+     */
+    fileprivate func prepareLineAnimationHandler(button: UIButton) {
+        removeLineAnimationHandler(button: button)
+        button.addTarget(self, action: #selector(handleButton(button:)), for: .touchUpInside)
+    }
+    
+    /**
+     Removes the line animation handlers.
+     - Parameter button: A UIButton.
+     */
+    fileprivate func removeLineAnimationHandler(button: UIButton) {
+        button.removeTarget(self, action: #selector(handleButton(button:)), for: .touchUpInside)
+    }
+}
+
+extension TabBar {
+    /// Handles the button touch event.
     @objc
-	internal func handleButton(button: UIButton) {
-        animate(to: button)
-	}
-	
+    internal func handleButton(button: UIButton) {
+        animate(to: button, isTriggeredByUserInteraction: true)
+    }
+}
+
+extension TabBar {
     /**
      Selects a given index from the buttons array.
      - Parameter at index: An Int.
@@ -166,77 +220,52 @@ open class TabBar: Bar {
         guard -1 < index, index < buttons.count else {
             return
         }
-        animate(to: buttons[index], completion: completion)
+        animate(to: buttons[index], isTriggeredByUserInteraction: false, completion: completion)
     }
     
     /**
      Animates to a given button.
      - Parameter to button: A UIButton.
-     - Paramater completion: An optional completion block.
+     - Parameter completion: An optional completion block.
      */
     open func animate(to button: UIButton, completion: ((UIButton) -> Void)? = nil) {
-        delegate?.tabBar?(tabBar: self, willSelect: button)
+        animate(to: button, isTriggeredByUserInteraction: false, completion: completion)
+    }
+    
+    /**
+     Animates to a given button.
+     - Parameter to button: A UIButton.
+     - Parameter isTriggeredByUserInteraction: A boolean indicating whether the
+     state was changed by a user interaction, true if yes, false otherwise.
+     - Parameter completion: An optional completion block.
+     */
+    fileprivate func animate(to button: UIButton, isTriggeredByUserInteraction: Bool, completion: ((UIButton) -> Void)? = nil) {
+        if isTriggeredByUserInteraction {
+            delegate?.tabBar?(tabBar: self, willSelect: button)
+        }
+        
         selected = button
         isAnimating = true
+        
         UIView.animate(withDuration: 0.25, animations: { [weak self, button = button] in
             guard let s = self else {
                 return
             }
+            
             s.line.center.x = button.center.x
             s.line.width = button.width
         }) { [weak self, button = button, completion = completion] _ in
             guard let s = self else {
                 return
             }
+            
             s.isAnimating = false
-            s.delegate?.tabBar?(tabBar: s, didSelect: button)
+            
+            if isTriggeredByUserInteraction {
+                s.delegate?.tabBar?(tabBar: s, didSelect: button)
+            }
+            
             completion?(button)
         }
-    }
-    
-	/**
-     Prepares the view instance when intialized. When subclassing,
-     it is recommended to override the prepare method
-     to initialize property values and other setup operations.
-     The super.prepare method should always be called immediately
-     when subclassing.
-     */
-	open override func prepare() {
-		super.prepare()
-        contentEdgeInsetsPreset = .none
-        interimSpacePreset = .none
-        prepareLine()
-        prepareDivider()
-	}
-	
-	// Prepares the line.
-	private func prepareLine() {
-		line = UIView()
-        line.zPosition = 6000
-		lineColor = Color.blueGrey.lighten3
-		lineHeight = 3
-        addSubview(line)
-	}
-    
-    /// Prepares the divider.
-    private func prepareDivider() {
-        dividerAlignment = .top
-    }
-    
-    /**
-     Prepares the line animation handlers.
-     - Parameter button: A UIButton.
-     */
-    private func prepareLineAnimationHandler(button: UIButton) {
-        removeLineAnimationHandler(button: button)
-        button.addTarget(self, action: #selector(handleButton(button:)), for: .touchUpInside)
-    }
-    
-    /**
-     Removes the line animation handlers.
-     - Parameter button: A UIButton.
-     */
-    private func removeLineAnimationHandler(button: UIButton) {
-        button.removeTarget(self, action: #selector(handleButton(button:)), for: .touchUpInside)
     }
 }

@@ -43,7 +43,8 @@ open class BottomTabBar: UITabBar {
     }
     
     /// Automatically aligns the BottomNavigationBar to the superview.
-	open var isAlignedToParentAutomatically = true
+	@IBInspectable
+    open var isAlignedToParentAutomatically = true
 	
 	/// A property that accesses the backing layer's background
 	@IBInspectable
@@ -74,13 +75,9 @@ open class BottomTabBar: UITabBar {
         prepare()
     }
 	
-    open override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        layoutShape()
-    }
-    
-	open override func layoutSubviews() {
+    open override func layoutSubviews() {
 		super.layoutSubviews()
+        layoutShape()
         layoutShadowPath()
         
 		if let v = items {

@@ -1,5 +1,5 @@
 PODS:
-  - Agrume (3.0.2)
+  - Agrume (3.0.4)
   - Bolts (1.8.4):
     - Bolts/AppLinks (= 1.8.4)
     - Bolts/Tasks (= 1.8.4)
@@ -7,11 +7,11 @@ PODS:
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
   - BRYXBanner (0.7.1)
-  - BWWalkthrough (1.1.0)
+  - BWWalkthrough (2.0.0)
   - ChameleonFramework/Default (2.1.0)
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
-  - CVCalendar (1.4.0)
+  - CVCalendar (1.4.1)
   - DrawerController (3.0.0):
     - DrawerController/Core (= 3.0.0)
     - DrawerController/DrawerVisualStates (= 3.0.0)
@@ -19,6 +19,10 @@ PODS:
   - DrawerController/DrawerVisualStates (3.0.0):
     - DrawerController/Core
   - DZNEmptyDataSet (1.8.1)
+  - FBSDKCoreKit (4.18.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.18.0):
+    - FBSDKCoreKit
   - FontAwesomeKit (2.2.0):
     - FontAwesomeKit/Core (= 2.2.0)
     - FontAwesomeKit/FontAwesome (= 2.2.0)
@@ -41,16 +45,22 @@ PODS:
   - JSQWebViewController (5.0.0)
   - M13PDFKit (1.1.0):
     - TTOpenInAppActivity
-  - Material (2.3.19):
-    - Material/Core (= 2.3.19)
-  - Material/Core (2.3.19)
+  - Material (2.4.6):
+    - Material/Core (= 2.4.6)
+  - Material/Core (2.4.6)
   - Parse (1.14.2):
     - Bolts/Tasks (~> 1.8)
+  - ParseFacebookUtilsV4 (1.11.1):
+    - Bolts/Tasks (>= 1.6)
+    - FBSDKCoreKit (~> 4.10)
+    - FBSDKLoginKit (~> 4.10)
+    - FBSDKTVOSKit (~> 4.10)
+    - Parse (~> 1.12)
   - ParseUI (1.2.0):
     - Bolts/Tasks (~> 1.3)
     - Parse (~> 1.9)
   - SlackTextViewController (1.9.5)
-  - SVProgressHUD (2.0.4)
+  - SVProgressHUD (2.1.2)
   - TextFieldEffects (1.3.0)
   - TTOpenInAppActivity (1.0)
   - XLPagerTabStrip (6.0.0)
@@ -71,6 +81,7 @@ DEPENDENCIES:
   - M13PDFKit
   - Material
   - Parse
+  - ParseFacebookUtilsV4
   - ParseUI
   - SlackTextViewController
   - SVProgressHUD
@@ -78,29 +89,32 @@ DEPENDENCIES:
   - XLPagerTabStrip
 
 SPEC CHECKSUMS:
-  Agrume: 5698c55f02bb9bd60b6a32fea6ac0e8057ccb927
+  Agrume: f8b325c28309e6d7f5be28a083539edc2a97f94a
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   BRYXBanner: 34eabf9c6c009f187948ca78a4f3bba3767d0f04
-  BWWalkthrough: 0c27ad2773a25c8f4fb9004bc7d6685deb35fecc
+  BWWalkthrough: ca4d3c8526486add00bf38e20e9f3e218bda1ade
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
-  CVCalendar: ec1a06a508f99d8e5067258754f811a8a1433a3f
+  CVCalendar: 61912eb5dc39c3bcfe22a731147a559a696fbc15
   DrawerController: 5e859c5dbeae3cea20981eb5ff2aa16eb946dff9
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
+  FBSDKCoreKit: 15fef8804a4629f98c6f4e55e81a76c9d725d85e
+  FBSDKLoginKit: 6773073e970b2b15fb12e451ce7f11da0532b880
   FontAwesomeKit: 025fd4dd1017fe4e3f8d47b03e024deedbb33cd4
   Former: 0b48a812c0d93b092b908d1b0574d0fd95c6b6f9
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JSQWebViewController: 0461aa42612b221571556df61d9c09f080cb2eef
   M13PDFKit: 4417c8a98dd22c0fe1e615f40bdf38848bb3b367
-  Material: ad15e0b55e3a3c104195e8409afa199a430c2e6c
+  Material: 43bd91d61e86ae2b6d6574e28fcb1ed48ff813cb
   Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
+  ParseFacebookUtilsV4: 2f30c2b7021c8005d3042781da7ef87d06589421
   ParseUI: af2eba584799da4a9fbdac0e178662d7438b502e
   SlackTextViewController: fbcdadbb8090673f604484ff5b6eb8d77baed42a
-  SVProgressHUD: bfde85ed6c573ea802b9cb37894ed9b629034f1b
+  SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
   TextFieldEffects: ef594746f17997c813e07633f8ae5acaf9b04f27
   TTOpenInAppActivity: c2218fe419d03ddd4ffb1f07d52d66e0d213d0d4
   XLPagerTabStrip: c46e802a8dcac29edbcea573de8fe920e052455b
 
-PODFILE CHECKSUM: db7731f9369f22b118233e3f97627fd41418ea3f
+PODFILE CHECKSUM: 6637ad807ee6cbd7134886af34cc89c5a9add592
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1

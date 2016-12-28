@@ -10,6 +10,7 @@ import UIKit
 import TextFieldEffects
 import Parse
 import SVProgressHUD
+import ParseFacebookUtilsV4
 
 class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthroughViewControllerDelegate {
     
@@ -19,6 +20,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var logo: UIImageView!
+    @IBOutlet weak var facebookButton: UIButton!
     
     internal var firstLoad = true
     internal var validEmail = false
@@ -69,12 +71,14 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
             loginButton.isHidden = false
             registerButton.isHidden = false
             logo.isHidden = false
+            facebookButton.isHidden = false
         } else {
             emailTextField.isHidden = true
             passwordTextField.isHidden = true
             loginButton.isHidden = true
             registerButton.isHidden = true
             logo.isHidden = true
+            facebookButton.isHidden = true
         }
     }
     
@@ -130,6 +134,32 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
             }
         }
     }
+    
+    @IBAction func facebookLogin(_ sender: Any) {
+        PFFacebookUtils.logInInBackground(withReadPermissions: ["public_profile", "email", "user_friends"]) { (user, error) in
+            
+            if user != nil {
+                Profile.sharedInstance.user = user
+                Profile.sharedInstance.loadUser()
+                let request = FBSDKGraphRequest(graphPath:"me", parameters: ["fields": "id, email, first_name, last_name"])
+                request!.start(completionHandler: { (connection, result, error) in
+                    if let userData = result as? NSDictionary {
+                        Profile.sharedInstance.email = userData["email"] as? String
+                        Profile.sharedInstance.name = (userData["first_name"] as! String) + " " + (userData["last_name"] as! String)
+                        Profile.sharedInstance.saveUser()
+                    }
+                })
+                DispatchQueue.main.async {
+                    Utilities.userLoggedIn(self)
+                    self.resetForm()
+                }
+            } else {
+                print(error.debugDescription)
+                SVProgressHUD.showError(withStatus: "Oops, something went wrong")
+            }
+        }
+    }
+    
  
     @IBAction func registerButtonPressed(_ sender: AnyObject) {
         self.dismissKeyboard()
