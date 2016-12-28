@@ -21,7 +21,7 @@ class LoginViewController: UITableViewController, UITextFieldDelegate, BWWalkthr
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var logo: UIImageView!
     @IBOutlet weak var facebookButton: UIButton!
-    
+     
     internal var firstLoad = true
     internal var validEmail = false
     internal var validPassword = false

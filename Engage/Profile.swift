@@ -100,7 +100,7 @@ final class Profile {
             }
         }
     }
-    
+     
     func saveUser() {
         let fullName = name
         if fullName!.characters.count > 0 {
