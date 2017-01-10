@@ -8,6 +8,8 @@ use_frameworks!
 
 # Pods for Engage
 
+pod 'NTUIKit', :path => '~/Documents/NTUIKit'
+
 # Database Pods
 pod 'Parse'
 pod 'ParseUI'
@@ -22,9 +24,8 @@ pod 'CVCalendar'
 pod 'XLPagerTabStrip'
 pod 'Material'
 # pod 'LocationPicker'
-pod 'DrawerController'
 pod 'Agrume'
-pod 'BWWalkthrough'
+#pod 'BWWalkthrough'
 
 # UITableView Management Pods
 pod 'Former’
@@ -32,11 +33,7 @@ pod 'DZNEmptyDataSet'
 
 # Other Pods
 pod 'SVProgressHUD'
-pod 'ChameleonFramework/Swift'
-pod 'FontAwesomeKit'
-pod 'TextFieldEffects'
 pod 'BRYXBanner'
 pod 'M13PDFKit'
-# pod 'SnapKit'
 
 end
