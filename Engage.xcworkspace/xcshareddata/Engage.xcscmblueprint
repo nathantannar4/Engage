@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "52E08E559C2B6F67840DA4C13E15E264A3728DB1",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "52E08E559C2B6F67840DA4C13E15E264A3728DB1" : 9223372036854775807,
+    "1980E9960F45D6E526E15968A4736DB75FF39639" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "809AA10F-9103-453D-BE9C-A8F5BB43A7DA",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "52E08E559C2B6F67840DA4C13E15E264A3728DB1" : "Engage\/",
+    "1980E9960F45D6E526E15968A4736DB75FF39639" : "..\/Documents\/NTUIKit"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Engage",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Engage.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/nathantannar4\/NTUIKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1980E9960F45D6E526E15968A4736DB75FF39639"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/nathantannar4\/Engage.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "52E08E559C2B6F67840DA4C13E15E264A3728DB1"
+    }
+  ]
+}
