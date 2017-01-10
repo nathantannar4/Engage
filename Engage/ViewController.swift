@@ -11,7 +11,7 @@ import NTUIKit
 import Parse
 import ParseFacebookUtilsV4
 
-class ViewController: NTLoginViewController {
+class LoginViewController: NTLoginViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
