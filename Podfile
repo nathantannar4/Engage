@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '10.0'
+platform :ios, '8.2'
 
 target 'Engage' do
 
@@ -18,11 +18,7 @@ pod 'Bolts'
 
 # View Controller Pods
 pod 'SlackTextViewController'
-pod 'JSQMessagesViewController'
-pod 'JSQWebViewController'
 pod 'CVCalendar'
-pod 'XLPagerTabStrip'
-pod 'Material'
 # pod 'LocationPicker'
 pod 'Agrume'
 #pod 'BWWalkthrough'
@@ -32,7 +28,6 @@ pod 'Former’
 pod 'DZNEmptyDataSet'
 
 # Other Pods
-pod 'SVProgressHUD'
 pod 'BRYXBanner'
 pod 'M13PDFKit'
 

@@ -14,15 +14,8 @@ PODS:
   - FBSDKLoginKit (4.18.0):
     - FBSDKCoreKit
   - Former (1.5.1)
-  - JSQMessagesViewController (7.3.4):
-    - JSQSystemSoundPlayer (~> 2.0.1)
-  - JSQSystemSoundPlayer (2.0.1)
-  - JSQWebViewController (5.0.0)
   - M13PDFKit (1.1.0):
     - TTOpenInAppActivity
-  - Material (2.4.8):
-    - Material/Core (= 2.4.8)
-  - Material/Core (2.4.8)
   - NTUIKit (0.0.2)
   - Parse (1.14.2):
     - Bolts/Tasks (~> 1.8)
@@ -36,9 +29,7 @@ PODS:
     - Bolts/Tasks (~> 1.3)
     - Parse (~> 1.9)
   - SlackTextViewController (1.9.5)
-  - SVProgressHUD (2.1.2)
   - TTOpenInAppActivity (1.0)
-  - XLPagerTabStrip (6.0.0)
 
 DEPENDENCIES:
   - Agrume
@@ -47,17 +38,12 @@ DEPENDENCIES:
   - CVCalendar
   - DZNEmptyDataSet
   - Former
-  - JSQMessagesViewController
-  - JSQWebViewController
   - M13PDFKit
-  - Material
   - NTUIKit (from `~/Documents/NTUIKit`)
   - Parse
   - ParseFacebookUtilsV4
   - ParseUI
   - SlackTextViewController
-  - SVProgressHUD
-  - XLPagerTabStrip
 
 EXTERNAL SOURCES:
   NTUIKit:
@@ -72,20 +58,14 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 15fef8804a4629f98c6f4e55e81a76c9d725d85e
   FBSDKLoginKit: 6773073e970b2b15fb12e451ce7f11da0532b880
   Former: 0b48a812c0d93b092b908d1b0574d0fd95c6b6f9
-  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
-  JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
-  JSQWebViewController: 0461aa42612b221571556df61d9c09f080cb2eef
   M13PDFKit: 4417c8a98dd22c0fe1e615f40bdf38848bb3b367
-  Material: b5d946bf46c51bc83b726602cb04b7793b8256fe
   NTUIKit: b0b6edbedc239ef4dc70380bb4398122f6457a4d
   Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
   ParseFacebookUtilsV4: 2f30c2b7021c8005d3042781da7ef87d06589421
   ParseUI: af2eba584799da4a9fbdac0e178662d7438b502e
   SlackTextViewController: fbcdadbb8090673f604484ff5b6eb8d77baed42a
-  SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
   TTOpenInAppActivity: c2218fe419d03ddd4ffb1f07d52d66e0d213d0d4
-  XLPagerTabStrip: c46e802a8dcac29edbcea573de8fe920e052455b
 
-PODFILE CHECKSUM: 5e3a6de4363bdc5d86a9937c6a851519ce0293af
+PODFILE CHECKSUM: fccf207ca0b8b6f69b33f9efde1a003a53cf29f3
 
 COCOAPODS: 1.1.1
