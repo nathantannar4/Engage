@@ -31,10 +31,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FBSDKSettings.setAppID(FACEBOOK_APPLICATION_ID)
         PFFacebookUtils.initializeFacebook(applicationLaunchOptions: launchOptions)
         PFUser.enableRevocableSessionInBackground()
-        
+ 
         // Set default appearances
         UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -60), for:UIBarMetrics.default)
-        Color.defaultTint = Color.darkBlue
+        Color.defaultButtonTint = Color.blue
+        Color.defaultNavbarTint = Color.blue
+        Color.defaultTitle = UIColor.black
         
         // Register for push notifications
         let center = UNUserNotificationCenter.current()
@@ -44,10 +46,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         // Initialize the window
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window!.backgroundColor = UIColor.white
-        window!.rootViewController = NTNavigationContainer(centerView: LoginViewController(), leftView: nil, rightView: nil)
-        window!.makeKeyAndVisible()
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window!.backgroundColor = UIColor.white
+        self.window!.rootViewController = UINavigationController(rootViewController: LoginViewController())
+        self.window!.makeKeyAndVisible()
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }

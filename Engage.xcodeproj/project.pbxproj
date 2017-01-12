@@ -7,8 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38118E201E2701250042F9C1 /* ActivityFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E1F1E2701250042F9C1 /* ActivityFeedViewController.swift */; };
+		38118E221E2705CF0042F9C1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E211E2705CF0042F9C1 /* Post.swift */; };
+		38118E261E2709A80042F9C1 /* Engagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E251E2709A80042F9C1 /* Engagement.swift */; };
+		38118E281E270D430042F9C1 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E271E270D430042F9C1 /* User.swift */; };
+		38118E2A1E27E25C0042F9C1 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E291E27E25C0042F9C1 /* MenuViewController.swift */; };
+		38118E2C1E27E3290042F9C1 /* DemoProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E2B1E27E3290042F9C1 /* DemoProfileViewController.swift */; };
+		38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */; };
+		38118E321E282C6B0042F9C1 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E311E282C6B0042F9C1 /* String.swift */; };
+		38118E341E2830300042F9C1 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E331E2830300042F9C1 /* Comment.swift */; };
 		38F7DFC51E24C7320001BA91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7DFC41E24C7320001BA91 /* AppDelegate.swift */; };
-		38F7DFC71E24C7320001BA91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7DFC61E24C7320001BA91 /* ViewController.swift */; };
+		38F7DFC71E24C7320001BA91 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7DFC61E24C7320001BA91 /* LoginViewController.swift */; };
 		38F7DFCA1E24C7320001BA91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38F7DFC81E24C7320001BA91 /* Main.storyboard */; };
 		38F7DFCC1E24C7320001BA91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38F7DFCB1E24C7320001BA91 /* Assets.xcassets */; };
 		38F7DFCF1E24C7320001BA91 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38F7DFCD1E24C7320001BA91 /* LaunchScreen.storyboard */; };
@@ -18,9 +27,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		38118E1F1E2701250042F9C1 /* ActivityFeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityFeedViewController.swift; sourceTree = "<group>"; };
+		38118E211E2705CF0042F9C1 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		38118E251E2709A80042F9C1 /* Engagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Engagement.swift; sourceTree = "<group>"; };
+		38118E271E270D430042F9C1 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		38118E291E27E25C0042F9C1 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		38118E2B1E27E3290042F9C1 /* DemoProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoProfileViewController.swift; sourceTree = "<group>"; };
+		38118E2D1E282BD10042F9C1 /* Engage-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Engage-Bridging-Header.h"; sourceTree = "<group>"; };
+		38118E2E1E282BD20042F9C1 /* NSDate+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utilities.h"; sourceTree = "<group>"; };
+		38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utilities.m"; sourceTree = "<group>"; };
+		38118E311E282C6B0042F9C1 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		38118E331E2830300042F9C1 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		38F7DFC11E24C7320001BA91 /* Engage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Engage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38F7DFC41E24C7320001BA91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		38F7DFC61E24C7320001BA91 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		38F7DFC61E24C7320001BA91 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		38F7DFC91E24C7320001BA91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		38F7DFCB1E24C7320001BA91 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38F7DFCE1E24C7320001BA91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -44,6 +64,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		38118E1E1E26FE2E0042F9C1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				38118E311E282C6B0042F9C1 /* String.swift */,
+				38F7DFD61E24C8D60001BA91 /* Constants.swift */,
+				38F7DFD81E24C9100001BA91 /* Config.swift */,
+				38118E2E1E282BD20042F9C1 /* NSDate+Utilities.h */,
+				38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */,
+				38F7DFD01E24C7320001BA91 /* Info.plist */,
+				38118E2D1E282BD10042F9C1 /* Engage-Bridging-Header.h */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		38F7DFB81E24C7320001BA91 = {
 			isa = PBXGroup;
 			children = (
@@ -66,13 +100,18 @@
 			isa = PBXGroup;
 			children = (
 				38F7DFC41E24C7320001BA91 /* AppDelegate.swift */,
-				38F7DFC61E24C7320001BA91 /* ViewController.swift */,
+				38F7DFC61E24C7320001BA91 /* LoginViewController.swift */,
+				38118E291E27E25C0042F9C1 /* MenuViewController.swift */,
+				38118E2B1E27E3290042F9C1 /* DemoProfileViewController.swift */,
+				38118E1F1E2701250042F9C1 /* ActivityFeedViewController.swift */,
+				38118E211E2705CF0042F9C1 /* Post.swift */,
+				38118E331E2830300042F9C1 /* Comment.swift */,
+				38118E271E270D430042F9C1 /* User.swift */,
+				38118E251E2709A80042F9C1 /* Engagement.swift */,
 				38F7DFC81E24C7320001BA91 /* Main.storyboard */,
 				38F7DFCB1E24C7320001BA91 /* Assets.xcassets */,
 				38F7DFCD1E24C7320001BA91 /* LaunchScreen.storyboard */,
-				38F7DFD61E24C8D60001BA91 /* Constants.swift */,
-				38F7DFD81E24C9100001BA91 /* Config.swift */,
-				38F7DFD01E24C7320001BA91 /* Info.plist */,
+				38118E1E1E26FE2E0042F9C1 /* Supporting Files */,
 			);
 			path = Engage;
 			sourceTree = "<group>";
@@ -130,6 +169,7 @@
 					38F7DFC01E24C7320001BA91 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 9EUCWD26TP;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -218,10 +258,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38F7DFC71E24C7320001BA91 /* ViewController.swift in Sources */,
+				38F7DFC71E24C7320001BA91 /* LoginViewController.swift in Sources */,
+				38118E261E2709A80042F9C1 /* Engagement.swift in Sources */,
 				38F7DFD91E24C9100001BA91 /* Config.swift in Sources */,
+				38118E2C1E27E3290042F9C1 /* DemoProfileViewController.swift in Sources */,
+				38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */,
 				38F7DFC51E24C7320001BA91 /* AppDelegate.swift in Sources */,
+				38118E321E282C6B0042F9C1 /* String.swift in Sources */,
+				38118E2A1E27E25C0042F9C1 /* MenuViewController.swift in Sources */,
+				38118E341E2830300042F9C1 /* Comment.swift in Sources */,
+				38118E281E270D430042F9C1 /* User.swift in Sources */,
+				38118E221E2705CF0042F9C1 /* Post.swift in Sources */,
 				38F7DFD71E24C8D60001BA91 /* Constants.swift in Sources */,
+				38118E201E2701250042F9C1 /* ActivityFeedViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,11 +392,14 @@
 			baseConfigurationReference = 747BE6F8AB51FF72CA38F76B /* Pods-Engage.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 9EUCWD26TP;
 				INFOPLIST_FILE = Engage/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.nathantannar.Engage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -357,11 +409,13 @@
 			baseConfigurationReference = 5FCA40DEC76BC2759D454F47 /* Pods-Engage.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 9EUCWD26TP;
 				INFOPLIST_FILE = Engage/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.nathantannar.Engage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Engage/Engage-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

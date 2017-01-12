@@ -25,10 +25,10 @@ let PF_USER_PICTURE						= "picture"                 //	File
 let PF_USER_PHONE                       = "phone"                   //	String
 let PF_USER_ENGAGEMENTS                 = "engagements"             //	Array
 let PF_USER_BLOCKED                     = "blocked_users"           //  Array
-let PF_USER_SUBGROUP                    = "subgroup"
 
 
 /* Posts */
+let PF_POST_CREATED_AT                  = "createdAt"
 let PF_POST_INFO                        = "info"
 let PF_POST_COMMENTS                    = "comments"
 let PF_POST_COMMENT_DATES               = "commentsDate"
