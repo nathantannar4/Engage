@@ -12,7 +12,7 @@
 		38118E261E2709A80042F9C1 /* Engagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E251E2709A80042F9C1 /* Engagement.swift */; };
 		38118E281E270D430042F9C1 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E271E270D430042F9C1 /* User.swift */; };
 		38118E2A1E27E25C0042F9C1 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E291E27E25C0042F9C1 /* MenuViewController.swift */; };
-		38118E2C1E27E3290042F9C1 /* DemoProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E2B1E27E3290042F9C1 /* DemoProfileViewController.swift */; };
+		38118E2C1E27E3290042F9C1 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E2B1E27E3290042F9C1 /* ProfileViewController.swift */; };
 		38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */; };
 		38118E321E282C6B0042F9C1 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E311E282C6B0042F9C1 /* String.swift */; };
 		38118E341E2830300042F9C1 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E331E2830300042F9C1 /* Comment.swift */; };
@@ -32,7 +32,7 @@
 		38118E251E2709A80042F9C1 /* Engagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Engagement.swift; sourceTree = "<group>"; };
 		38118E271E270D430042F9C1 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		38118E291E27E25C0042F9C1 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
-		38118E2B1E27E3290042F9C1 /* DemoProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoProfileViewController.swift; sourceTree = "<group>"; };
+		38118E2B1E27E3290042F9C1 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		38118E2D1E282BD10042F9C1 /* Engage-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Engage-Bridging-Header.h"; sourceTree = "<group>"; };
 		38118E2E1E282BD20042F9C1 /* NSDate+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utilities.h"; sourceTree = "<group>"; };
 		38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utilities.m"; sourceTree = "<group>"; };
@@ -102,12 +102,12 @@
 				38F7DFC41E24C7320001BA91 /* AppDelegate.swift */,
 				38F7DFC61E24C7320001BA91 /* LoginViewController.swift */,
 				38118E291E27E25C0042F9C1 /* MenuViewController.swift */,
-				38118E2B1E27E3290042F9C1 /* DemoProfileViewController.swift */,
+				38118E2B1E27E3290042F9C1 /* ProfileViewController.swift */,
 				38118E1F1E2701250042F9C1 /* ActivityFeedViewController.swift */,
-				38118E211E2705CF0042F9C1 /* Post.swift */,
-				38118E331E2830300042F9C1 /* Comment.swift */,
 				38118E271E270D430042F9C1 /* User.swift */,
 				38118E251E2709A80042F9C1 /* Engagement.swift */,
+				38118E211E2705CF0042F9C1 /* Post.swift */,
+				38118E331E2830300042F9C1 /* Comment.swift */,
 				38F7DFC81E24C7320001BA91 /* Main.storyboard */,
 				38F7DFCB1E24C7320001BA91 /* Assets.xcassets */,
 				38F7DFCD1E24C7320001BA91 /* LaunchScreen.storyboard */,
@@ -261,7 +261,7 @@
 				38F7DFC71E24C7320001BA91 /* LoginViewController.swift in Sources */,
 				38118E261E2709A80042F9C1 /* Engagement.swift in Sources */,
 				38F7DFD91E24C9100001BA91 /* Config.swift in Sources */,
-				38118E2C1E27E3290042F9C1 /* DemoProfileViewController.swift in Sources */,
+				38118E2C1E27E3290042F9C1 /* ProfileViewController.swift in Sources */,
 				38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */,
 				38F7DFC51E24C7320001BA91 /* AppDelegate.swift in Sources */,
 				38118E321E282C6B0042F9C1 /* String.swift in Sources */,

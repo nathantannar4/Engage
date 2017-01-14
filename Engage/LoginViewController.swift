@@ -25,7 +25,7 @@ class LoginViewController: NTLoginViewController {
     }
     
     override func registerButtonPressed() {
-        self.emailLoginLogic(email: "nathantannar4@gmail.com", password: "Dragon.Claw7484")
+        
     }
     
     override func emailLoginLogic(email: String, password: String) {

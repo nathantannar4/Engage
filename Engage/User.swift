@@ -12,12 +12,16 @@ import NTUIKit
 
 public class User {
     
-    static var _current: User?
+    private static var _current: User?
     
     public var object: PFUser
-    public var id: String? {
+    public var id: String {
         get {
-            return self.object.objectId
+            guard let id = self.object.objectId else {
+                Log.write(.error, "User ID was nil")
+                fatalError()
+            }
+            return id
         }
     }
     public var image: UIImage?
@@ -62,8 +66,13 @@ public class User {
         }
     }
     
-    public static func current() -> User? {
-        return self._current
+    public static func current() -> User {
+        guard let user = self._current else {
+            // Show login screen
+            Log.write(.error, "The current user was nil")
+            fatalError()
+        }
+        return user
     }
     
     public class func didLogin(with user: PFUser) {

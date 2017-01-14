@@ -12,7 +12,7 @@ import Parse
 
 class MenuViewController: UITableViewController {
     
-    let viewControllers = [ActivityFeedViewController(), DemoProfileViewController()]
+    let viewControllers = [ActivityFeedViewController(), ProfileViewController(user: User.current())]
     let titles = ["Activity Feed", "Profile"]
     var currentIndex = 0
     
@@ -21,6 +21,10 @@ class MenuViewController: UITableViewController {
         
         self.prepareTable()
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        // 
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
