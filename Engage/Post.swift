@@ -45,11 +45,12 @@ public class Post {
     
     public init(fromObject object: PFObject) {
         self.object = object
+        
         guard let objectUser = object.object(forKey: PF_POST_USER) as? PFUser else {
             Log.write(.error, "Object with ID \(object.objectId!) did not have a cooresponding user")
             return
         }
-        self.user = User(fromObject: objectUser)
+        self.user = Cache.retrieveUser(objectUser)
         
         guard let file = self.object.value(forKey: PF_POST_IMAGE) as? PFFile else {
             return
@@ -64,8 +65,11 @@ public class Post {
     }
     
     public init(text: String?, image: UIImage?, completion: ((_ success: Bool) -> Void)?) {
+        guard let engagement = Engagement.current() else {
+            fatalError()
+        }
         self.user = User.current()
-        self.object = PFObject(className: "Test_Posts")
+        self.object = PFObject(className: engagement.queryName! + PF_POST_CLASSNAME)
         self.object[PF_POST_INFO] = text ?? ""
         self.object[PF_POST_COMMENTS] = []
         self.object[PF_POST_COMMENT_DATES] = []
@@ -124,7 +128,6 @@ public class Post {
     
     // MARK: Public Functions
 
-    
     public func liked(byUser user: User, completion: ((_ success: Bool) -> Void)?) {
         guard var currentLikes = self.likes else {
             self.object[PF_POST_LIKES] = [user.id]
@@ -172,5 +175,57 @@ public class Post {
     
     public func flag(fromUser user: User, reason: String, completion: ((_ success: Bool) -> Void)?) {
         
+    }
+    
+    public func handleByOwner(target: UIViewController, sender: UIButton) {
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheetController.view.tintColor = Color.defaultButtonTint
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+            //Just dismiss the action sheet
+        }
+        actionSheetController.addAction(cancelAction)
+        
+        let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
+            
+        }
+        actionSheetController.addAction(editAction)
+        
+        let deleteAction: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+            
+        }
+        actionSheetController.addAction(deleteAction)
+        
+        actionSheetController.popoverPresentationController?.sourceView = sender
+        actionSheetController.popoverPresentationController?.sourceRect = sender.bounds
+        
+        target.present(actionSheetController, animated: true, completion: nil)
+    }
+    
+    public func handle(target: UIViewController, sender: UIButton) {
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheetController.view.tintColor = Color.defaultButtonTint
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+            //Just dismiss the action sheet
+        }
+        actionSheetController.addAction(cancelAction)
+        
+        if self.image != nil {
+            let editAction: UIAlertAction = UIAlertAction(title: "Save Photo", style: .default) { action -> Void in
+                
+            }
+            actionSheetController.addAction(editAction)
+        }
+        
+        let deleteAction: UIAlertAction = UIAlertAction(title: "Report", style: .default) { action -> Void in
+            
+        }
+        actionSheetController.addAction(deleteAction)
+        
+        actionSheetController.popoverPresentationController?.sourceView = sender
+        actionSheetController.popoverPresentationController?.sourceRect = sender.bounds
+        
+        target.present(actionSheetController, animated: true, completion: nil)
     }
 }

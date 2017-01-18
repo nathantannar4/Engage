@@ -23,10 +23,6 @@ class MenuViewController: UITableViewController {
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        // 
-    }
-    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }

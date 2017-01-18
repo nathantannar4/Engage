@@ -14,6 +14,7 @@ let PF_INSTALLATION_OBJECTID			= "objectId"				//	String
 let PF_INSTALLATION_USER				= "user"					//	Pointer to User Class
 
 /* User */
+let PF_USER_EXTENSION                   = "user"
 let PF_USER_CLASS_NAME					= "_User"                   //	Class name
 let PF_USER_OBJECTID					= "objectId"				//	String
 let PF_USER_USERNAME					= "username"				//	String
@@ -28,6 +29,7 @@ let PF_USER_BLOCKED                     = "blocked_users"           //  Array
 
 
 /* Posts */
+let PF_POST_CLASSNAME                   = "_Posts"
 let PF_POST_CREATED_AT                  = "createdAt"
 let PF_POST_INFO                        = "info"
 let PF_POST_COMMENTS                    = "comments"

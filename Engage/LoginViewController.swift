@@ -20,7 +20,14 @@ class LoginViewController: NTLoginViewController {
         self.logo = UIImage(named: "Engage_Logo")
         
         if PFUser.current() != nil {
-            User.didLogin(with: PFUser.current()!)
+            let query = PFQuery(className: "Engagements")
+            query.whereKey("name", equalTo: "Test")
+            query.findObjectsInBackground(block: { (objects, error) in
+                if let object = objects?.first {
+                    User.didLogin(with: PFUser.current()!)
+                    Engagement.didSelect(with: object)
+                }
+            })
         }
     }
     
@@ -42,6 +49,13 @@ class LoginViewController: NTLoginViewController {
             }
             Log.write(.status, "Email Login Successful")
             User.didLogin(with: user)
+            let query = PFQuery(className: "Engagements")
+            query.whereKey("name", equalTo: "Test")
+            query.findObjectsInBackground(block: { (objects, error) in
+                if let object = objects?.first {
+                    Engagement.didSelect(with: object)
+                }
+            })
         }
     }
     
