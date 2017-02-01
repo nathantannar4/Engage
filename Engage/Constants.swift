@@ -26,6 +26,8 @@ let PF_USER_PICTURE						= "picture"                 //	File
 let PF_USER_PHONE                       = "phone"                   //	String
 let PF_USER_ENGAGEMENTS                 = "engagements"             //	Array
 let PF_USER_BLOCKED                     = "blocked_users"           //  Array
+let PF_USER_EXTENSION_CLASSNAME         = "User"
+let PF_USER_COVER                       = "coverPicture"
 
 
 /* Posts */
@@ -54,7 +56,8 @@ let PF_ENGAGEMENTS_HIDDEN               = "hidden"                  //  Bool
 let PF_ENGAGEMENTS_PASSWORD             = "password"                //  String
 let PF_ENGAGEMENTS_ADMINS               = "admins"                  //  Array
 let PF_ENGAGEMENTS_INFO                 = "info"                    //  String
-let PF_ENGAGEMENTS_COVER_PHOTO          = "coverphoto"              //  File\
+let PF_ENGAGEMENTS_COVER_PHOTO          = "coverphoto"              //  File
+let PF_ENGAGEMENTS_LOGO                 = "logo"                    //  File
 let PF_ENGAGEMENTS_PROFILE_FIELDS       = "profile_fields"          //  Array
 let PF_ENGAGEMENTS_PHONE                = "phone"                   //  String
 let PF_ENGAGEMENTS_ADDRESS              = "address"                 //  String

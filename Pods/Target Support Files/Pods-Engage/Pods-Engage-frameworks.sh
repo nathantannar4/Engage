@@ -84,6 +84,7 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/ALTextInputBar/ALTextInputBar.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Agrume/Agrume.framework"
   install_framework "$BUILT_PRODUCTS_DIR/BRYXBanner/BRYXBanner.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Bolts/Bolts.framework"
@@ -101,6 +102,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/TTOpenInAppActivity/TTOpenInAppActivity.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/ALTextInputBar/ALTextInputBar.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Agrume/Agrume.framework"
   install_framework "$BUILT_PRODUCTS_DIR/BRYXBanner/BRYXBanner.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Bolts/Bolts.framework"

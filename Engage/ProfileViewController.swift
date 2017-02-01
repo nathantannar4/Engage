@@ -11,10 +11,11 @@ import NTUIKit
 import Agrume
 import Parse
 
-class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTableViewDelegate {
+class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTableViewDelegate, PostModificationDelegate {
     
     private var user: User!
     private var posts: [Post] = [Post]()
+    private var isQuerying: Bool = false
     
     // MARK: - Initializers
     public convenience init(user: User) {
@@ -28,6 +29,9 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         self.title = self.user.fullname
         self.dataSource = self
         self.delegate = self
+        if self.getNTNavigationContainer == nil {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(dismiss(sender:)))
+        }
         self.prepareTableView()
         self.queryForPosts()
     }
@@ -35,8 +39,10 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     func pullToRefresh(sender: UIRefreshControl) {
         self.tableView.refreshControl?.beginRefreshing()
         self.posts.removeAll()
+        self.user = Cache.retrieveUser(self.user.id)
         self.reloadData()
         self.queryForPosts()
+        self.tableView.refreshControl?.endRefreshing()
     }
     
     // MARK: Preperation Functions 
@@ -54,12 +60,66 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     // MARK: User Action
     
-    func createNewPost(sender: UIButton) {
-        
+    func editProfile(sender: UIButton) {
+        let navVC = UINavigationController(rootViewController: EditProfileViewController())
+        self.present(navVC, animated: true, completion: nil)
     }
     
-    func editProfile(sender: UIButton) {
-        
+    func createNewPost(sender: UIButton) {
+        let navVC = UINavigationController(rootViewController: NewPostViewController())
+        self.presentViewController(navVC, from: .bottom, completion: nil)
+    }
+    
+    func toggleLike(sender: UIButton) {
+        guard let likes = self.posts[sender.tag].likes else {
+            return
+        }
+        if likes.contains(User.current().id) {
+            sender.setTitle(" \(likes.count - 1)", for: .normal)
+            sender.setImage(Icon.Apple.like, for: .normal)
+            self.posts[sender.tag].unliked(byUser: User.current()) { (success) in
+                if !success {
+                    // Reset if save failed
+                    let likes = self.posts[sender.tag].likes
+                    let likeCount = likes?.count ?? 0
+                    sender.setTitle(" \(likeCount)", for: .normal)
+                    sender.setImage(Icon.Apple.likeFilled, for: .normal)
+                }
+            }
+        } else {
+            sender.setTitle(" \(likes.count + 1)", for: .normal)
+            sender.setImage(Icon.Apple.likeFilled, for: .normal)
+            self.posts[sender.tag].liked(byUser: User.current()) { (success) in
+                if !success {
+                    // Reset if save failed
+                    let likes = self.posts[sender.tag].likes
+                    let likeCount = likes?.count ?? 0
+                    sender.setTitle(" \(likeCount)", for: .normal)
+                    sender.setImage(Icon.Apple.like, for: .normal)
+                }
+            }
+        }
+    }
+    
+    func addComment(sender: UIButton) {
+        let detailVC = PostDetailViewController(post: self.posts[sender.tag])
+        detailVC.textInputBar.textView.becomeFirstResponder()
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func handleMore(sender: UIButton) {
+        let post = self.posts[sender.tag]
+        if post.user.id == User.current().id {
+            post.handleByOwner(target: self, delegate: self, sender: sender)
+        } else {
+            post.handle(target: self, sender: sender)
+        }
+    }
+    
+    // MARK: PostModificationDelegate
+    
+    func didMakeModification() {
+        self.pullToRefresh(sender: self.tableView.refreshControl!)
     }
     
     func viewProfilePhoto() {
@@ -68,6 +128,10 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         }
         let agrume = Agrume(image: image)
         agrume.showFrom(self)
+    }
+    
+    func dismiss(sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: NTTableViewDataSource
@@ -100,13 +164,14 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         if section >= 2 {
             return 4
         } else if section == 1 {
-            return Engagement.current()?.profileFields?.count ?? 0
+            return Engagement.current().profileFields?.count ?? 0
         }
         return 1
     }
     
     func tableView(_ tableView: NTTableView, cellForRowAt indexPath: IndexPath) -> NTTableViewCell {
         if indexPath.section == 0 {
+            // User Header
             let cell = NTProfileHeaderCell.initFromNib()
             cell.setDefaults()
             cell.image = self.user.image
@@ -116,11 +181,12 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
             cell.title = ""
             cell.subtitle = ""
             if self.user.id == User.current().id {
-                cell.rightButton.setImage(Icon.Apple.editFilled?.resizeImage(width: 25, height: 25, renderingMode: .alwaysTemplate), for: .normal)
+                cell.rightButton.setImage(Icon.Apple.editFilled, for: .normal)
                 cell.rightButton.addTarget(self, action: #selector(editProfile(sender:)), for: .touchUpInside)
             }
             return cell
         } else if indexPath.section == 1 {
+            // User Extension Fields
             let cell = NTLabeledCell.initFromNib()
             cell.horizontalInset = 10
             cell.cornerRadius = 5
@@ -130,10 +196,11 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
             } else if indexPath.row == (rows - 1) {
                 cell.cornersRounded = [.bottomLeft, .bottomRight]
             }
-            cell.title = Engagement.current()?.profileFields?[indexPath.row]
-            cell.text = self.user.userExtension!.field(forIndex: indexPath.row)
+            cell.title = Engagement.current().profileFields?[indexPath.row]
+            cell.text = self.user.userExtension?.field(forIndex: indexPath.row)
             return cell
         } else {
+            // User Posts
             let section = indexPath.section - 2
             switch indexPath.row {
             case 0:
@@ -145,7 +212,8 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
                 cell.cornersRounded = [.topLeft, .topRight]
                 cell.title = self.posts[section].user.fullname
                 cell.image = self.posts[section].user.image
-                cell.accessoryButton.setImage(Icon.Apple.moreVerticalFilled?.resizeImage(width: 20, height: 20, renderingMode: .alwaysTemplate), for: .normal)
+                cell.accessoryButton.tag = section
+                cell.accessoryButton.setImage(Icon.Apple.moreVerticalFilled, for: .normal)
                 cell.accessoryButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)
                 return cell
             case 1:
@@ -155,6 +223,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
                 cell.contentImageView.layer.borderColor = UIColor.white.cgColor
                 cell.contentImageView.layer.cornerRadius = 5
                 cell.image = self.posts[section].image
+                
                 if cell.image == nil {
                     cell.contentImageView.removeFromSuperview()
                     cell.bounds = CGRect.zero
@@ -170,17 +239,25 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
                 let cell = NTActionCell.initFromNib()
                 cell.setDefaults()
                 cell.cornersRounded = [.bottomLeft, .bottomRight]
-                cell.leftButton.setImage(Icon.Apple.likeFilled?.resizeImage(width: 20, height: 20, renderingMode: .alwaysTemplate), for: .normal)
-                let likes = self.posts[section].likes
-                let likeCount = likes?.count ?? 0
-                cell.leftButton.setTitle(" \(likeCount)", for: .normal)
+                let likes = self.posts[section].likes ?? [String]()
+                if likes.contains(User.current().id) {
+                    cell.leftButton.setImage(Icon.Apple.likeFilled, for: .normal)
+                } else {
+                    cell.leftButton.setImage(Icon.Apple.like, for: .normal)
+                }
+                cell.leftButton.setTitle(" \(likes.count)", for: .normal)
                 cell.leftButton.tag = section
                 cell.leftButton.addTarget(self, action: #selector(toggleLike(sender:)), for: .touchUpInside)
-                cell.centerButton.setImage(Icon.Apple.commentFilled?.resizeImage(width: 20, height: 20, renderingMode: .alwaysTemplate), for: .normal)
                 let comments = self.posts[section].comments
-                let commentsCount = comments?.count ?? 0
+                let commentsCount = comments.count
+                if commentsCount > 0 {
+                    cell.centerButton.setImage(Icon.Apple.commentFilled, for: .normal)
+                } else {
+                    cell.centerButton.setImage(Icon.Apple.comment, for: .normal)
+                }
                 cell.centerButton.setTitle(" \(commentsCount)", for: .normal)
                 cell.centerButton.tag = section
+                cell.centerButton.addTarget(self, action: #selector(addComment(sender:)), for: .touchUpInside)
                 let createdAt = self.posts[section].createdAt
                 cell.rightButton.setTitle(String.mediumDateNoTime(date: createdAt ?? Date()), for: .normal)
                 cell.rightButton.setTitleColor(UIColor.black, for: .normal)
@@ -193,67 +270,49 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     }
     
     func imageForStretchyView(in tableView: NTTableView) -> UIImage? {
-        return #imageLiteral(resourceName: "header")
+        guard let image = self.user.coverImage else {
+            self.fadeInNavBarOnScroll = false
+            return nil
+        }
+        self.fadeInNavBarOnScroll = true
+        return image
     }
     
-    // MARK: User Actions
+    // MARK: NTTableViewDelegate
     
-    func toggleLike(sender: UIButton) {
-        guard let likes = self.posts[sender.tag].likes else {
-            return
-        }
-        if likes.contains(User.current().id) {
-            sender.setTitle(" \(likes.count - 1)", for: .normal)
-            self.posts[sender.tag].unliked(byUser: User.current()) { (success) in
-                if !success {
-                    // Reset if save failed
-                    let likes = self.posts[sender.tag].likes
-                    let likeCount = likes?.count ?? 0
-                    sender.setTitle(" \(likeCount)", for: .normal)
-                }
+    func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section >= 2 {
+            if indexPath.section <= (self.posts.count - 1) {
+                let detailVC = PostDetailViewController(post: self.posts[indexPath.section - 2])
+                self.navigationController?.pushViewController(detailVC, animated: true)
             }
-        } else {
-            sender.setTitle(" \(likes.count + 1)", for: .normal)
-            self.posts[sender.tag].liked(byUser: User.current()) { (success) in
-                if !success {
-                    // Reset if save failed
-                    let likes = self.posts[sender.tag].likes
-                    let likeCount = likes?.count ?? 0
-                    sender.setTitle(" \(likeCount)", for: .normal)
-                }
-            }
-        }
-    }
-    
-    func handleMore(sender: UIButton) {
-        let post = self.posts[sender.tag]
-        if post.user.id == User.current().id {
-            post.handleByOwner(target: self, sender: sender)
-        } else {
-            post.handle(target: self, sender: sender)
         }
     }
     
     // MARK: Data Connecter
     
     func queryForPosts() {
-        guard let engagement = Engagement.current() else {
+        if self.isQuerying {
             return
+        } else {
+            self.isQuerying = true
         }
-        let postQuery = PFQuery(className: engagement.queryName! + PF_POST_CLASSNAME)
+        let postQuery = PFQuery(className: Engagement.current().queryName! + PF_POST_CLASSNAME)
+        postQuery.skip = self.posts.count
+        postQuery.limit = 10
+        postQuery.whereKey(PF_POST_USER, equalTo: self.user.object)
         postQuery.includeKey(PF_POST_USER)
         postQuery.addDescendingOrder(PF_POST_CREATED_AT)
-        postQuery.whereKey(PF_POST_USER, equalTo: self.user.object)
         postQuery.findObjectsInBackground { (objects, error) in
             guard let posts = objects else {
                 Log.write(.error, error.debugDescription)
                 return
             }
-            Log.write(.status, "Downloaded \(posts.count) posts")
             for post in posts {
-                self.posts.append(Post(fromObject: post))
+                self.posts.append(Cache.retrievePost(post))
             }
             self.reloadData()
+            self.isQuerying = false
             self.tableView.refreshControl?.endRefreshing()
         }
     }

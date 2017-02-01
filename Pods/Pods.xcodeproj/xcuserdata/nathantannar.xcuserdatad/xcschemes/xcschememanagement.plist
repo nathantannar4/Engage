@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>ALTextInputBar.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Agrume.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -97,6 +102,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>186AAC74E15FD49600CF627C8D513A5F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>2A52779AA0BD86BA0CEB8753126ED2FE</key>
 		<dict>
 			<key>primary</key>
@@ -107,12 +117,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>51CB0AF616C6306147B99C320EB6D3ED</key>
+		<key>49E49CAB1E94D750D1376CF1811A64DF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5515FB37F0F04A2B6E95AE84210027AE</key>
+		<key>51CB0AF616C6306147B99C320EB6D3ED</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -127,17 +137,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>70EE2FA14F0A0535B75F97C1EE8B1C8D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>A49653DE5C178056786C3F4942CA524F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>A760316124FD796EF09C09479E9F0021</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>AE0E901D3CBC59529B767CBD0D4BDD1E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -157,12 +167,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C4E01191A1F790CDE63EFB702E853CE0</key>
+		<key>D386C75EFD4F03725E4EFB866B600B9A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D386C75EFD4F03725E4EFB866B600B9A</key>
+		<key>DE8FA52121837E186CDA8A6C390FF973</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -13,7 +13,7 @@ import ParseUI
 import Agrume
 import DZNEmptyDataSet
 
-class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, NTTableViewDelegate, DZNEmptyDataSetSource {
+class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, NTTableViewDelegate, DZNEmptyDataSetSource, PostModificationDelegate {
     
     private var posts: [Post] = [Post]()
     private var isQuerying: Bool = false
@@ -22,11 +22,13 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
         super.viewDidLoad()
         
         self.title = "Activity Feed"
+        self.subtitle = "All Posts"
         self.dataSource = self
         self.delegate = self
+        self.tableView.contentInset.bottom = 100
         self.prepareTableView()
         self.prepareButton()
-        //self.queryForPosts()
+        self.queryForPosts()
     }
     
     func pullToRefresh(sender: UIRefreshControl) {
@@ -58,11 +60,11 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
         button.layer.shadowOpacity = 0.5
         button.layer.shadowOffset = CGSize(width: 2, height: 2)
         button.layer.shadowRadius = 2
-        button.setImage(Icon.Google.add?.resizeImage(width: 30, height: 30, renderingMode: .alwaysTemplate), for: .normal)
+        button.setImage(Icon.Google.add, for: .normal)
         button.tintColor = Color.defaultNavbarTint
         self.view.addSubview(button)
     }
-    
+        
     // MARK: User Actions
     
     func toggleLike(sender: UIButton) {
@@ -71,41 +73,57 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
         }
         if likes.contains(User.current().id) {
             sender.setTitle(" \(likes.count - 1)", for: .normal)
+            sender.setImage(Icon.Apple.like, for: .normal)
             self.posts[sender.tag].unliked(byUser: User.current()) { (success) in
                 if !success {
                     // Reset if save failed
                     let likes = self.posts[sender.tag].likes
                     let likeCount = likes?.count ?? 0
                     sender.setTitle(" \(likeCount)", for: .normal)
+                    sender.setImage(Icon.Apple.likeFilled, for: .normal)
                 }
             }
         } else {
             sender.setTitle(" \(likes.count + 1)", for: .normal)
+            sender.setImage(Icon.Apple.likeFilled, for: .normal)
             self.posts[sender.tag].liked(byUser: User.current()) { (success) in
                 if !success {
                     // Reset if save failed
                     let likes = self.posts[sender.tag].likes
                     let likeCount = likes?.count ?? 0
                     sender.setTitle(" \(likeCount)", for: .normal)
+                    sender.setImage(Icon.Apple.like, for: .normal)
                 }
             }
         }
     }
     
+    func addComment(sender: UIButton) {
+        let detailVC = PostDetailViewController(post: self.posts[sender.tag])
+        detailVC.textInputBar.textView.becomeFirstResponder()
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
     func handleMore(sender: UIButton) {
         let post = self.posts[sender.tag]
         if post.user.id == User.current().id {
-            post.handleByOwner(target: self, sender: sender)
+            post.handleByOwner(target: self, delegate: self, sender: sender)
         } else {
             post.handle(target: self, sender: sender)
         }
     }
     
+    // MARK: PostModificationDelegate
+    
+    func didMakeModification() {
+        self.posts.removeAll()
+        self.reloadData()
+        self.queryForPosts()
+    }
+    
     func createNewPost(sender: UIButton) {
         let navVC = UINavigationController(rootViewController: NewPostViewController())
-        navVC.view.frame = CGRect(x: 25 , y: 60, width: self.view.frame.width - 50, height: self.view.frame.height / 2)
-        navVC.view.center = self.view.center
-        self.getNTNavigationContainer?.presentOverlay(navVC, from: .bottom)
+        self.presentViewController(navVC, from: .bottom, completion: nil)
     }
     
     // MARK: NTTableViewDataSource
@@ -131,60 +149,81 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     }
     
     func tableView(_ tableView: NTTableView, cellForRowAt indexPath: IndexPath) -> NTTableViewCell {
-        switch indexPath.row {
-        case 0:
-            let cell = NTProfileCell.initFromNib()
-            cell.setDefaults()
-            cell.setImageViewDefaults()
-            cell.imageView.layer.borderWidth = 1
-            cell.imageView.layer.borderColor = Color.defaultButtonTint.cgColor
-            cell.cornersRounded = [.topLeft, .topRight]
-            cell.title = self.posts[indexPath.section].user.fullname
-            cell.image = self.posts[indexPath.section].user.image
-            cell.accessoryButton.setImage(Icon.Apple.moreVerticalFilled?.resizeImage(width: 20, height: 20, renderingMode: .alwaysTemplate), for: .normal)
-            cell.accessoryButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)
-            return cell
-        case 1:
-            let cell = NTImageCell.initFromNib()
-            cell.horizontalInset = 10
-            cell.contentImageView.layer.borderWidth = 2
-            cell.contentImageView.layer.borderColor = UIColor.white.cgColor
-            cell.contentImageView.layer.cornerRadius = 5
-            cell.image = self.posts[indexPath.section].image
-            if cell.image == nil {
-                cell.contentImageView.removeFromSuperview()
-                cell.bounds = CGRect.zero
+        if indexPath.section < self.posts.count {
+            switch indexPath.row {
+            case 0:
+                let cell = NTProfileCell.initFromNib()
+                cell.setDefaults()
+                cell.setImageViewDefaults()
+                cell.imageView.layer.borderWidth = 1
+                cell.imageView.layer.borderColor = Color.defaultButtonTint.cgColor
+                cell.cornersRounded = [.topLeft, .topRight]
+                cell.title = self.posts[indexPath.section].user.fullname
+                cell.image = self.posts[indexPath.section].user.image
+                cell.accessoryButton.tag = indexPath.section
+                cell.accessoryButton.setImage(Icon.Apple.moreVerticalFilled, for: .normal)
+                cell.accessoryButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)
+                return cell
+            case 1:
+                let cell = NTImageCell.initFromNib()
+                cell.horizontalInset = 10
+                cell.contentImageView.layer.borderWidth = 2
+                cell.contentImageView.layer.borderColor = UIColor.white.cgColor
+                cell.contentImageView.layer.cornerRadius = 5
+                cell.image = self.posts[indexPath.section].image
+                
+                if cell.image == nil {
+                    cell.contentImageView.removeFromSuperview()
+                    cell.bounds = CGRect.zero
+                }
+                return cell
+            case 2:
+                let cell = NTDynamicHeightTextCell.initFromNib()
+                cell.verticalInset = -5
+                cell.horizontalInset = 10
+                cell.text = self.posts[indexPath.section].content
+                return cell
+            case 3:
+                let cell = NTActionCell.initFromNib()
+                cell.setDefaults()
+                cell.cornersRounded = [.bottomLeft, .bottomRight]
+                let likes = self.posts[indexPath.section].likes ?? [String]()
+                if likes.contains(User.current().id) {
+                    cell.leftButton.setImage(Icon.Apple.likeFilled, for: .normal)
+                } else {
+                    cell.leftButton.setImage(Icon.Apple.like, for: .normal)
+                }
+                cell.leftButton.setTitle(" \(likes.count)", for: .normal)
+                cell.leftButton.tag = indexPath.section
+                cell.leftButton.addTarget(self, action: #selector(toggleLike(sender:)), for: .touchUpInside)
+                let comments = self.posts[indexPath.section].comments
+                let commentsCount = comments.count
+                if commentsCount > 0 {
+                    cell.centerButton.setImage(Icon.Apple.commentFilled, for: .normal)
+                } else {
+                    cell.centerButton.setImage(Icon.Apple.comment, for: .normal)
+                }
+                cell.centerButton.setTitle(" \(commentsCount)", for: .normal)
+                cell.centerButton.tag = indexPath.section
+                cell.centerButton.addTarget(self, action: #selector(addComment(sender:)), for: .touchUpInside)
+                let createdAt = self.posts[indexPath.section].createdAt
+                cell.rightButton.setTitle(String.mediumDateNoTime(date: createdAt ?? Date()), for: .normal)
+                cell.rightButton.setTitleColor(UIColor.black, for: .normal)
+                cell.rightButton.isEnabled = false
+                return cell
+            default:
+                return NTTableViewCell()
             }
-            return cell
-        case 2:
-            let cell = NTDynamicHeightTextCell.initFromNib()
-            cell.verticalInset = -5
-            cell.horizontalInset = 10
-            cell.text = self.posts[indexPath.section].content
-            return cell
-        case 3:
-            let cell = NTActionCell.initFromNib()
-            cell.setDefaults()
-            cell.cornersRounded = [.bottomLeft, .bottomRight]
-            cell.leftButton.setImage(Icon.Apple.likeFilled?.resizeImage(width: 20, height: 20, renderingMode: .alwaysTemplate), for: .normal)
-            let likes = self.posts[indexPath.section].likes
-            let likeCount = likes?.count ?? 0
-            cell.leftButton.setTitle(" \(likeCount)", for: .normal)
-            cell.leftButton.tag = indexPath.section
-            cell.leftButton.addTarget(self, action: #selector(toggleLike(sender:)), for: .touchUpInside)
-            cell.centerButton.setImage(Icon.Apple.commentFilled?.resizeImage(width: 20, height: 20, renderingMode: .alwaysTemplate), for: .normal)
-            let comments = self.posts[indexPath.section].comments
-            let commentsCount = comments?.count ?? 0
-            cell.centerButton.setTitle(" \(commentsCount)", for: .normal)
-            cell.centerButton.tag = indexPath.section
-            let createdAt = self.posts[indexPath.section].createdAt
-            cell.rightButton.setTitle(String.mediumDateNoTime(date: createdAt ?? Date()), for: .normal)
-            cell.rightButton.setTitleColor(UIColor.black, for: .normal)
-            cell.rightButton.isEnabled = false
-            return cell
-        default:
-            return NTTableViewCell()
+        } else {
+            return NTTextViewCell()
         }
+    }
+    
+    // MARK: NTTableViewDelegate
+    
+    func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
+        let detailVC = PostDetailViewController(post: self.posts[indexPath.section])
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
     
     // MARK: UITableViewDelegate
@@ -192,7 +231,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.section == (self.numberOfSections(in: self.tableView) - 1) {
             Log.write(.status, "Loading more posts")
-            self.queryForPosts()
+            //self.queryForPosts()
         }
     }
     
@@ -204,13 +243,10 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
         } else {
             self.isQuerying = true
         }
-        guard let engagement = Engagement.current() else {
-            return
-        }
-        let postQuery = PFQuery(className: engagement.queryName! + PF_POST_CLASSNAME)
-        postQuery.includeKey(PF_POST_USER)
+        let postQuery = PFQuery(className: Engagement.current().queryName! + PF_POST_CLASSNAME)
         postQuery.skip = self.posts.count
         postQuery.limit = 10
+        postQuery.includeKey(PF_POST_USER)
         postQuery.addDescendingOrder(PF_POST_CREATED_AT)
         postQuery.findObjectsInBackground { (objects, error) in
             guard let posts = objects else {
@@ -220,12 +256,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
             for post in posts {
                 self.posts.append(Cache.retrievePost(post))
             }
-            if posts.count > 0 {
-                Log.write(.status, "Downloaded \(posts.count) posts")
-                self.reloadData()
-            } else {
-                Log.write(.status, "No more posts are left to download")
-            }
+            self.reloadData()
             self.isQuerying = false
             self.tableView.refreshControl?.endRefreshing()
         }
@@ -235,7 +266,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     // MARK: DZNEmptyDataSetSource
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        return NSAttributedString(string: Engagement.current()?.name ?? "Engage", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 36)])
+        return NSAttributedString(string: Engagement.current().name ?? "Engage", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 36)])
     }
 }
 

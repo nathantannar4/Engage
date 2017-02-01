@@ -17,8 +17,4 @@ public class Comment {
         self.text = text
         self.date = date
     }
-    
-    
-
-
 }

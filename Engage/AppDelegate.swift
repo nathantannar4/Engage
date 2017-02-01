@@ -37,6 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Color.defaultButtonTint = Color.blue
         Color.defaultNavbarTint = Color.blue
         Color.defaultTitle = UIColor.black
+        UINavigationBar.appearance().tintColor = Color.defaultNavbarTint
+        UINavigationBar.appearance().backgroundColor = Color.defaultNavbarBackground
+        
         
         // Register for push notifications
         let center = UNUserNotificationCenter.current()

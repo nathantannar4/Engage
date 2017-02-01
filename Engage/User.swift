@@ -25,30 +25,56 @@ public class User {
             return id
         }
     }
+    public var createdAt: Date? {
+        get {
+            return self.object.createdAt
+        }
+    }
+    public var updatedAt: Date? {
+        get {
+            return self.object.updatedAt
+        }
+    }
     public var image: UIImage?
+    public var coverImage: UIImage?
     public var fullname: String? {
         get {
             return self.object.value(forKey: PF_USER_FULLNAME) as? String
+        }
+        set {
+            self.object[PF_USER_FULLNAME] = newValue
         }
     }
     public var email: String? {
         get {
             return self.object.email
         }
+        set {
+            self.object.email = newValue
+        }
     }
     public var phone: String? {
         get {
             return self.object.value(forKey: PF_USER_PHONE) as? String
+        }
+        set {
+            self.object[PF_USER_PHONE] = newValue
         }
     }
     public var blockedUsers: [String]? {
         get {
             return self.object.value(forKey: PF_USER_BLOCKED) as? [String]
         }
+        set {
+            self.object[PF_USER_BLOCKED] = newValue
+        }
     }
     public var engagements: [String]? {
         get {
             return self.object.value(forKey: PF_USER_ENGAGEMENTS) as? [String]
+        }
+        set {
+            self.object[PF_USER_ENGAGEMENTS] = newValue
         }
     }
     
@@ -57,35 +83,67 @@ public class User {
     public init(fromObject object: PFUser) {
         self.object = object
         
-        guard let file = self.object.value(forKey: PF_USER_PICTURE) as? PFFile else {
+        Log.write(.status, "Downloading images for user with id \(self.id)")
+        guard let logoFile = self.object.value(forKey: PF_USER_PICTURE) as? PFFile else {
             return
         }
-        Log.write(.error, "Downloading image for user with id \(self.id)")
-        file.getDataInBackground { (data, error) in
+        logoFile.getDataInBackground { (data, error) in
             guard let imageData = data else {
                 Log.write(.error, error.debugDescription)
                 return
             }
             self.image = UIImage(data: imageData)
         }
+        
+        guard let coverFile = self.object.value(forKey: PF_USER_COVER) as? PFFile else {
+            return
+        }
+        coverFile.getDataInBackground { (data, error) in
+            guard let imageData = data else {
+                Log.write(.error, error.debugDescription)
+                return
+            }
+            self.coverImage = UIImage(data: imageData)
+        }
+        if Engagement.current() != nil {
+            self.loadExtension()
+        }
+
     }
     
     // MARK: Public Functions
     
-    public static func current() -> User {
+    public static func current() -> User! {
         guard let user = self._current else {
-            // Show login screen
             Log.write(.error, "The current user was nil")
-            fatalError()
+            return nil
         }
         return user
     }
     
-    public func loadExtension() {
-        guard let engagement = Engagement.current() else {
-            return
+    public func save(completion: ((_ success: Bool) -> Void)?) {
+        self.object.saveInBackground { (success, error) in
+            if success && self.userExtension != nil {
+                self.userExtension?.save(completion: { (success) in
+                    Cache.update(self)
+                    completion?(success)
+                })
+            }
+            if error != nil {
+                Log.write(.error, "Could not save user")
+                Log.write(.error, error.debugDescription)
+                Toast.genericErrorMessage()
+                completion?(success)
+            }
         }
-        let userExtenionQuery = PFQuery(className: engagement.queryName! + PF_USER_CLASS_NAME)
+    }
+    
+    public func undoModifications() {
+        User._current = Cache.retrieveUser(User.current().id)
+    }
+    
+    public func loadExtension() {
+        let userExtenionQuery = PFQuery(className: Engagement.current().queryName! + PF_USER_CLASS_NAME)
         userExtenionQuery.whereKey(PF_USER_EXTENSION, equalTo: User.current().object)
         userExtenionQuery.findObjectsInBackground { (objects, error) in
             guard let userExtensions = objects else {
@@ -94,7 +152,7 @@ public class User {
             }
             if userExtensions.count == 0 {
                 // Extension does not exist yet
-                let newExtension = PFObject(className: engagement.queryName! + PF_USER_CLASS_NAME)
+                let newExtension = PFObject(className: Engagement.current().queryName! + PF_USER_CLASS_NAME)
                 newExtension[PF_USER_EXTENSION] = User.current().object
                 newExtension.saveInBackground()
                 Log.write(.status, "Created extension for user \(self.id)")
@@ -113,7 +171,7 @@ public class User {
     }
     
     public class func didLogin(with user: PFUser) {
-        self._current = User(fromObject: user)
+        User._current = User(fromObject: user)
     }
     
     // MARK: User Extension
@@ -140,18 +198,30 @@ public class User {
         // MARK: Public Functions
         
         public func field(forIndex index: Int) -> String? {
-            guard let engagement = Engagement.current() else {
-                return nil
-            }
-            guard let profileFields = engagement.profileFields else {
+            guard let profileFields = Engagement.current().profileFields else {
                 Log.write(.warning, "Engagements profile fields was nil")
                 return nil
             }
             if index >= profileFields.count {
                 return nil
             }
-            let indexString = profileFields[index].replacingOccurrences(of: " ", with: "_").lowercased()
+            let indexString = profileFields[index].replacingOccurrences(of: " ", with: "_")
             return self.object.value(forKey: indexString) as? String
+        }
+        
+        public func setValue(_ newValue: String, forField field: String) {
+            self.object[field] = newValue
+        }
+        
+        public func save(completion: ((_ success: Bool) -> Void)?) {
+            self.object.saveInBackground { (success, error) in
+                completion?(success)
+                if error != nil {
+                    Log.write(.error, "Could not save user extension")
+                    Log.write(.error, error.debugDescription)
+                    Toast.genericErrorMessage()
+                }
+            }
         }
     }
 }

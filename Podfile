@@ -30,5 +30,6 @@ pod 'DZNEmptyDataSet'
 # Other Pods
 pod 'BRYXBanner'
 pod 'M13PDFKit'
+pod 'ALTextInputBar'
 
 end

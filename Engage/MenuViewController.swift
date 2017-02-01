@@ -12,8 +12,8 @@ import Parse
 
 class MenuViewController: UITableViewController {
     
-    let viewControllers = [ActivityFeedViewController(), ProfileViewController(user: User.current())]
-    let titles = ["Activity Feed", "Profile"]
+    let viewControllers = [ActivityFeedViewController(), ProfileViewController(user: User.current()), EngagementViewController(engagement: Engagement.current())]
+    let titles = ["Activity Feed", "Profile", Engagement.current().name]
     var currentIndex = 0
     
     override func viewDidLoad() {

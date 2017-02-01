@@ -10,6 +10,10 @@ import Foundation
 import Parse
 import NTUIKit
 
+public protocol PostModificationDelegate {
+    func didMakeModification()
+}
+
 public class Post {
     
     public var object: PFObject
@@ -34,12 +38,17 @@ public class Post {
             return self.object.createdAt
         }
     }
+    public var updatedAt: Date? {
+        get {
+            return self.object.updatedAt
+        }
+    }
     public var likes: [String]? {
         get {
             return self.object.value(forKey: PF_POST_LIKES) as? [String]
         }
     }
-    public var comments: [Comment]?
+    public var comments = [Comment]()
     
     // MARK: Initialization
     
@@ -62,45 +71,95 @@ public class Post {
             }
             self.image = UIImage(data: imageData)
         }
+        
+        guard let comments = object.value(forKey: PF_POST_COMMENTS) as? [String] else {
+            return
+        }
+        guard let commentUsers = object.value(forKey: PF_POST_COMMENT_USERS) as? [PFUser] else {
+            return
+        }
+        guard let commentDates = object.value(forKey: PF_POST_COMMENT_DATES) as? [Date] else {
+            return
+        }
+        for user in commentUsers {
+            user.fetchInBackground(block: { (object, error) in
+                guard let user = object as? PFUser else {
+                    Log.write(.error, "Could not fetch the user of the comment")
+                    Log.write(.error, error.debugDescription)
+                    return
+                }
+                self.comments.append(Comment(user: Cache.retrieveUser(user), text: comments[commentUsers.index(of: user)!], date: commentDates[commentUsers.index(of: user)!]))
+            })
+        }
     }
     
-    public init(text: String?, image: UIImage?, completion: ((_ success: Bool) -> Void)?) {
-        guard let engagement = Engagement.current() else {
-            fatalError()
-        }
+    public init(text: String?, image: UIImage?) {
         self.user = User.current()
-        self.object = PFObject(className: engagement.queryName! + PF_POST_CLASSNAME)
+        self.object = PFObject(className: Engagement.current().queryName! + PF_POST_CLASSNAME)
         self.object[PF_POST_INFO] = text ?? ""
         self.object[PF_POST_COMMENTS] = []
         self.object[PF_POST_COMMENT_DATES] = []
         self.object[PF_POST_COMMENT_USERS] = []
         self.object[PF_POST_LIKES] = []
         self.object[PF_POST_USER] = PFUser.current()
-        if image != nil {
+        self.image = image
+    }
+    
+    // MARK: Private Functions
+    
+    private func save(completion: ((_ success: Bool) -> Void)?) {
+        self.object.saveInBackground { (success, error) in
+            completion?(success)
+            if error != nil {
+                Log.write(.error, error.debugDescription)
+                Toast.genericErrorMessage()
+            } else {
+                Cache.update(self)
+            }
+        }
+    }
+    
+    // MARK: Public Functions
+    
+    public func upload(completion: ((_ success: Bool) -> Void)?) {
+        // Freeze user interaction
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        
+        if self.image != nil {
             var imageToPost = image!
             if image!.size.width > 500 {
                 let resizeFactor = 500 / image!.size.width
-                imageToPost = image!.resizeImage(width: resizeFactor * image!.size.height, height: resizeFactor * image!.size.height, renderingMode: .alwaysOriginal)
+                imageToPost = image!.resizeImage(width: resizeFactor * image!.size.width, height: resizeFactor * image!.size.height, renderingMode: .alwaysOriginal)
             }
             let pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(imageToPost, 0.6)!)
             pictureFile!.saveInBackground { (succeeded: Bool, error: Error?) -> Void in
                 if error == nil {
                     self.object[PF_POST_IMAGE] = pictureFile
                     self.save { (success) in
+                        // Unfreeze user interaction
+                        UIApplication.shared.endIgnoringInteractionEvents()
+                        
                         completion?(success)
                         if success {
                             Log.write(.status, "Post \(self.id) uploaded to databased successfully")
-                            let toast = Toast(text: "Post uploaded!", button: nil, color: Color.darkGray, height: 44)
+                            let toast = Toast(text: "Post Uploaded", button: nil, color: Color.darkGray, height: 44)
                             toast.dismissOnTap = true
                             toast.show(duration: 1.0)
                         } else {
                             Toast.genericErrorMessage()
                         }
                     }
+                } else {
+                    // Unfreeze user interaction
+                    UIApplication.shared.endIgnoringInteractionEvents()
+                    Toast.genericErrorMessage()
                 }
             }
         } else {
             self.save { (success) in
+                // Unfreeze user interaction
+                UIApplication.shared.endIgnoringInteractionEvents()
+                
                 completion?(success)
                 if success {
                     Log.write(.status, "Post \(self.id) uploaded to databased successfully")
@@ -114,19 +173,35 @@ public class Post {
         }
     }
     
-    // MARK: Private Functions
-    
-    private func save(completion: ((_ success: Bool) -> Void)?) {
-        self.object.saveInBackground { (success, error) in
-            completion?(success)
-            if error != nil {
-                Log.write(.error, error.debugDescription)
-                Toast.genericErrorMessage()
+    public func addComment(_ comment: Comment, completion: ((_ success: Bool) -> Void)?) {
+        guard var comments = object.value(forKey: PF_POST_COMMENTS) as? [String] else {
+            completion?(false)
+            Toast.genericErrorMessage()
+            return
+        }
+        guard var commentUsers = object.value(forKey: PF_POST_COMMENT_USERS) as? [PFUser] else {
+            completion?(false)
+            Toast.genericErrorMessage()
+            return
+        }
+        guard var commentDates = object.value(forKey: PF_POST_COMMENT_DATES) as? [Date] else {
+            completion?(false)
+            Toast.genericErrorMessage()
+            return
+        }
+        comments.append(comment.text)
+        self.object[PF_POST_COMMENTS] = comments
+        commentUsers.append(comment.user.object)
+        self.object[PF_POST_COMMENT_USERS] = commentUsers
+        commentDates.append(comment.date)
+        self.object[PF_POST_COMMENT_DATES] = commentDates
+        self.comments.append(comment)
+        self.save { (success) in
+            if success {
+                completion?(true)
             }
         }
     }
-    
-    // MARK: Public Functions
 
     public func liked(byUser user: User, completion: ((_ success: Bool) -> Void)?) {
         guard var currentLikes = self.likes else {
@@ -177,13 +252,11 @@ public class Post {
         
     }
     
-    public func handleByOwner(target: UIViewController, sender: UIButton) {
+    public func handleByOwner(target: UIViewController, delegate: PostModificationDelegate, sender: UIButton) {
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheetController.view.tintColor = Color.defaultButtonTint
         
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-            //Just dismiss the action sheet
-        }
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
         actionSheetController.addAction(cancelAction)
         
         let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
@@ -192,7 +265,26 @@ public class Post {
         actionSheetController.addAction(editAction)
         
         let deleteAction: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+            let alert = UIAlertController(title: "Are you sure?", message: "This cannot be undone.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.view.tintColor = Color.defaultNavbarTint
             
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
+            alert.addAction(cancelAction)
+            
+            let delete: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+                self.object.deleteInBackground(block: { (success: Bool, error: Error?) in
+                    if success {
+                        //let undoButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.undo, target: self, action: #selector(save(completion:)))
+                        let toast = Toast(text: "Post Deleted", button: nil, color: Color.darkGray, height: 44)
+                        toast.show(target.view, duration: 2.0)
+                        delegate.didMakeModification()
+                    } else {
+                        Toast.genericErrorMessage()
+                    }
+                })
+            }
+            alert.addAction(delete)
+            target.present(alert, animated: true, completion: nil)
         }
         actionSheetController.addAction(deleteAction)
         
@@ -206,9 +298,7 @@ public class Post {
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheetController.view.tintColor = Color.defaultButtonTint
         
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-            //Just dismiss the action sheet
-        }
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
         actionSheetController.addAction(cancelAction)
         
         if self.image != nil {

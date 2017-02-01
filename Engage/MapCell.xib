@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="184" id="vR5-3Q-iLj" customClass="MapCell" customModule="WESST" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="184"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vR5-3Q-iLj" id="erk-JC-D1a">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="183.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="r1p-fy-OKZ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="184"/>
+                    </mapView>
+                </subviews>
+                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                <constraints>
+                    <constraint firstItem="r1p-fy-OKZ" firstAttribute="centerY" secondItem="erk-JC-D1a" secondAttribute="centerY" id="Snh-WA-KvJ"/>
+                    <constraint firstItem="r1p-fy-OKZ" firstAttribute="leading" secondItem="erk-JC-D1a" secondAttribute="leading" id="VB1-qN-c1b"/>
+                    <constraint firstAttribute="trailing" secondItem="r1p-fy-OKZ" secondAttribute="trailing" id="kwX-yf-zWL"/>
+                    <constraint firstItem="r1p-fy-OKZ" firstAttribute="top" secondItem="erk-JC-D1a" secondAttribute="top" id="uYo-qd-G4h"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="mapView" destination="r1p-fy-OKZ" id="7Yq-Rz-mq4"/>
+            </connections>
+            <point key="canvasLocation" x="221" y="266"/>
+        </tableViewCell>
+    </objects>
+</document>

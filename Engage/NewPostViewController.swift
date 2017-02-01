@@ -24,19 +24,24 @@ class NewPostViewController: NTTableViewController, NTTableViewDataSource, UIIma
         self.dataSource = self
         self.tableView.emptyHeaderHeight = 30
         self.tableView.cellSeperationHeight = 10
+        self.tableView.contentInset.top = 70
         self.tableView.contentInset.bottom = 100
-        
-        self.navBarOverlayView?.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 44)
-        
-        if let navVC = self.navigationController {
-            let frame = self.tableView.frame
-            self.tableView.frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: navVC.view.frame.width, height: frame.height)
-            navVC.view.round(corners: .allCorners, radius: 5)
-            navVC.navigationBar.round(corners: [.topLeft, .topRight], radius: 5)
-        }
-        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Google.check, style: .plain, target: self, action: #selector(saveButtonPressed(sender:)))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(cancelButtonPressed(sender:)))
+    }
     
-        self.view.round(corners: [.bottomLeft, .bottomRight], radius: 5)
+    func saveButtonPressed(sender: UIBarButtonItem) {
+        let post = Post(text: self.text, image: self.image)
+        post.upload { (success) in
+            if success {
+                Cache.add(post)
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func cancelButtonPressed(sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
     }
 
     // MARK: User Actions
