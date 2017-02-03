@@ -12,8 +12,8 @@ import Parse
 
 class MenuViewController: UITableViewController {
     
-    let viewControllers = [ActivityFeedViewController(), ProfileViewController(user: User.current()), EngagementViewController(engagement: Engagement.current())]
-    let titles = ["Activity Feed", "Profile", Engagement.current().name]
+    var viewControllers = [UIViewController]()
+    var titles = [String]()
     var currentIndex = 0
     
     override func viewDidLoad() {
@@ -21,6 +21,18 @@ class MenuViewController: UITableViewController {
         
         self.prepareTable()
         
+        self.viewControllers = [ActivityFeedViewController(), ProfileViewController(user: User.current()), EngagementViewController(engagement: Engagement.current()), NTTableViewController()]
+        self.titles = ["Activity Feed", "Profile", Engagement.current().name ?? "Engagement", User.current().userExtension?.team?.name ?? "Join a Team"] as [String]
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let team = User.current().userExtension?.team {
+            self.titles[3] = team.name!
+            self.viewControllers[3] = TeamViewController(team: team)
+            self.tableView.reloadData()
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

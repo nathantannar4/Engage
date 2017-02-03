@@ -11,7 +11,8 @@ import Parse
 import NTUIKit
 
 public protocol PostModificationDelegate {
-    func didMakeModification()
+    func didUpdatePost()
+    func didDeletePost()
 }
 
 public class Post {
@@ -30,6 +31,9 @@ public class Post {
     public var content: String? {
         get {
             return self.object.value(forKey: PF_POST_INFO) as? String
+        }
+        set {
+            self.object[PF_POST_INFO] = newValue
         }
     }
     public var image: UIImage?
@@ -107,7 +111,19 @@ public class Post {
     
     // MARK: Private Functions
     
-    private func save(completion: ((_ success: Bool) -> Void)?) {
+    @objc private func undoDeletion() {
+        self.save { (success) in
+            if success {
+                let toast = Toast(text: "Post Restored", button: nil, color: Color.darkGray, height: 44)
+                toast.dismissOnTap = true
+                toast.show(duration: 1.0)
+            }
+        }
+    }
+    
+    // MARK: Public Functions
+    
+    public func save(completion: ((_ success: Bool) -> Void)?) {
         self.object.saveInBackground { (success, error) in
             completion?(success)
             if error != nil {
@@ -118,8 +134,6 @@ public class Post {
             }
         }
     }
-    
-    // MARK: Public Functions
     
     public func upload(completion: ((_ success: Bool) -> Void)?) {
         // Freeze user interaction
@@ -163,7 +177,7 @@ public class Post {
                 completion?(success)
                 if success {
                     Log.write(.status, "Post \(self.id) uploaded to databased successfully")
-                    let toast = Toast(text: "Post uploaded!", button: nil, color: Color.darkGray, height: 44)
+                    let toast = Toast(text: "Post Uploaded", button: nil, color: Color.darkGray, height: 44)
                     toast.dismissOnTap = true
                     toast.show(duration: 1.0)
                 } else {
@@ -260,7 +274,9 @@ public class Post {
         actionSheetController.addAction(cancelAction)
         
         let editAction: UIAlertAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-            
+            target.present(UINavigationController(rootViewController: EditPostViewController(post: self)), animated: true, completion: {
+                delegate.didUpdatePost()
+            })
         }
         actionSheetController.addAction(editAction)
         
@@ -274,10 +290,10 @@ public class Post {
             let delete: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
                 self.object.deleteInBackground(block: { (success: Bool, error: Error?) in
                     if success {
-                        //let undoButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.undo, target: self, action: #selector(save(completion:)))
+                        let undoButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.undo, target: self, action: #selector(self.undoDeletion))
                         let toast = Toast(text: "Post Deleted", button: nil, color: Color.darkGray, height: 44)
                         toast.show(target.view, duration: 2.0)
-                        delegate.didMakeModification()
+                        delegate.didDeletePost()
                     } else {
                         Toast.genericErrorMessage()
                     }

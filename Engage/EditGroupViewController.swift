@@ -16,19 +16,26 @@ import Former
 import Agrume
 
 
-class EditEngagementViewController: FormViewController, UserSelectionDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class EditGroupViewController: FormViewController, UserSelectionDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     enum photoSelection {
         case isLogo, isCover
     }
     private var imagePickerType = photoSelection.isLogo
+    private var group: Group!
+    
+    // MARK: - Initializers
+    public convenience init(group: Group) {
+        self.init()
+        self.group = group
+    }
     
     // MARK: Public
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.setTitleView(title: Engagement.current().name, subtitle: "Edit", titleColor: Color.defaultTitle, subtitleColor: Color.defaultSubtitle)
+        self.setTitleView(title: self.group.name, subtitle: "Edit", titleColor: Color.defaultTitle, subtitleColor: Color.defaultSubtitle)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Google.check, style: .plain, target: self, action: #selector(saveButtonPressed(sender:)))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(cancelButtonPressed(sender:)))
         if Color.defaultNavbarBackground.isLight {
@@ -46,19 +53,31 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
     
     func saveButtonPressed(sender: UIBarButtonItem) {
         Log.write(.status, "Save button pressed")
-        Engagement.current().save { (success) in
+        self.group.save { (success) in
             if success {
-                let toast = Toast(text: "Engagement Updated", button: nil, color: Color.darkGray, height: 44)
-                toast.dismissOnTap = true
-                toast.show(duration: 2.0)
-                self.dismiss(animated: true, completion: nil)
+                if self.group is Engagement {
+                    let toast = Toast(text: "Engagement Updated", button: nil, color: Color.darkGray, height: 44)
+                    toast.dismissOnTap = true
+                    toast.show(duration: 2.0)
+                    self.dismiss(animated: true, completion: nil)
+                } else if self.group is Team {
+                    let toast = Toast(text: "Team Updated", button: nil, color: Color.darkGray, height: 44)
+                    toast.dismissOnTap = true
+                    toast.show(duration: 2.0)
+                    self.dismiss(animated: true, completion: nil)
+                }
             }
         }
     }
     
     func cancelButtonPressed(sender: UIBarButtonItem) {
-        Engagement.current().undoModifications()
-        self.dismiss(animated: true, completion: nil)
+        if let engagement = self.group as? Engagement {
+            engagement.undoModifications()
+            self.dismiss(animated: true, completion: nil)
+        } else if let team = self.group as? Team {
+            team.undoModifications()
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     // MARK: Former Rows
@@ -78,7 +97,7 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
     
     private lazy var imageRow: LabelRowFormer<ProfileImageCell> = {
         LabelRowFormer<ProfileImageCell>(instantiateType: .Nib(nibName: "ProfileImageCell")) {
-            $0.iconView.image = Engagement.current().image
+            $0.iconView.image = self.group.image
             }.configure {
                 $0.text = "Choose logo from library"
                 $0.rowHeight = 60
@@ -91,12 +110,12 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
     
     private lazy var onlyImageRow: LabelRowFormer<ImageCell> = {
         LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {
-            $0.displayImage.image = Engagement.current().coverImage
+            $0.displayImage.image = self.group.coverImage
             }.configure {
                 $0.rowHeight = 200
             }
             .onSelected({ (cell: LabelRowFormer<ImageCell>) in
-                if Engagement.current().coverImage != nil {
+                if self.group.coverImage != nil {
                     let agrume = Agrume(image: cell.cell.displayImage.image!)
                     agrume.showFrom(self)
                 }
@@ -121,11 +140,11 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
         let infoRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.font = UIFont.systemFont(ofSize: 14)
             }.configure {
-                $0.text = Engagement.current().info
+                $0.text = self.group.info
                 $0.placeholder = "Info"
                 $0.rowHeight = 200
             }.onTextChanged {
-                Engagement.current().info = $0
+                self.group.info = $0
         }
         let urlRow = TextFieldRowFormer<ProfileFieldCell>(instantiateType: .Nib(nibName: "ProfileFieldCell")) { [weak self] in
             $0.titleLabel.text = "Website"
@@ -133,18 +152,18 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
             $0.textField.inputAccessoryView = self?.formerInputAccessoryView
             }.configure {
                 $0.placeholder = "Add url"
-                $0.text = Engagement.current().phone
+                $0.text = self.group.url
             }.onTextChanged {
-                Engagement.current().phone = $0
+                self.group.url = $0
         }
         let addressRow = TextFieldRowFormer<ProfileFieldCell>(instantiateType: .Nib(nibName: "ProfileFieldCell")) { [weak self] in
             $0.titleLabel.text = "Address"
             $0.textField.inputAccessoryView = self?.formerInputAccessoryView
             }.configure {
                 $0.placeholder = "Add address"
-                $0.text = Engagement.current().phone
+                $0.text = self.group.address
             }.onTextChanged {
-                Engagement.current().phone = $0
+                self.group.address = $0
         }
         let phoneRow = TextFieldRowFormer<ProfileFieldCell>(instantiateType: .Nib(nibName: "ProfileFieldCell")) { [weak self] in
             $0.titleLabel.text = "Phone"
@@ -152,9 +171,9 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
             $0.textField.inputAccessoryView = self?.formerInputAccessoryView
             }.configure {
                 $0.placeholder = "Add phone number"
-                $0.text = Engagement.current().phone
+                $0.text = self.group.phone
             }.onTextChanged {
-                Engagement.current().phone = $0
+                self.group.phone = $0
         }
         let emailRow = TextFieldRowFormer<ProfileFieldCell>(instantiateType: .Nib(nibName: "ProfileFieldCell")) { [weak self] in
             $0.titleLabel.text = "Email"
@@ -162,9 +181,9 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
             $0.textField.inputAccessoryView = self?.formerInputAccessoryView
             }.configure {
                 $0.placeholder = "Add email"
-                $0.text = Engagement.current().email
+                $0.text = self.group.email
             }.onTextChanged {
-                Engagement.current().email = $0
+                self.group.email = $0
         }
         
         // Create SectionFormers
@@ -215,14 +234,14 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
                 }
             }
             
-            let engagement = Engagement.current().object
+            let group = self.group.object
             switch self.imagePickerType {
             case .isLogo:
-                engagement[PF_ENGAGEMENTS_LOGO] = pictureFile
+                group[PF_ENGAGEMENTS_LOGO] = pictureFile
             case .isCover:
-                engagement[PF_ENGAGEMENTS_COVER_PHOTO] = pictureFile
+                group[PF_ENGAGEMENTS_COVER_PHOTO] = pictureFile
             }
-            engagement.saveInBackground { (succeeded: Bool, error:
+            group.saveInBackground { (succeeded: Bool, error:
                 Error?) -> Void in
                 if error != nil {
                     Log.write(.error, error.debugDescription)
@@ -235,12 +254,12 @@ class EditEngagementViewController: FormViewController, UserSelectionDelegate, U
                     
                     switch self.imagePickerType {
                     case .isLogo:
-                        Engagement.current().image = imageToBeSaved
+                        self.group.image = imageToBeSaved
                         self.imageRow.cellUpdate {
                             $0.iconView.image = imageToBeSaved
                         }
                     case .isCover:
-                        Engagement.current().coverImage = imageToBeSaved
+                        self.group.coverImage = imageToBeSaved
                         self.onlyImageRow.cellUpdate {
                             $0.displayImage.image = imageToBeSaved
                         }

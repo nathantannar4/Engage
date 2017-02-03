@@ -1,8 +1,8 @@
 //
-//  EngagementViewController.swift
+//  TeamViewController.swift
 //  Engage
 //
-//  Created by Nathan Tannar on 1/29/17.
+//  Created by Nathan Tannar on 2/1/17.
 //  Copyright © 2017 Nathan Tannar. All rights reserved.
 //
 
@@ -11,14 +11,14 @@ import NTUIKit
 import Agrume
 import Parse
 
-class EngagementViewController: NTTableViewController, NTTableViewDataSource, NTTableViewDelegate {
+class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableViewDelegate {
     
-    private var engagement: Engagement!
+    private var team: Team!
     
     // MARK: - Initializers
-    public convenience init(engagement: Engagement) {
+    public convenience init(team: Team) {
         self.init()
-        self.engagement = engagement
+        self.team = team
     }
     
     override func viewDidLoad() {
@@ -31,7 +31,6 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(dismiss(sender:)))
         }
         self.prepareTableView()
-        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
     }
     
     func pullToRefresh(sender: UIRefreshControl) {
@@ -48,7 +47,7 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         self.tableView.emptyHeaderHeight = 10
         self.fadeInNavBarOnScroll = true
         let refreshControl = UIRefreshControl()
-        if self.engagement.image != nil {
+        if self.team.image != nil {
             refreshControl.tintColor = UIColor.white
             refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         } else {
@@ -60,22 +59,18 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     
     // MARK: User Action
     
-    func editEngagement(sender: UIButton) {
-        let navVC = UINavigationController(rootViewController: EditGroupViewController(group: Engagement.current()))
+    func editTeam(sender: UIButton) {
+        let navVC = UINavigationController(rootViewController: EditGroupViewController(group: self.team))
         self.present(navVC, animated: true, completion: nil)
     }
     
-    func showMembers(sender: AnyObject) {
-        let selectionVC = UserListViewController(group: Engagement.current())
+    func showMembers(sender: UIButton) {
+        let selectionVC = UserListViewController(group: self.team)
         self.navigationController?.pushViewController(selectionVC, animated: true)
     }
     
-    func createTeam(sender: UIButton) {
-        
-    }
-    
     func viewProfilePhoto() {
-        guard let image = self.engagement.image else {
+        guard let image = self.team.image else {
             return
         }
         let agrume = Agrume(image: image)
@@ -91,12 +86,6 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     func tableView(_ tableView: NTTableView, cellForHeaderInSection section: Int) -> NTHeaderCell? {
         if section == 0 {
             return NTHeaderCell()
-        } else if section == 2 {
-            let header = NTHeaderCell.initFromNib()
-            header.titleLabel.text = "Teams"
-            header.actionButton.setTitle("New Team", for: .normal)
-            header.actionButton.addTarget(self, action: #selector(createTeam(sender:)), for: .touchUpInside)
-            return header
         } else {
             return nil
         }
@@ -107,7 +96,7 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     }
     
     func numberOfSections(in tableView: NTTableView) -> Int {
-        return 3
+        return 2
     }
     
     func tableView(_ tableView: NTTableView, rowsInSection section: Int) -> Int {
@@ -115,10 +104,8 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
             return 1
         } else if section == 1 {
             return 7
-        } else if section == 2{
-            return self.engagement.teams.count
         } else {
-            return 0
+            return self.team.admins?.count ?? 0
         }
     }
     
@@ -129,11 +116,11 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
             cell.setDefaults()
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewProfilePhoto))
             cell.imageView.addGestureRecognizer(tapGesture)
-            cell.image = Engagement.current().image
-            cell.name = Engagement.current().name
-            if self.engagement.admins!.contains(User.current().id) {
+            cell.image = self.team.image
+            cell.name = self.team.name
+            if self.team.admins!.contains(User.current().id) {
                 cell.rightButton.setImage(Icon.Apple.editFilled, for: .normal)
-                cell.rightButton.addTarget(self, action: #selector(editEngagement(sender:)), for: .touchUpInside)
+                cell.rightButton.addTarget(self, action: #selector(editTeam(sender:)), for: .touchUpInside)
             }
             return cell
         } else if indexPath.section == 1 {
@@ -153,38 +140,38 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
                 cell.verticalInset = -5
                 cell.horizontalInset = 10
                 cell.contentLabel.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightRegular)
-                cell.text = self.engagement.info
+                cell.text = self.team.info
                 return cell
             case 2:
                 let cell = NTLabeledCell.initFromNib()
                 cell.horizontalInset = 10
                 cell.title = "Website"
-                cell.text = self.engagement.url
+                cell.text = self.team.url
                 return cell
             case 3:
                 let cell = NTLabeledCell.initFromNib()
                 cell.horizontalInset = 10
                 cell.title = "Address"
-                cell.text = self.engagement.address
+                cell.text = self.team.address
                 return cell
             case 4:
                 let cell = NTLabeledCell.initFromNib()
                 cell.horizontalInset = 10
                 cell.title = "Phone"
-                cell.text = self.engagement.phone
+                cell.text = self.team.phone
                 return cell
             case 5:
                 let cell = NTLabeledCell.initFromNib()
                 cell.horizontalInset = 10
                 cell.title = "Email"
-                cell.text = self.engagement.email
+                cell.text = self.team.email
                 return cell
             case 6:
                 let cell = NTMenuItemCell.initFromNib()
                 cell.horizontalInset = 10
                 cell.cornersRounded = [.bottomLeft, .bottomRight]
                 cell.cornerRadius = 5
-                cell.title = "\(self.engagement.members!.count) Members"
+                cell.title = "\(self.team.members!.count) Members"
                 cell.titleLabel.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
                 cell.titleLabel.textColor = Color.defaultNavbarTint
                 cell.accessoryButton.setImage(Icon.Apple.arrowForward, for: .normal)
@@ -196,30 +183,13 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
                 return NTTextViewCell()
             }
             
-        } else if indexPath.section == 2 {
-            let cell = NTMenuItemCell.initFromNib()
-            cell.horizontalInset = 10
-            if indexPath.row == 0 {
-                cell.cornersRounded = [.topLeft, .topRight]
-                if indexPath.row == (self.engagement.teams.count - 1) {
-                    cell.cornersRounded = .allCorners
-                }
-            } else if indexPath.row == (self.engagement.teams.count - 1) {
-                cell.cornersRounded = [.bottomLeft, .bottomRight]
-            }
-            cell.cornerRadius = 5
-            cell.title = self.engagement.teams[indexPath.row].name
-            cell.titleLabel.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
-            cell.titleLabel.textColor = Color.defaultNavbarTint
-            cell.accessoryButton.setImage(Icon.Apple.arrowForward, for: .normal)
-            return cell
         } else {
             return NTTextViewCell()
         }
     }
     
     func imageForStretchyView(in tableView: NTTableView) -> UIImage? {
-        guard let image = Engagement.current().coverImage else {
+        guard let image = self.team.coverImage else {
             self.fadeInNavBarOnScroll = false
             return nil
         }
@@ -229,19 +199,9 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         return image
     }
     
-    // MARK: NTTableViewDelegate
+    // MARK: - UIScrollViewDelegate
     
-    func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 2 {
-            let team = self.engagement.teams[indexPath.row]
-            let teamVC = TeamViewController(team: team)
-            self.navigationController?.pushViewController(teamVC, animated: true)
-        }
-    }
-    
-    // MARK: UIScrollViewDelegate
-    
-     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y + self.tableView.contentInset.top
         var headerTransform = CATransform3DIdentity
@@ -261,4 +221,5 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         self.stretchyView.layer.transform = headerTransform
     }
 }
+
 

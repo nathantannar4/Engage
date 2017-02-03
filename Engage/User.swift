@@ -45,6 +45,14 @@ public class User {
             self.object[PF_USER_FULLNAME] = newValue
         }
     }
+    public var bio: String? {
+        get {
+            return self.object.value(forKey: PF_USER_BIO) as? String
+        }
+        set {
+            self.object[PF_USER_BIO] = newValue
+        }
+    }
     public var email: String? {
         get {
             return self.object.email
@@ -144,6 +152,7 @@ public class User {
     
     public func loadExtension() {
         let userExtenionQuery = PFQuery(className: Engagement.current().queryName! + PF_USER_CLASS_NAME)
+        userExtenionQuery.includeKey(PF_USER_TEAM)
         userExtenionQuery.whereKey(PF_USER_EXTENSION, equalTo: User.current().object)
         userExtenionQuery.findObjectsInBackground { (objects, error) in
             guard let userExtensions = objects else {
@@ -188,11 +197,24 @@ public class User {
                 return id
             }
         }
+        public var team: Team?
         
         // MARK: Initialization
         
         public init(fromObject object: PFObject) {
             self.object = object
+            
+            guard let team = object.object(forKey: PF_USER_TEAM) as? PFObject else {
+                Log.write(.status, "User is not associated with a team")
+                return
+            }
+            team.fetchInBackground { (object, error) in
+                guard let usersTeam = object else {
+                    Log.write(.error, error.debugDescription)
+                    return
+                }
+                self.team = Cache.retrieveTeam(usersTeam)
+            }
         }
         
         // MARK: Public Functions

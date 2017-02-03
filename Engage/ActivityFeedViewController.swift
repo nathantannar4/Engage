@@ -58,7 +58,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
         button.addTarget(self, action: #selector(createNewPost(sender:)), for: .touchUpInside)
         button.layer.shadowColor = Color.darkGray.cgColor
         button.layer.shadowOpacity = 0.5
-        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+        button.layer.shadowOffset = CGSize(width: 1, height: 1)
         button.layer.shadowRadius = 2
         button.setImage(Icon.Google.add, for: .normal)
         button.tintColor = Color.defaultNavbarTint
@@ -115,14 +115,20 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     
     // MARK: PostModificationDelegate
     
-    func didMakeModification() {
+    func didUpdatePost() {
+        self.posts.removeAll()
+        self.reloadData()
+        self.queryForPosts()
+    }
+    
+    func didDeletePost() {
         self.posts.removeAll()
         self.reloadData()
         self.queryForPosts()
     }
     
     func createNewPost(sender: UIButton) {
-        let navVC = UINavigationController(rootViewController: NewPostViewController())
+        let navVC = UINavigationController(rootViewController: EditPostViewController())
         self.presentViewController(navVC, from: .bottom, completion: nil)
     }
     

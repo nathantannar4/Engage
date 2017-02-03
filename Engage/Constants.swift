@@ -28,6 +28,8 @@ let PF_USER_ENGAGEMENTS                 = "engagements"             //	Array
 let PF_USER_BLOCKED                     = "blocked_users"           //  Array
 let PF_USER_EXTENSION_CLASSNAME         = "User"
 let PF_USER_COVER                       = "coverPicture"
+let PF_USER_TEAM                        = "subgroup"
+let PF_USER_BIO                        = "bio"
 
 
 /* Posts */
@@ -69,7 +71,7 @@ let PF_ENGAGEMENT_COLOR                 = "color"
 let PF_ENGAGEMENT_SPONSOR               = "sponsor"
 
 /* Engagement Sub Groups */
-let PF_SUBGROUP_CLASS_NAME              = "SubGroup"                //  Class Name
+let PF_SUBGROUP_CLASS_NAME              = "_SubGroup"                //  Class Name
 let PF_SUBGROUP_NAME                    = "name"                    //  String
 let PF_SUBGROUP_LOWERCASE_NAME          = "lowercase_name"          //  String
 let PF_SUBGROUP_MEMBERS                 = "members"                 //  Array
@@ -102,7 +104,7 @@ let PF_CONFERENCE_END                   = "end"                //  Array
 
 
 /* Events */
-let PF_EVENTS_CLASS_NAME                = "Events"                  //  Class name
+let PF_EVENTS_CLASS_NAME                = "_Events"                  //  Class name
 let PF_EVENTS_TITLE                     = "title"                   //  String
 let PF_EVENTS_LOCATION                  = "location"
 let PF_EVENTS_INFO                      = "info"
@@ -118,7 +120,7 @@ let PF_EVENTS_LONGITUDE                 = "longitude"
 let PF_EVENTS_LATITUDE                  = "latitude"
 
 /* Chat */
-let PF_CHAT_CLASS_NAME					= "Chat"					//	Class name
+let PF_CHAT_CLASS_NAME					= "_Chat"					//	Class name
 let PF_CHAT_USER						= "user"					//	Pointer to User Class
 let PF_CHAT_GROUPID						= "groupId"                 //	String
 let PF_CHAT_TEXT						= "text"					//	String
@@ -127,11 +129,11 @@ let PF_CHAT_VIDEO						= "video"                   //	File
 let PF_CHAT_CREATEDAT					= "createdAt"               //	Date
 
 /* Groups */
-let PF_GROUPS_CLASS_NAME				= "Groups"                  //	Class name
+let PF_GROUPS_CLASS_NAME				= ")Groups"                  //	Class name
 let PF_GROUPS_NAME                      = "name"					//	String
 
 /* Messages*/
-let PF_MESSAGES_CLASS_NAME				= "Messages"				//	Class name
+let PF_MESSAGES_CLASS_NAME				= "_Messages"				//	Class name
 let PF_MESSAGES_USER					= "user"					//	Pointer to User Class
 let PF_MESSAGES_GROUPID					= "groupId"                 //	String
 let PF_MESSAGES_DESCRIPTION				= "description"             //	String

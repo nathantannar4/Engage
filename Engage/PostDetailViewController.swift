@@ -74,6 +74,7 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
         
         self.keyboardObserver.isUserInteractionEnabled = false
         
+        self.textInputBar.addBorder(edges: .top, colour: Color.darkGray, thickness: 0.5)
         self.textInputBar.showTextViewBorder = true
         self.textInputBar.leftView = leftButton
         self.textInputBar.rightView = rightButton
@@ -142,7 +143,12 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
     
     // MARK: PostModificationDelegate
     
-    func didMakeModification() {
+    func didUpdatePost() {
+        self.post = Cache.retrievePost(self.post.object)
+        self.reloadData()
+    }
+    
+    func didDeletePost() {
         self.getNTNavigationContainer?.setCenterView(newView: ActivityFeedViewController())
     }
     
@@ -308,7 +314,7 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
         self.post.object.fetchInBackground { (object, error) in
             guard let updatedPost = object else {
                 Log.write(.error, error.debugDescription)
-                let toast = Toast(text: "Could not fetch updated", button: nil, color: Color.darkGray, height: 44)
+                let toast = Toast(text: "Could not fetch update", button: nil, color: Color.darkGray, height: 44)
                 toast.dismissOnTap = true
                 toast.show(duration: 1.0)
                 return

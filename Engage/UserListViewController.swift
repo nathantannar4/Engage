@@ -20,10 +20,10 @@ class UserListViewController: NTSearchViewController, NTTableViewDataSource, NTT
     var users = [User]()
     
     // MARK: - Initializers
-    public convenience init(engagement: Engagement) {
+    public convenience init(group: Group) {
         self.init()
-        self.searchMembers = engagement.members!
-        self.adminMembers = engagement.admins!
+        self.searchMembers = group.members!
+        self.adminMembers = group.admins!
     }
     
     override func viewDidLoad() {
@@ -100,7 +100,7 @@ class UserListViewController: NTSearchViewController, NTTableViewDataSource, NTT
             cell.image = self.users[indexPath.row].image
             cell.title = self.users[indexPath.row].fullname
             cell.subtitle = "Admin"
-            cell.addBorder(edges: [.bottom, .top], colour: Color.darkGray, thickness: 0.1)
+            cell.addBorder(edges: [.bottom, .top], colour: Color.darkGray, thickness: 0.3)
             return cell
         } else {
             let cell = NTProfileCell.initFromNib()
@@ -108,7 +108,7 @@ class UserListViewController: NTSearchViewController, NTTableViewDataSource, NTT
             cell.setImageViewDefaults()
             cell.image = self.users[indexPath.row].image
             cell.title = self.users[indexPath.row].fullname
-            cell.addBorder(edges: [.bottom, .top], colour: Color.darkGray, thickness: 0.5)
+            cell.addBorder(edges: [.bottom, .top], colour: Color.darkGray, thickness: 0.3)
             return cell
         }
     }

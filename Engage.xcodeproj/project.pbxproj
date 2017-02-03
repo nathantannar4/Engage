@@ -9,12 +9,11 @@
 /* Begin PBXBuildFile section */
 		380A89BD1E3EB55300BD8E37 /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380A89BC1E3EB55300BD8E37 /* PostDetailViewController.swift */; };
 		380A89BF1E3EDC3700BD8E37 /* EngagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380A89BE1E3EDC3700BD8E37 /* EngagementViewController.swift */; };
-		380A89C61E3EEA8500BD8E37 /* UserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380A89C51E3EEA8500BD8E37 /* UserActions.swift */; };
 		380A89C81E3EF36500BD8E37 /* UserListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380A89C71E3EF36500BD8E37 /* UserListViewController.swift */; };
-		380A89CA1E3F1A1900BD8E37 /* EditEngagementGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380A89C91E3F1A1900BD8E37 /* EditEngagementGroupViewController.swift */; };
+		380A89CA1E3F1A1900BD8E37 /* EditGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380A89C91E3F1A1900BD8E37 /* EditGroupViewController.swift */; };
 		380A89CF1E3F1C6700BD8E37 /* UserSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380A89CD1E3F1C6700BD8E37 /* UserSelectionViewController.swift */; };
 		380F6F021E2AC721008C7675 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F6F011E2AC721008C7675 /* Cache.swift */; };
-		380F6F041E2C17C2008C7675 /* NewPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F6F031E2C17C2008C7675 /* NewPostViewController.swift */; };
+		380F6F041E2C17C2008C7675 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F6F031E2C17C2008C7675 /* EditPostViewController.swift */; };
 		38118E201E2701250042F9C1 /* ActivityFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E1F1E2701250042F9C1 /* ActivityFeedViewController.swift */; };
 		38118E221E2705CF0042F9C1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E211E2705CF0042F9C1 /* Post.swift */; };
 		38118E261E2709A80042F9C1 /* Engagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E251E2709A80042F9C1 /* Engagement.swift */; };
@@ -24,6 +23,9 @@
 		38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */; };
 		38118E321E282C6B0042F9C1 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E311E282C6B0042F9C1 /* String.swift */; };
 		38118E341E2830300042F9C1 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E331E2830300042F9C1 /* Comment.swift */; };
+		389937671E41AFE200AA2E1D /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937661E41AFE200AA2E1D /* Group.swift */; };
+		389937691E41B14400AA2E1D /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937681E41B14400AA2E1D /* Team.swift */; };
+		3899376C1E4309C300AA2E1D /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3899376B1E4309C300AA2E1D /* TeamViewController.swift */; };
 		38A5B8DB1E372216009E280B /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8DA1E372216009E280B /* EditProfileViewController.swift */; };
 		38A5B8DD1E372474009E280B /* FormerInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8DC1E372474009E280B /* FormerInputAccessoryView.swift */; };
 		38A5B9071E3724C2009E280B /* ColorListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8E01E3724C2009E280B /* ColorListCell.swift */; };
@@ -66,12 +68,11 @@
 /* Begin PBXFileReference section */
 		380A89BC1E3EB55300BD8E37 /* PostDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		380A89BE1E3EDC3700BD8E37 /* EngagementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngagementViewController.swift; sourceTree = "<group>"; };
-		380A89C51E3EEA8500BD8E37 /* UserActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserActions.swift; sourceTree = "<group>"; };
 		380A89C71E3EF36500BD8E37 /* UserListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListViewController.swift; sourceTree = "<group>"; };
-		380A89C91E3F1A1900BD8E37 /* EditEngagementGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEngagementGroupViewController.swift; sourceTree = "<group>"; };
+		380A89C91E3F1A1900BD8E37 /* EditGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditGroupViewController.swift; sourceTree = "<group>"; };
 		380A89CD1E3F1C6700BD8E37 /* UserSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSelectionViewController.swift; sourceTree = "<group>"; };
 		380F6F011E2AC721008C7675 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
-		380F6F031E2C17C2008C7675 /* NewPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewPostViewController.swift; sourceTree = "<group>"; };
+		380F6F031E2C17C2008C7675 /* EditPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
 		38118E1F1E2701250042F9C1 /* ActivityFeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityFeedViewController.swift; sourceTree = "<group>"; };
 		38118E211E2705CF0042F9C1 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		38118E251E2709A80042F9C1 /* Engagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Engagement.swift; sourceTree = "<group>"; };
@@ -83,6 +84,9 @@
 		38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utilities.m"; sourceTree = "<group>"; };
 		38118E311E282C6B0042F9C1 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		38118E331E2830300042F9C1 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		389937661E41AFE200AA2E1D /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		389937681E41B14400AA2E1D /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		3899376B1E4309C300AA2E1D /* TeamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		38A5B8DA1E372216009E280B /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		38A5B8DC1E372474009E280B /* FormerInputAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormerInputAccessoryView.swift; sourceTree = "<group>"; };
 		38A5B8E01E3724C2009E280B /* ColorListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorListCell.swift; sourceTree = "<group>"; };
@@ -138,13 +142,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		380A89C01E3EDC4300BD8E37 /* Engagement */ = {
+		380A89C01E3EDC4300BD8E37 /* Engagement / Team */ = {
 			isa = PBXGroup;
 			children = (
 				380A89BE1E3EDC3700BD8E37 /* EngagementViewController.swift */,
-				380A89C91E3F1A1900BD8E37 /* EditEngagementGroupViewController.swift */,
+				3899376B1E4309C300AA2E1D /* TeamViewController.swift */,
+				380A89C91E3F1A1900BD8E37 /* EditGroupViewController.swift */,
 			);
-			name = Engagement;
+			name = "Engagement / Team";
 			sourceTree = "<group>";
 		};
 		380A89D11E3F1C6F00BD8E37 /* User Selection */ = {
@@ -161,10 +166,11 @@
 			children = (
 				380F6F011E2AC721008C7675 /* Cache.swift */,
 				38118E271E270D430042F9C1 /* User.swift */,
+				389937661E41AFE200AA2E1D /* Group.swift */,
+				389937681E41B14400AA2E1D /* Team.swift */,
 				38118E251E2709A80042F9C1 /* Engagement.swift */,
 				38118E211E2705CF0042F9C1 /* Post.swift */,
 				38118E331E2830300042F9C1 /* Comment.swift */,
-				380A89C51E3EEA8500BD8E37 /* UserActions.swift */,
 			);
 			name = Objects;
 			sourceTree = "<group>";
@@ -177,7 +183,7 @@
 				380A89D11E3F1C6F00BD8E37 /* User Selection */,
 				380F6F0F1E2C4AA0008C7675 /* Activity Feed */,
 				384628161E373B90004B39D0 /* Profile */,
-				380A89C01E3EDC4300BD8E37 /* Engagement */,
+				380A89C01E3EDC4300BD8E37 /* Engagement / Team */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -187,7 +193,7 @@
 			children = (
 				38118E1F1E2701250042F9C1 /* ActivityFeedViewController.swift */,
 				380A89BC1E3EB55300BD8E37 /* PostDetailViewController.swift */,
-				380F6F031E2C17C2008C7675 /* NewPostViewController.swift */,
+				380F6F031E2C17C2008C7675 /* EditPostViewController.swift */,
 			);
 			name = "Activity Feed";
 			sourceTree = "<group>";
@@ -448,6 +454,7 @@
 			files = (
 				380A89C81E3EF36500BD8E37 /* UserListViewController.swift in Sources */,
 				38A5B91F1E3724C2009E280B /* ProfileFieldCell.swift in Sources */,
+				389937691E41B14400AA2E1D /* Team.swift in Sources */,
 				380A89CF1E3F1C6700BD8E37 /* UserSelectionViewController.swift in Sources */,
 				38A5B8DB1E372216009E280B /* EditProfileViewController.swift in Sources */,
 				38A5B9071E3724C2009E280B /* ColorListCell.swift in Sources */,
@@ -463,17 +470,18 @@
 				38A5B92F1E372653009E280B /* TableFunctions.swift in Sources */,
 				38118E2C1E27E3290042F9C1 /* ProfileViewController.swift in Sources */,
 				38A5B9271E3724C2009E280B /* ProfileLabelCell.swift in Sources */,
+				389937671E41AFE200AA2E1D /* Group.swift in Sources */,
 				38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */,
 				38F7DFC51E24C7320001BA91 /* AppDelegate.swift in Sources */,
 				38118E321E282C6B0042F9C1 /* String.swift in Sources */,
-				380A89CA1E3F1A1900BD8E37 /* EditEngagementGroupViewController.swift in Sources */,
+				380A89CA1E3F1A1900BD8E37 /* EditGroupViewController.swift in Sources */,
 				38A5B9191E3724C2009E280B /* HeaderCell.swift in Sources */,
 				38A5B91D1E3724C2009E280B /* MapCell.swift in Sources */,
 				38A5B9291E3724C2009E280B /* TitleCell.swift in Sources */,
 				38118E2A1E27E25C0042F9C1 /* MenuViewController.swift in Sources */,
 				38A5B9251E3724C2009E280B /* ProfileImageDetailCell.swift in Sources */,
+				3899376C1E4309C300AA2E1D /* TeamViewController.swift in Sources */,
 				38118E341E2830300042F9C1 /* Comment.swift in Sources */,
-				380A89C61E3EEA8500BD8E37 /* UserActions.swift in Sources */,
 				380A89BD1E3EB55300BD8E37 /* PostDetailViewController.swift in Sources */,
 				38A5B90B1E3724C2009E280B /* DetailLeftLabelCell.swift in Sources */,
 				38A5B90D1E3724C2009E280B /* DetailPostCell.swift in Sources */,
@@ -482,7 +490,7 @@
 				38118E221E2705CF0042F9C1 /* Post.swift in Sources */,
 				38F7DFD71E24C8D60001BA91 /* Constants.swift in Sources */,
 				38118E201E2701250042F9C1 /* ActivityFeedViewController.swift in Sources */,
-				380F6F041E2C17C2008C7675 /* NewPostViewController.swift in Sources */,
+				380F6F041E2C17C2008C7675 /* EditPostViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

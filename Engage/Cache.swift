@@ -16,6 +16,8 @@ public class Cache {
     
     public static var Engagements = [Engagement]()
     
+    public static var Teams = [Team]()
+    
     public static var Posts = [Post]()
     
     public static var ids = [String]()
@@ -24,6 +26,9 @@ public class Cache {
         if let user = object as? User {
             Cache.ids.append(user.id)
             Cache.Users.append(user)
+        } else if let team = object as? Team {
+            Cache.ids.append(team.id)
+            Cache.Teams.append(team)
         } else if let engagement = object as? Engagement {
             Cache.ids.append(engagement.id)
             Cache.Engagements.append(engagement)
@@ -37,7 +42,9 @@ public class Cache {
     
     public static func update(_ object: AnyObject) {
         if let user = object as? User {
-            Cache.retrieveUser(user.object)
+            let _ = Cache.retrieveUser(user.object)
+        } else if let team = object as? Team {
+            let _ = Cache.retrieveTeam(team.object)
         } else if let engagement = object as? Engagement {
             let _ = Cache.retrieveEngagement(engagement.object)
         } else if let post = object as? Post {
@@ -75,6 +82,26 @@ public class Cache {
             }
         }
         return nil
+    }
+    
+    public static func retrieveTeam(_ teamObject: PFObject) -> Team {
+        var index = 0
+        for team in Cache.Teams {
+            if team.id == teamObject.objectId! {
+                if team.updatedAt == teamObject.updatedAt {
+                    return team
+                } else {
+                    let updatedTeam = Team(fromObject: teamObject)
+                    Cache.Teams[index] = updatedTeam
+                    return updatedTeam
+                }
+            }
+            index += 1
+        }
+        Log.write(.status, "Caching Team with id \(teamObject.objectId!)")
+        let team = Team(fromObject: teamObject)
+        Cache.add(team)
+        return team
     }
     
     public static func retrieveEngagement(_ engagementObject: PFObject) -> Engagement {

@@ -126,11 +126,20 @@ class EditProfileViewController: FormViewController, UIImagePickerControllerDele
             }.onTextChanged {
                 User.current().phone = $0
         }
+        let infoRow = TextViewRowFormer<FormTextViewCell>() {
+            $0.textView.font = UIFont.systemFont(ofSize: 14)
+            }.configure {
+                $0.text = User.current().bio
+                $0.placeholder = "Bio"
+                $0.rowHeight = 80
+            }.onTextChanged {
+                User.current().bio = $0
+        }
         
         // Create SectionFormers
         let imageSection = SectionFormer(rowFormer: onlyImageRow, coverPhotoSelectionRow, imageRow).set(headerViewFormer: TableFunctions.createHeader(text: "Images"))
         
-        let basicSection = SectionFormer(rowFormer: nameRow, phoneRow).set(headerViewFormer: TableFunctions.createHeader(text: "Basic"))
+        let basicSection = SectionFormer(rowFormer: nameRow, phoneRow, infoRow).set(headerViewFormer: TableFunctions.createHeader(text: "Basic"))
         
         self.former.append(sectionFormer: imageSection, basicSection)
             .onCellSelected { [weak self] _ in

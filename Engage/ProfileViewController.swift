@@ -29,6 +29,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         self.title = self.user.fullname
         self.dataSource = self
         self.delegate = self
+        self.tableView.emptyFooterHeight = 10
         if self.getNTNavigationContainer == nil {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(dismiss(sender:)))
         }
@@ -38,11 +39,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     func pullToRefresh(sender: UIRefreshControl) {
         self.tableView.refreshControl?.beginRefreshing()
-        self.posts.removeAll()
-        self.user = Cache.retrieveUser(self.user.id)
-        self.reloadData()
-        self.queryForPosts()
-        self.tableView.refreshControl?.endRefreshing()
+        self.updateUser()
     }
     
     // MARK: Preperation Functions 
@@ -53,7 +50,12 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         self.tableView.emptyHeaderHeight = 10
         self.fadeInNavBarOnScroll = true
         let refreshControl = UIRefreshControl()
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
+        if self.user.image != nil {
+            refreshControl.tintColor = UIColor.white
+            refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
+        } else {
+            refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
+        }
         refreshControl.addTarget(self, action: #selector(pullToRefresh(sender:)), for: UIControlEvents.valueChanged)
         self.tableView.refreshControl = refreshControl
     }
@@ -66,7 +68,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     }
     
     func createNewPost(sender: UIButton) {
-        let navVC = UINavigationController(rootViewController: NewPostViewController())
+        let navVC = UINavigationController(rootViewController: EditPostViewController())
         self.presentViewController(navVC, from: .bottom, completion: nil)
     }
     
@@ -118,7 +120,11 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     // MARK: PostModificationDelegate
     
-    func didMakeModification() {
+    func didDeletePost() {
+        self.pullToRefresh(sender: self.tableView.refreshControl!)
+    }
+    
+    func didUpdatePost() {
         self.pullToRefresh(sender: self.tableView.refreshControl!)
     }
     
@@ -139,7 +145,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     func tableView(_ tableView: NTTableView, cellForHeaderInSection section: Int) -> NTHeaderCell? {
         if section == 0 {
             return NTHeaderCell()
-        } else if section == 2 {
+        } else if section == 3 {
             let header = NTHeaderCell.initFromNib()
             header.titleLabel.text = "Recent Posts"
             if self.user.id == User.current().id {
@@ -157,16 +163,17 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     }
     
     func numberOfSections(in tableView: NTTableView) -> Int {
-        return 2 + self.posts.count
+        return 3 + self.posts.count
     }
     
     func tableView(_ tableView: NTTableView, rowsInSection section: Int) -> Int {
-        if section >= 2 {
+        if section <= 1 {
+            return 1
+        } else if section == 2 {
+            return (Engagement.current().profileFields?.count ?? 0) + 2
+        } else {
             return 4
-        } else if section == 1 {
-            return Engagement.current().profileFields?.count ?? 0
         }
-        return 1
     }
     
     func tableView(_ tableView: NTTableView, cellForRowAt indexPath: IndexPath) -> NTTableViewCell {
@@ -178,30 +185,66 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewProfilePhoto))
             cell.imageView.addGestureRecognizer(tapGesture)
             cell.name = self.user.fullname
-            cell.title = ""
-            cell.subtitle = ""
+            cell.title = self.user.userExtension?.team?.name
+            cell.subtitle = self.user.userExtension?.team?.position(forUser: self.user)
             if self.user.id == User.current().id {
                 cell.rightButton.setImage(Icon.Apple.editFilled, for: .normal)
                 cell.rightButton.addTarget(self, action: #selector(editProfile(sender:)), for: .touchUpInside)
             }
             return cell
         } else if indexPath.section == 1 {
-            // User Extension Fields
-            let cell = NTLabeledCell.initFromNib()
-            cell.horizontalInset = 10
-            cell.cornerRadius = 5
-            let rows = self.tableView(self.tableView, numberOfRowsInSection: indexPath.section)
-            if indexPath.row == 0 {
-                cell.cornersRounded = [.topLeft, .topRight]
-            } else if indexPath.row == (rows - 1) {
-                cell.cornersRounded = [.bottomLeft, .bottomRight]
-            }
-            cell.title = Engagement.current().profileFields?[indexPath.row]
-            cell.text = self.user.userExtension?.field(forIndex: indexPath.row)
+            // Bio
+            let cell = NTDynamicHeightTextCell.initFromNib()
+            cell.setDefaults()
+            cell.verticalInset = -10
+            cell.contentLabel.textAlignment = .center
+            cell.text = self.user.bio
             return cell
+        } else if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                // Basic Contact Info
+                let cell = NTLabeledCell.initFromNib()
+                cell.horizontalInset = 10
+                cell.cornerRadius = 5
+                let rows = self.tableView(self.tableView, numberOfRowsInSection: indexPath.section)
+                if indexPath.row == 0 {
+                    cell.cornersRounded = [.topLeft, .topRight]
+                } else if indexPath.row == (rows - 1) {
+                    cell.cornersRounded = [.bottomLeft, .bottomRight]
+                }
+                cell.title = "Email"
+                cell.text = self.user.email
+                return cell
+            } else if indexPath.row == 1 {
+                // Basic Contact Info
+                let cell = NTLabeledCell.initFromNib()
+                cell.horizontalInset = 10
+                cell.cornerRadius = 5
+                let rows = self.tableView(self.tableView, numberOfRowsInSection: indexPath.section)
+                if indexPath.row == (rows - 1) {
+                    cell.cornersRounded = [.bottomLeft, .bottomRight]
+                }
+                cell.title = "Phone"
+                cell.text = self.user.phone
+                return cell
+            } else {
+                // User Extension Fields
+                let cell = NTLabeledCell.initFromNib()
+                cell.horizontalInset = 10
+                cell.cornerRadius = 5
+                let rows = self.tableView(self.tableView, numberOfRowsInSection: indexPath.section)
+                if indexPath.row == 0 {
+                    cell.cornersRounded = [.topLeft, .topRight]
+                } else if indexPath.row == (rows - 1) {
+                    cell.cornersRounded = [.bottomLeft, .bottomRight]
+                }
+                cell.title = Engagement.current().profileFields?[indexPath.row - 2]
+                cell.text = self.user.userExtension?.field(forIndex: indexPath.row - 2)
+                return cell
+            }
         } else {
             // User Posts
-            let section = indexPath.section - 2
+            let section = indexPath.section - 3
             switch indexPath.row {
             case 0:
                 let cell = NTProfileCell.initFromNib()
@@ -275,15 +318,17 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
             return nil
         }
         self.fadeInNavBarOnScroll = true
+        self.tableView.refreshControl?.tintColor = UIColor.white
+        self.tableView.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         return image
     }
     
     // MARK: NTTableViewDelegate
     
     func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section >= 2 {
+        if indexPath.section >= 3 {
             if indexPath.section <= (self.posts.count - 1) {
-                let detailVC = PostDetailViewController(post: self.posts[indexPath.section - 2])
+                let detailVC = PostDetailViewController(post: self.posts[indexPath.section - 3])
                 self.navigationController?.pushViewController(detailVC, animated: true)
             }
         }
@@ -291,12 +336,28 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     // MARK: Data Connecter
     
+    func updateUser() {
+        self.user.object.fetchInBackground { (object, error) in
+            guard let updatedUser = object as? PFUser else {
+                Log.write(.error, error.debugDescription)
+                let toast = Toast(text: "Could not fetch update", button: nil, color: Color.darkGray, height: 44)
+                toast.dismissOnTap = true
+                toast.show(duration: 1.0)
+                return
+            }
+            self.user = Cache.retrieveUser(updatedUser)
+            self.reloadData()
+            self.queryForPosts()
+        }
+    }
+    
     func queryForPosts() {
         if self.isQuerying {
             return
         } else {
             self.isQuerying = true
         }
+        self.posts.removeAll()
         let postQuery = PFQuery(className: Engagement.current().queryName! + PF_POST_CLASSNAME)
         postQuery.skip = self.posts.count
         postQuery.limit = 10
@@ -311,9 +372,9 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
             for post in posts {
                 self.posts.append(Cache.retrievePost(post))
             }
-            self.reloadData()
-            self.isQuerying = false
+            self.tableView.reloadData()
             self.tableView.refreshControl?.endRefreshing()
+            self.isQuerying = false
         }
     }
 }
