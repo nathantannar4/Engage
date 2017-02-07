@@ -27,6 +27,7 @@ class EditProfileViewController: FormViewController, UIImagePickerControllerDele
         
         // Configure UI
         self.setTitleView(title: "Profile", subtitle: "Edit", titleColor: Color.defaultTitle , subtitleColor: Color.defaultSubtitle)
+        self.navigationController?.navigationBar.isTranslucent = false
         self.tableView.contentInset.top = 10
         self.tableView.contentInset.bottom = 100
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Google.check, style: .plain, target: self, action: #selector(saveButtonPressed(sender:)))

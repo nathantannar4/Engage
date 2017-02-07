@@ -29,10 +29,13 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
         
         self.dataSource = self
         self.delegate = self
-        self.tableView.contentInset.bottom = 60
         self.prepareTableView()
         self.prepareTextInputBar()
-        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.dismissToolbar()
     }
     
     override func viewWillLayoutSubviews() {
@@ -42,12 +45,14 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
     
     func pullToRefresh(sender: UIRefreshControl) {
         self.tableView.refreshControl?.beginRefreshing()
+        self.dismissToolbar()
         self.updatePost()
     }
     
     // MARK: Preperation Functions
     
     private func prepareTableView() {
+        self.tableView.contentInset.bottom = 60
         self.tableView.emptyHeaderHeight = 10
         self.tableView.emptyFooterHeight = 10
         let refreshControl = UIRefreshControl()
@@ -57,12 +62,6 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
     }
     
     func prepareTextInputBar() {
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChanged(notification:)), name: NSNotification.Name(rawValue: ALKeyboardFrameDidChangeNotification), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
-        
         let leftButton  = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         let rightButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         
@@ -73,17 +72,20 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
         rightButton.addTarget(self, action: #selector(sendComment), for: .touchUpInside)
         
         self.keyboardObserver.isUserInteractionEnabled = false
-        
-        self.textInputBar.addBorder(edges: .top, colour: Color.darkGray, thickness: 0.5)
+        self.tableView.keyboardDismissMode = .interactive
         self.textInputBar.showTextViewBorder = true
         self.textInputBar.leftView = leftButton
         self.textInputBar.rightView = rightButton
         self.textInputBar.frame = CGRect(x: 0, y: view.frame.size.height - textInputBar.defaultHeight, width: view.frame.size.width, height: textInputBar.defaultHeight)
         self.textInputBar.keyboardObserver = keyboardObserver
         self.textInputBar.textView.placeholder = "Add a comment..."
-        
         self.textInputBar.delegate = self
+        
         self.view.addSubview(self.textInputBar)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChanged(notification:)), name: NSNotification.Name(rawValue: ALKeyboardFrameDidChangeNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     // MARK: User Actions
@@ -118,8 +120,13 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
             }
         }
     }
+    
     func addComment(sender: UIButton) {
         self.textInputBar.textView.becomeFirstResponder()
+    }
+    
+    func cancelButtonPressed(sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     func sendComment() {
@@ -314,7 +321,7 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
         self.post.object.fetchInBackground { (object, error) in
             guard let updatedPost = object else {
                 Log.write(.error, error.debugDescription)
-                let toast = Toast(text: "Could not fetch update", button: nil, color: Color.darkGray, height: 44)
+                let toast = Toast(text: "Could not fetch updated", button: nil, color: Color.darkGray, height: 44)
                 toast.dismissOnTap = true
                 toast.show(duration: 1.0)
                 return
@@ -344,21 +351,34 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
     func keyboardFrameChanged(notification: NSNotification) {
         if let userInfo = notification.userInfo {
             let frame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
-            textInputBar.frame.origin.y = frame.origin.y
+            if self.view.frame.width > self.view.frame.height {
+                self.textInputBar.frame.origin.y = frame.origin.y - self.textInputBar.defaultHeight
+            } else {
+                self.textInputBar.frame.origin.y = frame.origin.y - 60
+            }
+            
         }
     }
     
     func keyboardWillShow(notification: NSNotification) {
         if let userInfo = notification.userInfo {
             let frame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
-            self.textInputBar.frame.origin.y = frame.origin.y
+            if self.view.frame.width > self.view.frame.height {
+                self.textInputBar.frame.origin.y = frame.origin.y - self.textInputBar.defaultHeight
+            } else {
+                self.textInputBar.frame.origin.y = frame.origin.y - 60
+            }
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
         if let userInfo = notification.userInfo {
             let frame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
-            textInputBar.frame.origin.y = frame.origin.y
+            if self.view.frame.width > self.view.frame.height {
+                self.textInputBar.frame.origin.y = frame.origin.y - self.textInputBar.defaultHeight
+            } else {
+                self.textInputBar.frame.origin.y = frame.origin.y - 60
+            }
         }
     }
 }

@@ -104,20 +104,38 @@ let PF_CONFERENCE_END                   = "end"                //  Array
 
 
 /* Events */
-let PF_EVENTS_CLASS_NAME                = "_Events"                  //  Class name
-let PF_EVENTS_TITLE                     = "title"                   //  String
-let PF_EVENTS_LOCATION                  = "location"
-let PF_EVENTS_INFO                      = "info"
-let PF_EVENTS_URL                       = "url"
-let PF_EVENTS_START                     = "start"
-let PF_EVENTS_END                       = "end"
-let PF_EVENTS_ORGANIZER                 = "organizer"
-let PF_EVENTS_INVITE_TO                 = "inviteto"
-let PF_EVENTS_CONFIRMED                 = "confirmed"
-let PF_EVENTS_MAYBE                     = "maybe"
-let PF_EVENTS_ALL_DAY                   = "allday"
-let PF_EVENTS_LONGITUDE                 = "longitude"
-let PF_EVENTS_LATITUDE                  = "latitude"
+let PF_EVENT_CLASS_NAME                 = "_Events"                  //  Class name
+let PF_EVENT_NAME                       = "name"                   //  String
+let PF_EVENT_LOCATION                   = "location"
+let PF_EVENT_INFO                       = "info"
+let PF_EVENT_URL                        = "url"
+let PF_EVENT_START                      = "start"
+let PF_EVENT_END                        = "end"
+let PF_EVENT_ORGANIZER                  = "organizer"
+let PF_EVENT_INVITES                    = "invites"
+let PF_EVENT_ACCEPTED                   = "accepted"
+let PF_EVENT_DECLINED                   = "declined"
+let PF_EVENT_LONGITUDE                  = "longitude"
+let PF_EVENT_LATITUDE                   = "latitude"
+let PF_EVENT_PRIVATE                    = "private"
+let PF_EVENT_IMAGE                      = "image"
+
+/* Channel */
+let PF_CHANNEL_CLASS_NAME               = "_Channels"
+let PF_CHANNEL_NAME                     = "name"
+let PF_CHANNEL_IMAGE                    = "image"
+let PF_CHANNEL_MEMBERS                  = "members"
+let PF_CHANNEL_ADMINS                   = "admins"
+let PF_CHANNEL_PRIVATE                  = "private"
+let PF_CHANNEL_UPDATED_AT               = "updatedAt"   
+
+/* Messages*/
+let PF_MESSAGE_CLASS_NAME				= "_Messages"				//	Class name
+let PF_MESSAGE_USER                     = "user"					//	Pointer to User Class
+let PF_MESSAGE_CHANNEL                  = "channel"                 //	String
+let PF_MESSAGE_FILE                     = "file"
+let PF_MESSAGE_TEXT                     = "text"
+let PF_MESSAGE_CREATED_AT               = "createdAt"
 
 /* Chat */
 let PF_CHAT_CLASS_NAME					= "_Chat"					//	Class name
@@ -129,18 +147,9 @@ let PF_CHAT_VIDEO						= "video"                   //	File
 let PF_CHAT_CREATEDAT					= "createdAt"               //	Date
 
 /* Groups */
-let PF_GROUPS_CLASS_NAME				= ")Groups"                  //	Class name
+let PF_GROUPS_CLASS_NAME				= "_Groups"                  //	Class name
 let PF_GROUPS_NAME                      = "name"					//	String
 
-/* Messages*/
-let PF_MESSAGES_CLASS_NAME				= "_Messages"				//	Class name
-let PF_MESSAGES_USER					= "user"					//	Pointer to User Class
-let PF_MESSAGES_GROUPID					= "groupId"                 //	String
-let PF_MESSAGES_DESCRIPTION				= "description"             //	String
-let PF_MESSAGES_LASTUSER				= "lastUser"				//	Pointer to User Class
-let PF_MESSAGES_LASTMESSAGE				= "lastMessage"             //	String
-let PF_MESSAGES_COUNTER					= "counter"                 //	Number
-let PF_MESSAGES_UPDATEDACTION			= "updatedAction"           //	Date
 
 /* Notification */
 let NOTIFICATION_APP_STARTED			= "NCAppStarted"

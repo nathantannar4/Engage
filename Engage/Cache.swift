@@ -18,6 +18,8 @@ public class Cache {
     
     public static var Teams = [Team]()
     
+    public static var Channels = [Channel]()
+    
     public static var Posts = [Post]()
     
     public static var ids = [String]()
@@ -32,6 +34,9 @@ public class Cache {
         } else if let engagement = object as? Engagement {
             Cache.ids.append(engagement.id)
             Cache.Engagements.append(engagement)
+        } else if let channel = object as? Channel {
+            Cache.ids.append(channel.id)
+            Cache.Channels.append(channel)
         } else if let post = object as? Post {
             Cache.ids.append(post.id)
             Cache.Posts.append(post)
@@ -47,6 +52,8 @@ public class Cache {
             let _ = Cache.retrieveTeam(team.object)
         } else if let engagement = object as? Engagement {
             let _ = Cache.retrieveEngagement(engagement.object)
+        } else if let channel = object as? Channel {
+            let _ = Cache.retrieveChannel(channel.object)
         } else if let post = object as? Post {
             let _ = Cache.retrievePost(post.object)
         } else {
@@ -102,6 +109,26 @@ public class Cache {
         let team = Team(fromObject: teamObject)
         Cache.add(team)
         return team
+    }
+    
+    public static func retrieveChannel(_ channelObject: PFObject) -> Channel {
+        var index = 0
+        for channel in Cache.Channels {
+            if channel.id == channelObject.objectId! {
+                if channel.updatedAt == channelObject.updatedAt {
+                    return channel
+                } else {
+                    let updatedChannel = Channel(fromObject: channelObject)
+                    Cache.Channels[index] = updatedChannel
+                    return updatedChannel
+                }
+            }
+            index += 1
+        }
+        Log.write(.status, "Caching Channel with id \(channelObject.objectId!)")
+        let channel = Channel(fromObject: channelObject)
+        Cache.add(channel)
+        return channel
     }
     
     public static func retrieveEngagement(_ engagementObject: PFObject) -> Engagement {

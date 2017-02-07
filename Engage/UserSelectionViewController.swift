@@ -23,9 +23,31 @@ class UserSelectionViewController: UserListViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.delegate = self
-        self.dataSource = self
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(completedSelection(sender:)))
+    }
+    
+    override func updateResults() {
+        let query = PFUser.query()
+        query?.limit = 1000
+        query?.order(byAscending: PF_USER_FULLNAME)
+        query?.whereKey(PF_USER_OBJECTID, containedIn: self.searchMembers)
+        query?.whereKey(PF_USER_FULLNAME_LOWER, contains: self.searchBar.text?.lowercased())
+        query?.findObjectsInBackground(block: { (objects, error) in
+            guard let users = objects as? [PFUser] else {
+                Log.write(.error, error.debugDescription)
+                let toast = Toast(text: "Could not fetch users", button: nil, color: Color.darkGray, height: 44)
+                toast.dismissOnTap = true
+                toast.show(duration: 1.0)
+                return
+            }
+            self.users.removeAll()
+            for user in users {
+                if user.objectId! != User.current().id {
+                    self.users.append(Cache.retrieveUser(user))
+                }
+            }
+            self.reloadData()
+        })
     }
     
     func completedSelection(sender: UIButton) {
@@ -33,8 +55,9 @@ class UserSelectionViewController: UserListViewController {
         for id in self.selectedUsers {
             users.append(Cache.retrieveUser(id)!)
         }
-        self.selectionDelegate.didMakeSelection(ofUsers: users)
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+            self.selectionDelegate.didMakeSelection(ofUsers: users)
+        })
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -45,7 +68,7 @@ class UserSelectionViewController: UserListViewController {
         return cell
     }
     
-    override func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
         if self.allowMultipleSelection {
             guard let cell = self.tableView.cellForRow(at: indexPath) else {
                 return

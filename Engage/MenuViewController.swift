@@ -21,8 +21,8 @@ class MenuViewController: UITableViewController {
         
         self.prepareTable()
         
-        self.viewControllers = [ActivityFeedViewController(), ProfileViewController(user: User.current()), EngagementViewController(engagement: Engagement.current()), NTTableViewController()]
-        self.titles = ["Activity Feed", "Profile", Engagement.current().name ?? "Engagement", User.current().userExtension?.team?.name ?? "Join a Team"] as [String]
+        self.viewControllers = [ActivityFeedViewController(), ProfileViewController(user: User.current()), EngagementViewController(engagement: Engagement.current()), JoinTeamViewController(), MessagesViewController()]
+        self.titles = ["Activity Feed", "Profile", Engagement.current().name ?? "Engagement", User.current().userExtension?.team?.name ?? "Join a Team", "Messages"] as [String]
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,6 +39,19 @@ class MenuViewController: UITableViewController {
         return UITableViewAutomaticDimension
     }
     
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UITableViewHeaderFooterView()
+        header.textLabel?.text = "Menu"
+        header.textLabel?.textColor = Color.defaultNavbarBackground
+        header.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightBold)
+        header.contentView.backgroundColor = Color.defaultNavbarTint
+        return header
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -51,7 +64,8 @@ class MenuViewController: UITableViewController {
         let cell = UITableViewCell()
         cell.contentView.backgroundColor = self.tableView.backgroundColor
         cell.textLabel?.text = self.titles[indexPath.row]
-        cell.textLabel?.textColor = Color.darkGray
+        cell.textLabel?.textColor = Color.defaultNavbarBackground
+        cell.selectionStyle = .none
         if indexPath.row == currentIndex {
             cell.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
         } else {
@@ -69,7 +83,7 @@ class MenuViewController: UITableViewController {
         self.tableView.contentInset.top = 20
         self.tableView.separatorStyle = .none
         self.tableView.bounces = false
-        self.tableView.backgroundColor = UIColor.groupTableViewBackground
+        self.tableView.backgroundColor = Color.defaultNavbarTint
         self.tableView.estimatedRowHeight = 44
     }
     
@@ -81,4 +95,3 @@ class MenuViewController: UITableViewController {
         self.getNTNavigationContainer?.toggleLeftPanel()
     }
 }
-

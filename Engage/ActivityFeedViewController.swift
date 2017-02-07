@@ -52,7 +52,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     
     func prepareButton() {
         let button = UIButton()
-        button.frame = CGRect(x: self.view.frame.width - 75, y: self.view.frame.height - 75, width: 50, height: 50)
+        button.frame = CGRect(x: self.view.frame.width - 75, y: self.view.frame.height - 175, width: 50, height: 50)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.backgroundColor = Color.defaultNavbarBackground
         button.addTarget(self, action: #selector(createNewPost(sender:)), for: .touchUpInside)
@@ -101,7 +101,9 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     func addComment(sender: UIButton) {
         let detailVC = PostDetailViewController(post: self.posts[sender.tag])
         detailVC.textInputBar.textView.becomeFirstResponder()
+        self.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(detailVC, animated: true)
+        self.hidesBottomBarWhenPushed = false
     }
     
     func handleMore(sender: UIButton) {
@@ -129,7 +131,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     
     func createNewPost(sender: UIButton) {
         let navVC = UINavigationController(rootViewController: EditPostViewController())
-        self.presentViewController(navVC, from: .bottom, completion: nil)
+        self.present(navVC, animated: true, completion: nil)
     }
     
     // MARK: NTTableViewDataSource
@@ -147,7 +149,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     }
     
     func numberOfSections(in tableView: NTTableView) -> Int {
-        return posts.count
+        return self.posts.count
     }
     
     func tableView(_ tableView: NTTableView, rowsInSection section: Int) -> Int {
@@ -229,7 +231,9 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     
     func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = PostDetailViewController(post: self.posts[indexPath.section])
+        self.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(detailVC, animated: true)
+        self.hidesBottomBarWhenPushed = false
     }
     
     // MARK: UITableViewDelegate
@@ -272,7 +276,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     // MARK: DZNEmptyDataSetSource
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        return NSAttributedString(string: Engagement.current().name ?? "Engage", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 36)])
+        return NSAttributedString(string: "Engage", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 36)])
     }
 }
 

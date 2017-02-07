@@ -24,14 +24,13 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.stretchyHeaderHeight = 250
+        self.title = self.engagement.name
         self.dataSource = self
         self.delegate = self
         if self.getNTNavigationContainer == nil {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(dismiss(sender:)))
         }
         self.prepareTableView()
-        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
     }
     
     func pullToRefresh(sender: UIRefreshControl) {
@@ -48,7 +47,7 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         self.tableView.emptyHeaderHeight = 10
         self.fadeInNavBarOnScroll = true
         let refreshControl = UIRefreshControl()
-        if self.engagement.image != nil {
+        if self.engagement.coverImage != nil {
             refreshControl.tintColor = UIColor.white
             refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         } else {
@@ -67,7 +66,9 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     
     func showMembers(sender: AnyObject) {
         let selectionVC = UserListViewController(group: Engagement.current())
+        self.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(selectionVC, animated: true)
+        self.hidesBottomBarWhenPushed = false
     }
     
     func createTeam(sender: UIButton) {
@@ -235,30 +236,10 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         if indexPath.section == 2 {
             let team = self.engagement.teams[indexPath.row]
             let teamVC = TeamViewController(team: team)
+            self.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(teamVC, animated: true)
+            self.hidesBottomBarWhenPushed = false
         }
-    }
-    
-    // MARK: UIScrollViewDelegate
-    
-     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        let offset = scrollView.contentOffset.y + self.tableView.contentInset.top
-        var headerTransform = CATransform3DIdentity
-        
-        if offset < 0 {
-            let headerScaleFactor:CGFloat = -(offset) / self.stretchyView.bounds.height
-            let headerSizevariation = ((self.stretchyView.bounds.height * (1.0 + headerScaleFactor)) - self.stretchyView.bounds.height)/2.0
-            headerTransform = CATransform3DTranslate(headerTransform, 0, headerSizevariation, 0)
-            headerTransform = CATransform3DScale(headerTransform, 1.0 + headerScaleFactor, 1.0 + headerScaleFactor, 0)
-            
-            self.stretchyView.layer.transform = headerTransform
-        } else {
-            headerTransform = CATransform3DTranslate(headerTransform, 0, max(-self.stretchyHeaderHeight, -offset), 0)
-        }
-        
-        // Apply Transformation
-        self.stretchyView.layer.transform = headerTransform
     }
 }
 

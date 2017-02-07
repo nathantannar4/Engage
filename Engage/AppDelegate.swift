@@ -34,12 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
  
         // Set default appearances
         UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -60), for:UIBarMetrics.default)
-        Color.defaultButtonTint = Color.blue
-        Color.defaultNavbarTint = Color.blue
+        Color.defaultButtonTint = Color.red
+        Color.defaultNavbarTint = Color.red
         Color.defaultTitle = UIColor.black
         UINavigationBar.appearance().tintColor = Color.defaultNavbarTint
         UINavigationBar.appearance().backgroundColor = Color.defaultNavbarBackground
-        
         
         // Register for push notifications
         let center = UNUserNotificationCenter.current()

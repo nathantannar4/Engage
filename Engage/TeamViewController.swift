@@ -24,7 +24,7 @@ class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableV
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.stretchyHeaderHeight = 250
+        self.title = self.team.name
         self.dataSource = self
         self.delegate = self
         if self.getNTNavigationContainer == nil {
@@ -47,7 +47,7 @@ class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableV
         self.tableView.emptyHeaderHeight = 10
         self.fadeInNavBarOnScroll = true
         let refreshControl = UIRefreshControl()
-        if self.team.image != nil {
+        if self.team.coverImage != nil {
             refreshControl.tintColor = UIColor.white
             refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         } else {
@@ -66,7 +66,9 @@ class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableV
     
     func showMembers(sender: UIButton) {
         let selectionVC = UserListViewController(group: self.team)
+        self.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(selectionVC, animated: true)
+        self.hidesBottomBarWhenPushed = false
     }
     
     func viewProfilePhoto() {
@@ -197,28 +199,6 @@ class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableV
         self.tableView.refreshControl?.tintColor = UIColor.white
         self.tableView.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         return image
-    }
-    
-    // MARK: - UIScrollViewDelegate
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        let offset = scrollView.contentOffset.y + self.tableView.contentInset.top
-        var headerTransform = CATransform3DIdentity
-        
-        if offset < 0 {
-            let headerScaleFactor:CGFloat = -(offset) / self.stretchyView.bounds.height
-            let headerSizevariation = ((self.stretchyView.bounds.height * (1.0 + headerScaleFactor)) - self.stretchyView.bounds.height)/2.0
-            headerTransform = CATransform3DTranslate(headerTransform, 0, headerSizevariation, 0)
-            headerTransform = CATransform3DScale(headerTransform, 1.0 + headerScaleFactor, 1.0 + headerScaleFactor, 0)
-            
-            self.stretchyView.layer.transform = headerTransform
-        } else {
-            headerTransform = CATransform3DTranslate(headerTransform, 0, max(-self.stretchyHeaderHeight, -offset), 0)
-        }
-        
-        // Apply Transformation
-        self.stretchyView.layer.transform = headerTransform
     }
 }
 

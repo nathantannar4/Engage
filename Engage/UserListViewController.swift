@@ -11,9 +11,8 @@ import UIKit
 import NTUIKit
 import Parse
 
-class UserListViewController: NTSearchViewController, NTTableViewDataSource, NTTableViewDelegate {
+class UserListViewController: NTSearchViewController, NTTableViewDelegate {
     
-    var positionIDs = [String]()
     var searchMembers = [String]()
     var adminMembers = [String]()
     
@@ -30,51 +29,26 @@ class UserListViewController: NTSearchViewController, NTTableViewDataSource, NTT
         super.viewDidLoad()
         
         self.delegate = self
-        self.dataSource = self
+        self.tableView.separatorStyle = .singleLine
     }
     
     // MARK: User Actions
     
     override func updateResults() {
-        self.users.removeAll()
         let query = PFUser.query()
-        query?.limit = self.searchMembers.count
+        query?.limit = 1000
         query?.order(byAscending: PF_USER_FULLNAME)
         query?.whereKey(PF_USER_OBJECTID, containedIn: self.searchMembers)
-        query?.whereKey(PF_USER_OBJECTID, notContainedIn: Cache.ids)
         query?.whereKey(PF_USER_FULLNAME_LOWER, contains: self.searchBar.text?.lowercased())
         query?.findObjectsInBackground(block: { (objects, error) in
             guard let users = objects as? [PFUser] else {
                 Log.write(.error, error.debugDescription)
-                let toast = Toast(text: "Could not fetch users", button: nil, color: Color.darkGray, height: 44)
-                toast.dismissOnTap = true
-                toast.show(duration: 1.0)
+                Toast.genericErrorMessage()
                 return
             }
+            self.users.removeAll()
             for user in users {
                 self.users.append(Cache.retrieveUser(user))
-            }
-            for id in Cache.ids {
-                if self.searchMembers.contains(id) {
-                    let user = Cache.retrieveUser(id)!
-                    if let name = user.fullname?.lowercased() {
-                        if let searchText = self.searchBar.text {
-                            if searchText.isEmpty {
-                                if !self.users.contains(where: { (user) -> Bool in
-                                    return true
-                                }) {
-                                    self.users.append(user)
-                                }
-                            } else if name.contains(searchText.lowercased()) {
-                                if !self.users.contains(where: { (user) -> Bool in
-                                    return true
-                                }) {
-                                    self.users.append(user)
-                                }
-                            }
-                        }
-                    }
-                }
             }
             self.reloadData()
         })
@@ -82,40 +56,39 @@ class UserListViewController: NTSearchViewController, NTTableViewDataSource, NTT
     
     // MARK: NTTableViewDataSource
     
-    func numberOfSections(in tableView: NTTableView) -> Int {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(_ tableView: NTTableView, rowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.users.count
     }
     
-    func tableView(_ tableView: NTTableView, cellForRowAt indexPath: IndexPath) -> NTTableViewCell {
-        if self.users.count == 0 {
-            return NTTableViewCell()
-        }
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        
+        cell.textLabel?.text = self.users[indexPath.row].fullname
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
         if self.adminMembers.contains(self.users[indexPath.row].id) {
-            let cell = NTDetailedProfileCell.initFromNib()
-            cell.setImageViewDefaults()
-            cell.image = self.users[indexPath.row].image
-            cell.title = self.users[indexPath.row].fullname
-            cell.subtitle = "Admin"
-            cell.addBorder(edges: [.bottom, .top], colour: Color.darkGray, thickness: 0.3)
-            return cell
-        } else {
-            let cell = NTProfileCell.initFromNib()
-            cell.setDefaults()
-            cell.setImageViewDefaults()
-            cell.image = self.users[indexPath.row].image
-            cell.title = self.users[indexPath.row].fullname
-            cell.addBorder(edges: [.bottom, .top], colour: Color.darkGray, thickness: 0.3)
-            return cell
+            cell.detailTextLabel?.text = "Admin"
+            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFontWeightMedium)
+            cell.detailTextLabel?.textColor = Color.darkGray
         }
+        cell.imageView?.image = self.users[indexPath.row].image
+        cell.imageView?.contentMode = .scaleAspectFill
+        cell.imageView?.layer.cornerRadius = 22
+        cell.imageView?.layer.borderWidth = 1
+        cell.imageView?.layer.borderColor = Color.defaultNavbarTint.cgColor
+        cell.imageView?.layer.masksToBounds = true
+        
+        return cell
     }
     
-    // MARK: NTTableViewDelegate
-    
-    func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let profileVC = ProfileViewController(user: self.users[indexPath.row])
         self.present(UINavigationController(rootViewController: profileVC), animated: true, completion: nil)
     }

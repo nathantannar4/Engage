@@ -119,10 +119,8 @@ public class Group {
     public init(fromObject object: PFObject) {
         self.object = object
         
-        guard let logoFile = self.object.value(forKey: PF_ENGAGEMENTS_LOGO) as? PFFile else {
-            return
-        }
-        logoFile.getDataInBackground { (data, error) in
+        let logoFile = self.object.value(forKey: PF_ENGAGEMENTS_LOGO) as? PFFile
+        logoFile?.getDataInBackground { (data, error) in
             guard let imageData = data else {
                 Log.write(.error, error.debugDescription)
                 return
@@ -130,10 +128,8 @@ public class Group {
             self.image = UIImage(data: imageData)
         }
         
-        guard let coverFile = self.object.value(forKey: PF_ENGAGEMENTS_COVER_PHOTO) as? PFFile else {
-            return
-        }
-        coverFile.getDataInBackground { (data, error) in
+        let coverFile = self.object.value(forKey: PF_ENGAGEMENTS_COVER_PHOTO) as? PFFile
+        coverFile?.getDataInBackground { (data, error) in
             guard let imageData = data else {
                 Log.write(.error, error.debugDescription)
                 return
@@ -168,14 +164,11 @@ public class Group {
             // Maps positions to the user ids
             positionIds.append((self.object.value(forKey: position.replacingOccurrences(of: " ", with: "").lowercased()) as? String) ?? String())
         }
-        var position = String()
         for id in positionIds {
             if user.id == id {
-                position += (positions[positionIds.index(of: id)!] + " / ")
+                return positions[positionIds.index(of: id)!]
             }
         }
-        let range = position.index(position.endIndex, offsetBy: -3)..<position.endIndex
-        position.removeSubrange(range)
-        return position.isEmpty ? nil : position
+        return nil
     }
 }

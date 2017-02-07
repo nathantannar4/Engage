@@ -33,6 +33,7 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
         super.viewDidLoad()
         
         self.setTitleView(title: self.post == nil ? "Create" : "Edit", subtitle: "Post", titleColor: Color.defaultTitle, subtitleColor: Color.defaultSubtitle)
+        self.navigationController?.navigationBar.isTranslucent = false
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Google.check, style: .plain, target: self, action: #selector(saveButtonPressed(sender:)))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(cancelButtonPressed(sender:)))
         
@@ -169,13 +170,14 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
         
         // Create SectionFormers
         let section = SectionFormer(rowFormer: infoRow, imageOptionsRow)
-        if self.image != nil {
-            section.insert(rowFormer: onlyImageRow, below: infoRow)
-        }
         
         self.former.append(sectionFormer: section)
             .onCellSelected { [weak self] _ in
                 self?.formerInputAccessoryView.update()
+        }
+        
+        if self.image != nil {
+            self.former.insertUpdate(rowFormer: self.onlyImageRow, below: infoRow)
         }
     }
     

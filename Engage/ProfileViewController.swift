@@ -35,6 +35,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         }
         self.prepareTableView()
         self.queryForPosts()
+        self.tableView.contentOffset = CGPoint(x: 0, y: 0 - self.tableView.contentInset.top)
     }
     
     func pullToRefresh(sender: UIRefreshControl) {
@@ -50,7 +51,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         self.tableView.emptyHeaderHeight = 10
         self.fadeInNavBarOnScroll = true
         let refreshControl = UIRefreshControl()
-        if self.user.image != nil {
+        if self.user.coverImage != nil {
             refreshControl.tintColor = UIColor.white
             refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         } else {
@@ -62,6 +63,10 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     // MARK: User Action
     
+    func logout(sender: UIButton) {
+        User.current().logout(self)
+    }
+    
     func editProfile(sender: UIButton) {
         let navVC = UINavigationController(rootViewController: EditProfileViewController())
         self.present(navVC, animated: true, completion: nil)
@@ -69,7 +74,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     func createNewPost(sender: UIButton) {
         let navVC = UINavigationController(rootViewController: EditPostViewController())
-        self.presentViewController(navVC, from: .bottom, completion: nil)
+        self.present(navVC, animated: true, completion: nil)
     }
     
     func toggleLike(sender: UIButton) {
@@ -106,7 +111,9 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     func addComment(sender: UIButton) {
         let detailVC = PostDetailViewController(post: self.posts[sender.tag])
         detailVC.textInputBar.textView.becomeFirstResponder()
+        self.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(detailVC, animated: true)
+        self.hidesBottomBarWhenPushed = false
     }
     
     func handleMore(sender: UIButton) {
@@ -167,8 +174,10 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     }
     
     func tableView(_ tableView: NTTableView, rowsInSection section: Int) -> Int {
-        if section <= 1 {
+        if section == 0 {
             return 1
+        } else if section == 1 {
+            return self.user.bio != nil ? 1 : 0
         } else if section == 2 {
             return (Engagement.current().profileFields?.count ?? 0) + 2
         } else {
@@ -188,6 +197,8 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
             cell.title = self.user.userExtension?.team?.name
             cell.subtitle = self.user.userExtension?.team?.position(forUser: self.user)
             if self.user.id == User.current().id {
+                cell.leftButton.setTitle("Logout", for: .normal)
+                cell.leftButton.addTarget(self, action: #selector(logout(sender:)), for: .touchUpInside)
                 cell.rightButton.setImage(Icon.Apple.editFilled, for: .normal)
                 cell.rightButton.addTarget(self, action: #selector(editProfile(sender:)), for: .touchUpInside)
             }
@@ -327,9 +338,11 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section >= 3 {
-            if indexPath.section <= (self.posts.count - 1) {
+            if (indexPath.section - 3) <= (self.posts.count - 1) {
                 let detailVC = PostDetailViewController(post: self.posts[indexPath.section - 3])
+                self.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(detailVC, animated: true)
+                self.hidesBottomBarWhenPushed = false
             }
         }
     }

@@ -43,6 +43,7 @@ public class User {
         }
         set {
             self.object[PF_USER_FULLNAME] = newValue
+            self.object[PF_USER_FULLNAME] = newValue?.lowercased()
         }
     }
     public var bio: String? {
@@ -90,12 +91,11 @@ public class User {
     
     public init(fromObject object: PFUser) {
         self.object = object
-        
+        self.image = UIImage(named: "profile_blank")
+            
         Log.write(.status, "Downloading images for user with id \(self.id)")
-        guard let logoFile = self.object.value(forKey: PF_USER_PICTURE) as? PFFile else {
-            return
-        }
-        logoFile.getDataInBackground { (data, error) in
+        let logoFile = self.object.value(forKey: PF_USER_PICTURE) as? PFFile
+        logoFile?.getDataInBackground { (data, error) in
             guard let imageData = data else {
                 Log.write(.error, error.debugDescription)
                 return
@@ -103,10 +103,8 @@ public class User {
             self.image = UIImage(data: imageData)
         }
         
-        guard let coverFile = self.object.value(forKey: PF_USER_COVER) as? PFFile else {
-            return
-        }
-        coverFile.getDataInBackground { (data, error) in
+        let coverFile = self.object.value(forKey: PF_USER_COVER) as? PFFile
+        coverFile?.getDataInBackground { (data, error) in
             guard let imageData = data else {
                 Log.write(.error, error.debugDescription)
                 return
@@ -116,7 +114,6 @@ public class User {
         if Engagement.current() != nil {
             self.loadExtension()
         }
-
     }
     
     // MARK: Public Functions
@@ -181,6 +178,29 @@ public class User {
     
     public class func didLogin(with user: PFUser) {
         User._current = User(fromObject: user)
+    }
+    
+    public func logout(_ target: UIViewController) {
+        if self.id == User.current().id {
+            
+            let actionSheetController: UIAlertController = UIAlertController(title: "Are you sure?", message: "", preferredStyle: .alert)
+            actionSheetController.view.tintColor = Color.defaultNavbarTint
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
+            actionSheetController.addAction(cancelAction)
+            
+            let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .default) { action -> Void in
+                PFUser.logOut()
+                let navContainer = NTNavigationContainer(centerView: LoginViewController())
+                UIApplication.shared.keyWindow?.rootViewController = navContainer
+            }
+            actionSheetController.addAction(logoutAction)
+            
+            actionSheetController.popoverPresentationController?.sourceView = target.view
+            target.present(actionSheetController, animated: true, completion: nil)
+        } else {
+            Log.write(.warning, "User is not logged in")
+        }
     }
     
     // MARK: User Extension

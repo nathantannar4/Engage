@@ -36,6 +36,7 @@ class EditGroupViewController: FormViewController, UserSelectionDelegate, UIImag
         super.viewDidLoad()
         
         self.setTitleView(title: self.group.name, subtitle: "Edit", titleColor: Color.defaultTitle, subtitleColor: Color.defaultSubtitle)
+        self.navigationController?.navigationBar.isTranslucent = false
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Google.check, style: .plain, target: self, action: #selector(saveButtonPressed(sender:)))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(cancelButtonPressed(sender:)))
         if Color.defaultNavbarBackground.isLight {

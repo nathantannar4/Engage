@@ -51,6 +51,33 @@ public class Engagement: Group {
         }
     }
     public var teams = [Team]()
+    public var chats = [Channel]()
+    public var chatNames: [String]? {
+        get {
+            var array = [String]()
+            for chat in self.chats {
+                guard let name = chat.name else {
+                    return nil
+                }
+                array.append(name)
+            }
+            return array
+        }
+    }
+
+    public var channels = [Channel]()
+    public var channelNames: [String]? {
+        get {
+            var array = [String]()
+            for channel in self.channels {
+                guard let name = channel.name else {
+                    return nil
+                }
+                array.append(name)
+            }
+            return array
+        }
+    }
     
     // MARK: Initialization
     
@@ -68,6 +95,26 @@ public class Engagement: Group {
             }
             for team in teams {
                 self.teams.append(Cache.retrieveTeam(team))
+            }
+        }
+        
+        let channelQuery = PFQuery(className: self.queryName! + PF_CHANNEL_CLASS_NAME)
+        channelQuery.order(byAscending: PF_CHANNEL_UPDATED_AT)
+        channelQuery.findObjectsInBackground { (objects, error) in
+            guard let channels = objects else {
+                Log.write(.error, error.debugDescription)
+                let toast = Toast(text: "Could not fetch channels", button: nil, color: Color.darkGray, height: 44)
+                toast.show(duration: 2.0)
+                return
+            }
+            for channel in channels {
+                if let members = channel.value(forKey: PF_CHANNEL_MEMBERS) as? [String] {
+                    if members.count > 2 {
+                        self.channels.append(Cache.retrieveChannel(channel))
+                    } else {
+                        self.chats.append(Cache.retrieveChannel(channel))
+                    }
+                }
             }
         }
     }
@@ -90,7 +137,7 @@ public class Engagement: Group {
     public class func didSelect(with engagement: PFObject) {
         self._current = Cache.retrieveEngagement(engagement)
         User.current().loadExtension()
-        let navContainer = NTNavigationContainer(centerView: ActivityFeedViewController(), leftView: MenuViewController(), rightView: nil)
+        let navContainer = NTNavigationContainer(centerView: TabBarController())
         navContainer.leftPanelWidth = 200
         UIApplication.shared.keyWindow?.rootViewController = navContainer
     }
