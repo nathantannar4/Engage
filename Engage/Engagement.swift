@@ -15,7 +15,10 @@ public class Engagement: Group {
     
     public var queryName: String? {
         get {
-            return self.name?.replacingOccurrences(of: " ", with: "_")
+            guard let name = self.name?.replacingOccurrences(of: " ", with: "_") else {
+                return String()
+            }
+            return name
         }
     }
     public var profileFields: [String]? {
@@ -66,6 +69,32 @@ public class Engagement: Group {
     }
 
     public var channels = [Channel]()
+    public var myChannels: [Channel]! {
+        get {
+            return self.channels.filter({ (channel) -> Bool in
+                guard let members = channel.members else {
+                    return false
+                }
+                if members.contains(User.current().id) {
+                    return true
+                }
+                return false
+            })
+        }
+    }
+    public var otherChannels: [Channel]! {
+        get {
+            return self.channels.filter({ (channel) -> Bool in
+                guard let members = channel.members else {
+                    return false
+                }
+                if !members.contains(User.current().id) {
+                    return true
+                }
+                return false
+            })
+        }
+    }
     public var channelNames: [String]? {
         get {
             var array = [String]()
@@ -84,39 +113,8 @@ public class Engagement: Group {
     public override init(fromObject object: PFObject) {
         super.init(fromObject: object)
         
-        let teamQuery = PFQuery(className: self.queryName! + PF_SUBGROUP_CLASS_NAME)
-        teamQuery.order(byAscending: PF_SUBGROUP_NAME)
-        teamQuery.findObjectsInBackground { (objects, error) in
-            guard let teams = objects else {
-                Log.write(.error, error.debugDescription)
-                let toast = Toast(text: "Could not fetch teams", button: nil, color: Color.darkGray, height: 44)
-                toast.show(duration: 2.0)
-                return
-            }
-            for team in teams {
-                self.teams.append(Cache.retrieveTeam(team))
-            }
-        }
-        
-        let channelQuery = PFQuery(className: self.queryName! + PF_CHANNEL_CLASS_NAME)
-        channelQuery.order(byAscending: PF_CHANNEL_UPDATED_AT)
-        channelQuery.findObjectsInBackground { (objects, error) in
-            guard let channels = objects else {
-                Log.write(.error, error.debugDescription)
-                let toast = Toast(text: "Could not fetch channels", button: nil, color: Color.darkGray, height: 44)
-                toast.show(duration: 2.0)
-                return
-            }
-            for channel in channels {
-                if let members = channel.value(forKey: PF_CHANNEL_MEMBERS) as? [String] {
-                    if members.count > 2 {
-                        self.channels.append(Cache.retrieveChannel(channel))
-                    } else {
-                        self.chats.append(Cache.retrieveChannel(channel))
-                    }
-                }
-            }
-        }
+        self.updateTeams()
+        self.updateChannels()
     }
     
     
@@ -130,12 +128,64 @@ public class Engagement: Group {
         return engagement
     }
     
+    public func updateTeams() {
+        let teamQuery = PFQuery(className: self.queryName! + PF_SUBGROUP_CLASS_NAME)
+        teamQuery.order(byAscending: PF_SUBGROUP_NAME)
+        teamQuery.findObjectsInBackground { (objects, error) in
+            guard let teams = objects else {
+                Log.write(.error, error.debugDescription)
+                let toast = Toast(text: "Could not fetch teams", button: nil, color: Color.darkGray, height: 44)
+                toast.show(duration: 2.0)
+                return
+            }
+            for team in teams {
+                self.teams.append(Cache.retrieveTeam(team))
+            }
+        }
+
+    }
+    
+    public func updateChannels() {
+        let chatQuery = PFQuery(className: self.queryName! + PF_CHANNEL_CLASS_NAME)
+        chatQuery.whereKey(PF_CHANNEL_MEMBERS, contains: User.current().id)
+        chatQuery.whereKey(PF_CHANNEL_PRIVATE, equalTo: true)
+        chatQuery.order(byAscending: PF_CHANNEL_UPDATED_AT)
+        chatQuery.findObjectsInBackground { (objects, error) in
+            guard let chats = objects else {
+                Log.write(.error, error.debugDescription)
+                let toast = Toast(text: "Could not fetch private messages", button: nil, color: Color.darkGray, height: 44)
+                toast.show(duration: 2.0)
+                return
+            }
+            self.chats.removeAll()
+            for chat in chats {
+                self.chats.append(Cache.retrieveChannel(chat))
+            }
+        }
+        
+        let channelQuery = PFQuery(className: self.queryName! + PF_CHANNEL_CLASS_NAME)
+        channelQuery.whereKey(PF_CHANNEL_PRIVATE, equalTo: false)
+        channelQuery.order(byAscending: PF_CHANNEL_UPDATED_AT)
+        channelQuery.findObjectsInBackground { (objects, error) in
+            guard let channels = objects else {
+                Log.write(.error, error.debugDescription)
+                let toast = Toast(text: "Could not fetch channels", button: nil, color: Color.darkGray, height: 44)
+                toast.show(duration: 2.0)
+                return
+            }
+            self.channels.removeAll()
+            for channel in channels {
+                self.channels.append(Cache.retrieveChannel(channel))
+            }
+        }
+    }
+    
     public func undoModifications() {
         Engagement._current = Cache.retrieveEngagement(self.object)
     }
     
     public class func didSelect(with engagement: PFObject) {
-        self._current = Cache.retrieveEngagement(engagement)
+        Engagement._current = Cache.retrieveEngagement(engagement)
         User.current().loadExtension()
         let navContainer = NTNavigationContainer(centerView: TabBarController())
         navContainer.leftPanelWidth = 200

@@ -71,6 +71,9 @@
 		389937F01E46D9BD00AA2E1D /* CVWeekdaySymbolType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937D31E46D9BD00AA2E1D /* CVWeekdaySymbolType.swift */; };
 		389937F31E46DFEA00AA2E1D /* JoinTeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937F21E46DFEA00AA2E1D /* JoinTeamViewController.swift */; };
 		389937F51E47B0B700AA2E1D /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937F41E47B0B700AA2E1D /* TabBarController.swift */; };
+		3899381B1E4D16E700AA2E1D /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389938181E4D16E700AA2E1D /* PushNotification.swift */; };
+		3899381D1E4D16E700AA2E1D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3899381A1E4D16E700AA2E1D /* Device.swift */; };
+		3899381F1E4D1C2200AA2E1D /* EditChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3899381E1E4D1C2200AA2E1D /* EditChannelViewController.swift */; };
 		38A5B8DB1E372216009E280B /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8DA1E372216009E280B /* EditProfileViewController.swift */; };
 		38A5B8DD1E372474009E280B /* FormerInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8DC1E372474009E280B /* FormerInputAccessoryView.swift */; };
 		38A5B9071E3724C2009E280B /* ColorListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8E01E3724C2009E280B /* ColorListCell.swift */; };
@@ -182,6 +185,9 @@
 		389937D31E46D9BD00AA2E1D /* CVWeekdaySymbolType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVWeekdaySymbolType.swift; sourceTree = "<group>"; };
 		389937F21E46DFEA00AA2E1D /* JoinTeamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinTeamViewController.swift; sourceTree = "<group>"; };
 		389937F41E47B0B700AA2E1D /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		389938181E4D16E700AA2E1D /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
+		3899381A1E4D16E700AA2E1D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		3899381E1E4D1C2200AA2E1D /* EditChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditChannelViewController.swift; sourceTree = "<group>"; };
 		38A5B8DA1E372216009E280B /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		38A5B8DC1E372474009E280B /* FormerInputAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormerInputAccessoryView.swift; sourceTree = "<group>"; };
 		38A5B8E01E3724C2009E280B /* ColorListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorListCell.swift; sourceTree = "<group>"; };
@@ -308,6 +314,8 @@
 				38A5B8DF1E37249F009E280B /* Former */,
 				38118E311E282C6B0042F9C1 /* String.swift */,
 				38F7DFD61E24C8D60001BA91 /* Constants.swift */,
+				389938181E4D16E700AA2E1D /* PushNotification.swift */,
+				3899381A1E4D16E700AA2E1D /* Device.swift */,
 				38F7DFD81E24C9100001BA91 /* Config.swift */,
 				38118E2E1E282BD20042F9C1 /* NSDate+Utilities.h */,
 				38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */,
@@ -331,6 +339,7 @@
 			children = (
 				389937821E45830200AA2E1D /* MessagesViewController.swift */,
 				389937721E45682900AA2E1D /* ChannelViewController.swift */,
+				3899381E1E4D1C2200AA2E1D /* EditChannelViewController.swift */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -675,6 +684,7 @@
 				389937E61E46D9BD00AA2E1D /* CVCalendarWeekday.swift in Sources */,
 				389937671E41AFE200AA2E1D /* Group.swift in Sources */,
 				389937D91E46D9BD00AA2E1D /* CVCalendarMenuView.swift in Sources */,
+				3899381D1E4D16E700AA2E1D /* Device.swift in Sources */,
 				389937831E45830200AA2E1D /* MessagesViewController.swift in Sources */,
 				389937DB1E46D9BD00AA2E1D /* CVCalendarMonthContentViewController.swift in Sources */,
 				38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */,
@@ -697,6 +707,7 @@
 				389937B21E46D99700AA2E1D /* LocationSearchResultsViewController.swift in Sources */,
 				38A5B9251E3724C2009E280B /* ProfileImageDetailCell.swift in Sources */,
 				389937B31E46D99700AA2E1D /* SearchHistoryManager.swift in Sources */,
+				3899381F1E4D1C2200AA2E1D /* EditChannelViewController.swift in Sources */,
 				3899376C1E4309C300AA2E1D /* TeamViewController.swift in Sources */,
 				38118E341E2830300042F9C1 /* Comment.swift in Sources */,
 				380A89BD1E3EB55300BD8E37 /* PostDetailViewController.swift in Sources */,
@@ -719,6 +730,7 @@
 				389937E51E46D9BD00AA2E1D /* CVCalendarWeekContentViewController.swift in Sources */,
 				389937E91E46D9BD00AA2E1D /* CVPresent.swift in Sources */,
 				389937F51E47B0B700AA2E1D /* TabBarController.swift in Sources */,
+				3899381B1E4D16E700AA2E1D /* PushNotification.swift in Sources */,
 				389937D81E46D9BD00AA2E1D /* CVCalendarManager.swift in Sources */,
 				380F6F041E2C17C2008C7675 /* EditPostViewController.swift in Sources */,
 			);

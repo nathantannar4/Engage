@@ -27,8 +27,6 @@ class ChannelViewController: SLKTextViewController {
     
     var pipWindow: UIWindow?
     
-    var isLoading = false
-    
     override var tableView: UITableView {
         get {
             return super.tableView!
@@ -50,8 +48,8 @@ class ChannelViewController: SLKTextViewController {
     
     func commonInit() {
         
-        //NotificationCenter.default.addObserver(self.tableView, selector: #selector(UITableView.reloadData), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
-        //NotificationCenter.default.addObserver(self,  selector: #selector(MessageViewController.textInputbarDidMove(_:)), name: NSNotification.Name.SLKTextInputbarDidMove, object: nil)
+        NotificationCenter.default.addObserver(self.tableView, selector: #selector(UITableView.reloadData), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+        NotificationCenter.default.addObserver(self,  selector: #selector(ChannelViewController.textInputbarDidMove(_:)), name: NSNotification.Name.SLKTextInputbarDidMove, object: nil)
         
         // Register a SLKTextView subclass, if you need any special appearance and/or behavior customisation.
         self.registerClass(forTextView: MessageTextView.classForCoder())
@@ -67,15 +65,16 @@ class ChannelViewController: SLKTextViewController {
         self.timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(ChannelViewController.configureDataSource), userInfo: nil, repeats: true)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         self.timer.invalidate()
+        self.textInputbar.textView.text = String()
     }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        self.title = self.channel.name
+        self.title = self.channel.isPrivate! ? self.channel.name : "#" + self.channel.name!
         self.commonInit()
         
         // Configuration
@@ -89,11 +88,10 @@ class ChannelViewController: SLKTextViewController {
         self.shouldScrollToBottomAfterKeyboardShows = false
         self.isInverted = true
         
-        self.leftButton.setImage(Icon.Google.photoCamera, for: .normal)
+        //self.leftButton.setImage(Icon.Google.photoCamera, for: .normal)
         self.leftButton.tintColor = Color.defaultNavbarTint
         
-        self.rightButton.setImage(Icon.Google.send, for: .normal)
-        self.rightButton.setTitle("", for: .normal)
+        self.rightButton.setTitle("Send", for: .normal)
         self.rightButton.tintColor = Color.defaultNavbarTint
         
         self.textInputbar.autoHideRightButton = true
@@ -146,67 +144,19 @@ extension ChannelViewController {
     
     func configureDataSource() {
         
-        if self.isLoading == false {
-            
-            /*
-            self.isLoading = true
-            let lastMessage = messages.last
-            
-            let query = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_\(PF_CHAT_CLASS_NAME)")
-            query.whereKey(PF_CHAT_GROUPID, equalTo: groupId)
-            if let lastMessage = lastMessage {
-                query.whereKey(PF_CHAT_CREATEDAT, greaterThan: lastMessage.date)
-            }
-            query.includeKey(PF_CHAT_USER)
-            query.order(byDescending: PF_CHAT_CREATEDAT)
-            query.limit = 100
-            query.findObjectsInBackground(block: { (objects: [PFObject]?, error: Error?) -> Void in
-                if error == nil {
-                    for object in (objects as [PFObject]!).reversed() {
-                        let user = object[PF_CHAT_USER] as! PFUser
-                        if !self.userIDs.contains(user.objectId!) {
-                            // Downloads Profile Photo Once
-                            print("Downloading Profile Photo for \(user.value(forKey: PF_USER_FULLNAME))")
-                            self.userIDs.append(user.objectId!)
-                            self.users.append(user[PF_USER_FULLNAME] as! String)
-                            
-                            let pictureFile = user[PF_USER_PICTURE] as? PFFile
-                            if pictureFile != nil {
-                                do {
-                                    let imageData = try pictureFile!.getData()
-                                    self.userPhotos.append(UIImage(data:imageData)!)
-                                } catch {}
-                            } else {
-                                self.userPhotos.append(UIImage(named: "profile_blank")!)
-                            }
-                        }
-                        
-                        let newMessage = Message(text: object[PF_CHAT_TEXT] as! String, username: user.value(forKey: PF_USER_FULLNAME) as! String, user: user, date: object.createdAt!)
-                        self.messages.append(newMessage)
-                    }
-                    self.messages.reverse()
-                    self.tableView.reloadData()
-                    SVProgressHUD.dismiss()
-                } else {
-                    print("Network error")
-                    SVProgressHUD.showError(withStatus: "Network Error")
-                }
-                self.isLoading = false;
-            })
- 
-            */
-            
-            self.tableView.reloadData()
+        if self.channel.isNew {
+            self.tableView.reloadSections([0], with: .automatic)
         }
     }
     
     func configureActionItems() {
         
         //let arrowItem = UIBarButtonItem(image: UIImage(named: "icn_arrow_down"), style: .plain, target: self, action: #selector(MessageViewController.hideOrShowTextInputbar(_:)))
-        //let typeItem = UIBarButtonItem(image: UIImage(named: "icn_typing"), style: .plain, target: self, action: #selector(MessageViewController.simulateUserTyping(_:)))
+        let typeItem = UIBarButtonItem(image: UIImage(named: "icn_typing"), style: .plain, target: self, action: #selector(ChannelViewController.simulateUserTyping(_:)))
         //let appendItem = UIBarButtonItem(image: UIImage(named: "icn_append"), style: .plain, target: self, action: #selector(MessageViewController.fillWithText(_:)))
         //let pipItem = UIBarButtonItem(image: UIImage(named: "icn_pic"), style: .plain, target: self, action: #selector(MessageViewController.togglePIPWindow(_:)))
-        //self.navigationItem.rightBarButtonItems = [typeItem]
+        let infoItem = UIBarButtonItem(image: Icon.Apple.info, style: .plain, target: self, action: #selector(showGroupInfo))
+        self.navigationItem.rightBarButtonItems = [infoItem, typeItem]
     }
     
     // MARK: - Action Methods
@@ -327,52 +277,9 @@ extension ChannelViewController {
         pipWindow.frame = frame
     }
     
-    func sendMessage(text: String, video: NSURL?, picture: UIImage?) {
-        var newText = text
-        var videoFile: PFFile!
-        var pictureFile: PFFile!
-        
-        if let video = video {
-            newText = "[Video message]"
-            videoFile = PFFile(name: "video.mp4", data: FileManager.default.contents(atPath: video.path!)!)
-            
-            videoFile.saveInBackground(block: { (succeeed: Bool, error: Error?) -> Void in
-                if error != nil {
-                    print("Network error")
-                }
-            })
-        }
-        
-        if let picture = picture {
-            newText = "[Picture message]"
-            pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(picture, 0.6)!)
-            pictureFile.saveInBackground(block: { (suceeded: Bool, error: Error?) -> Void in
-                if error != nil {
-                    print("Picture save error")
-                }
-            })
-        }
-        
-        let newMessage = PFObject(className: Engagement.current().queryName! + PF_MESSAGE_CLASS_NAME)
-        newMessage[PF_MESSAGE_USER] = PFUser.current()
-        newMessage[PF_MESSAGE_CHANNEL] = self.channel.object
-        newMessage[PF_MESSAGE_TEXT] = newText
-        if let videoFile = videoFile {
-            newMessage[PF_MESSAGE_FILE] = videoFile
-        }
-        if let pictureFile = pictureFile {
-            newMessage[PF_MESSAGE_FILE] = pictureFile
-        }
-        newMessage.saveInBackground{ (succeeded, error) -> Void in
-            if succeeded {
-                //PushNotication.sendPushNotificationMessage(groupId, text: "\(PFUser.current()!.value(forKey: "fullname")!): \(text)")
-                //Messages.updateMessageCounter(groupId: groupId, lastMessage: text)
-            } else {
-                Log.write(.error, error.debugDescription)
-                let toast = Toast(text: "Error Sending Message", button: nil, color: Color.darkGray, height: 44)
-                toast.show(duration: 1.0)
-            }
-        }
+    func showGroupInfo() {
+        let vc = EditChannelViewController(channel: self.channel)
+        self.present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
     }
 }
 
@@ -430,15 +337,13 @@ extension ChannelViewController {
         self.dismissKeyboard(true)
         
         /*
-        
         //Create the AlertController
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        actionSheetController.view.tintColor = MAIN_COLOR
+        actionSheetController.view.tintColor = Color.defaultNavbarTint
         
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-            //Just dismiss the action sheet
-        }
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
         actionSheetController.addAction(cancelAction)
+        
         let takePictureAction: UIAlertAction = UIAlertAction(title: "Take Photo", style: .default)
         { action -> Void in
             Camera.shouldStartCamera(target: self, canEdit: true, frontFacing: true)
@@ -449,17 +354,18 @@ extension ChannelViewController {
             Camera.shouldStartPhotoLibrary(target: self, canEdit: true)
         }
         actionSheetController.addAction(choosePictureAction)
+        
+        
         let chooseVideoAction: UIAlertAction = UIAlertAction(title: "Choose Video", style: .default)
         { action -> Void in
             Camera.shouldStartVideoLibrary(target: self, canEdit: true)
         }
         actionSheetController.addAction(chooseVideoAction)
+        
+        
         actionSheetController.popoverPresentationController?.sourceView = self.view
-        //Present the AlertController
+        
         self.present(actionSheetController, animated: true, completion: nil)
- 
- 
- 
         */
     }
     
@@ -469,21 +375,20 @@ extension ChannelViewController {
         // This little trick validates any pending auto-correction or auto-spelling just after hitting the 'Send' button
         self.textView.refreshFirstResponder()
         
-        let message = Message(user: User.current(), text: self.textView.text, date: Date(), file: nil)
-        
-        let indexPath = IndexPath(row: 0, section: 0)
-        let rowAnimation: UITableViewRowAnimation = self.isInverted ? .bottom : .top
-        let scrollPosition: UITableViewScrollPosition = self.isInverted ? .bottom : .top
-        
-        self.tableView.beginUpdates()
-        self.channel.addMessage(message)
-        self.tableView.insertRows(at: [indexPath], with: rowAnimation)
-        self.tableView.endUpdates()
-        
-        self.tableView.scrollToRow(at: indexPath, at: scrollPosition, animated: true)
-        self.tableView.reloadRows(at: [indexPath], with: .automatic)
-        
-        self.sendMessage(text: self.textView.text, video: nil, picture: nil)
+        self.channel.addMessage(text: self.textView.text, file: nil) { (success) in
+            if success {
+                let indexPath = IndexPath(row: 0, section: 0)
+                let rowAnimation: UITableViewRowAnimation = self.isInverted ? .bottom : .top
+                let scrollPosition: UITableViewScrollPosition = self.isInverted ? .bottom : .top
+                
+                self.tableView.beginUpdates()
+                self.tableView.insertRows(at: [indexPath], with: rowAnimation)
+                self.tableView.endUpdates()
+                
+                self.tableView.scrollToRow(at: indexPath, at: scrollPosition, animated: true)
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        }
         
         super.didPressRightButton(sender)
     }
@@ -619,7 +524,6 @@ extension ChannelViewController {
                 return searchResult.count
             }
         }
-        
         return 0
     }
     
@@ -636,39 +540,18 @@ extension ChannelViewController {
     func messageCellForRowAtIndexPath(_ indexPath: IndexPath) -> MessageTableViewCell {
         
         let cell = self.tableView.dequeueReusableCell(withIdentifier: MessengerCellIdentifier) as! MessageTableViewCell
+        cell.titleLabel.textColor = UIColor.black
+        cell.indexPath = indexPath
+        cell.usedForMessage = true
+        cell.transform = self.tableView.transform
+ 
+        let index = self.tableView(self.tableView, numberOfRowsInSection: indexPath.section) - indexPath.row - 1
         
-        /*
-        if cell.gestureRecognizers?.count == nil {
-            let id = self.messages[(indexPath as NSIndexPath).row].userId
-            let tap = UITapGestureRecognizer(target: id, action: #selector(MessageViewController.showUser(_:)))
-            cell.addGestureRecognizer(tap)
-        }
-        */
-
-        let message = self.channel.messages[indexPath.row]
-        var lastMessage: Message?
-        if indexPath.row != 0 {
-            lastMessage = self.channel.messages[indexPath.row - 1]
-        }
-        if lastMessage == nil {
-            cell.titleLabel.text = message.user.fullname
-            cell.titleLabel.textColor = UIColor.black
-            cell.bodyLabel.text = message.text
-            cell.thumbnailView.image = message.user.image
-            cell.indexPath = indexPath
-            cell.usedForMessage = true
-            cell.transform = self.tableView.transform
-            return cell
-        } else {
-            cell.titleLabel.text = message.user.fullname
-            cell.titleLabel.textColor = UIColor.black
-            cell.thumbnailView.image = message.user.image
-            cell.bodyLabel.text = message.text
-            cell.indexPath = indexPath
-            cell.usedForMessage = true
-            cell.transform = self.tableView.transform
-            return cell
-        }
+        cell.titleLabel.text = self.channel.messages[index].user?.fullname
+        cell.thumbnailView.image = self.channel.messages[index].user?.image
+        cell.bodyLabel.text = self.channel.messages[index].text
+        
+        return cell
     }
     
     func autoCompletionCellForRowAtIndexPath(_ indexPath: IndexPath) -> MessageTableViewCell {
@@ -722,15 +605,15 @@ extension ChannelViewController {
             var width = tableView.frame.width-kMessageTableViewCellAvatarHeight
             width -= 25.0
             
-            let titleBounds = (message.user.object.value(forKey: PF_USER_FULLNAME) as? NSString)?.boundingRect(with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-            let bodyBounds = (message.text as NSString).boundingRect(with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            let titleBounds = (message.user?.object.value(forKey: PF_USER_FULLNAME) as? NSString)?.boundingRect(with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            let bodyBounds = (message.text as? NSString)?.boundingRect(with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
             
-            if message.text.characters.count == 0 {
+            if message.text?.characters.count == 0 {
                 return 0
             }
             
             var height = titleBounds?.height ?? 44
-            height += bodyBounds.height
+            height += bodyBounds?.height ?? 0
             height += 40
             
             if height < kMessageTableViewCellMinimumHeight {
@@ -766,11 +649,7 @@ extension ChannelViewController {
             item += " "
             
             self.acceptAutoCompletion(with: item, keepPrefix: true)
-        } /* else {
-            let profileVC = PublicProfileViewController()
-            profileVC.user = self.messages[(indexPath as NSIndexPath).row].user
-            self.navigationController?.pushViewController(profileVC, animated: true)
-        } */
+        }
     }
 }
 

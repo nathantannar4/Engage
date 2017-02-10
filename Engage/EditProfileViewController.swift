@@ -130,11 +130,11 @@ class EditProfileViewController: FormViewController, UIImagePickerControllerDele
         let infoRow = TextViewRowFormer<FormTextViewCell>() {
             $0.textView.font = UIFont.systemFont(ofSize: 14)
             }.configure {
-                $0.text = User.current().bio
+                $0.text = User.current().userExtension?.bio
                 $0.placeholder = "Bio"
                 $0.rowHeight = 80
             }.onTextChanged {
-                User.current().bio = $0
+                User.current().userExtension?.bio = $0
         }
         
         // Create SectionFormers

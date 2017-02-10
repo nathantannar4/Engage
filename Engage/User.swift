@@ -46,14 +46,6 @@ public class User {
             self.object[PF_USER_FULLNAME] = newValue?.lowercased()
         }
     }
-    public var bio: String? {
-        get {
-            return self.object.value(forKey: PF_USER_BIO) as? String
-        }
-        set {
-            self.object[PF_USER_BIO] = newValue
-        }
-    }
     public var email: String? {
         get {
             return self.object.email
@@ -215,6 +207,14 @@ public class User {
                     fatalError()
                 }
                 return id
+            }
+        }
+        public var bio: String? {
+            get {
+                return self.object.value(forKey: PF_USER_BIO) as? String
+            }
+            set {
+                self.object[PF_USER_BIO] = newValue
             }
         }
         public var team: Team?

@@ -36,6 +36,7 @@ class UserListViewController: NTSearchViewController, NTTableViewDelegate {
     
     override func updateResults() {
         let query = PFUser.query()
+        query?.cachePolicy = .cacheElseNetwork
         query?.limit = 1000
         query?.order(byAscending: PF_USER_FULLNAME)
         query?.whereKey(PF_USER_OBJECTID, containedIn: self.searchMembers)
@@ -57,7 +58,7 @@ class UserListViewController: NTSearchViewController, NTTableViewDelegate {
     // MARK: NTTableViewDataSource
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return 50
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -80,7 +81,7 @@ class UserListViewController: NTSearchViewController, NTTableViewDelegate {
         }
         cell.imageView?.image = self.users[indexPath.row].image
         cell.imageView?.contentMode = .scaleAspectFill
-        cell.imageView?.layer.cornerRadius = 22
+        cell.imageView?.layer.cornerRadius = 25
         cell.imageView?.layer.borderWidth = 1
         cell.imageView?.layer.borderColor = Color.defaultNavbarTint.cgColor
         cell.imageView?.layer.masksToBounds = true

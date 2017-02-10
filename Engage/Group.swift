@@ -154,6 +154,95 @@ public class Group {
         }
     }
     
+    public func promote(user: User, completion: ((_ success: Bool) -> Void)?) {
+        guard var admins = self.admins else {
+            completion?(false)
+            return
+        }
+        admins.append(user.id)
+        self.admins = admins
+        self.save { (success) in
+            completion?(success)
+            if success {
+                Log.write(.status, "User \(user.id) was promoted to an admin in group \(self.id)")
+            } else {
+                Toast.genericErrorMessage()
+            }
+        }
+    }
+    
+    public func join(user: User, completion: ((_ success: Bool) -> Void)?) {
+        guard var members = self.members else {
+            completion?(false)
+            return
+        }
+        members.append(user.id)
+        self.members = members
+        self.save { (success) in
+            completion?(success)
+            if success {
+                Log.write(.status, "User \(user.id) joined group \(self.id)")
+            } else {
+                Toast.genericErrorMessage()
+            }
+        }
+    }
+    
+    public func leave(user: User, completion: ((_ success: Bool) -> Void)?) {
+        guard var members = self.members else {
+            completion?(false)
+            return
+        }
+        if let index = members.index(of: user.id) {
+            members.remove(at: index)
+            self.members = members
+            if var admins = self.admins {
+                if let adminIndex = admins.index(of: user.id) {
+                    admins.remove(at: adminIndex)
+                    if admins.count == 0 {
+                        let toast = Toast(text: "Cannot leave, you are the only admin", button: nil, color: Color.darkGray, height: 44)
+                        toast.show(duration: 1.5)
+                        completion?(false)
+                        return
+                    }
+                    self.admins = admins
+                }
+            }
+        }
+        self.save { (success) in
+            completion?(success)
+            if success {
+                Log.write(.status, "User \(user.id) left group \(self.id)")
+            } else {
+                Toast.genericErrorMessage()
+            }
+        }
+    }
+    
+    public func delete(completion: ((_ success: Bool) -> Void)?) {
+        self.object.deleteInBackground { (success, error) in
+            completion?(success)
+            if error != nil {
+                Log.write(.error, error.debugDescription)
+                Toast.genericErrorMessage()
+            } else {
+                let messageQuery = PFQuery(className: Engagement.current().queryName! + PF_MESSAGE_CLASS_NAME)
+                messageQuery.whereKey(PF_MESSAGE_CHANNEL, equalTo: self.object)
+                messageQuery.limit = 1000
+                messageQuery.findObjectsInBackground { (objects, error) in
+                    guard let messages = objects else {
+                        Log.write(.error, "Error while deleting messages")
+                        Log.write(.error, error.debugDescription)
+                        return
+                    }
+                    for message in messages {
+                        message.deleteInBackground()
+                    }
+                }
+            }
+        }
+    }
+    
     public func position(forUser user: User) -> String? {
         guard let positions = self.positions else {
             Log.write(.status, "No positions exist")

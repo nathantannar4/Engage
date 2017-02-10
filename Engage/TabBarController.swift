@@ -10,6 +10,13 @@ import UIKit
 import NTUIKit
 
 class TabBarController: UITabBarController {
+    
+    override func viewWillLayoutSubviews() {
+        var tabFrame = self.tabBar.frame
+        tabFrame.size.height = 44
+        tabFrame.origin.y = self.view.frame.size.height - 44
+        self.tabBar.frame = tabFrame
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

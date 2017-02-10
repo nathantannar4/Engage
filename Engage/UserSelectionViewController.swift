@@ -68,7 +68,8 @@ class UserSelectionViewController: UserListViewController {
         return cell
     }
     
-    func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.tableView.deselectRow(at: indexPath, animated: true)
         if self.allowMultipleSelection {
             guard let cell = self.tableView.cellForRow(at: indexPath) else {
                 return
@@ -84,8 +85,9 @@ class UserSelectionViewController: UserListViewController {
                 cell.accessoryType = .checkmark
             }
         } else {
-            self.selectionDelegate.didMakeSelection(ofUsers: [self.users[indexPath.row]])
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: {
+                self.selectionDelegate.didMakeSelection(ofUsers: [self.users[indexPath.row]])
+            })
         }
     }
 }

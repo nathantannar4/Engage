@@ -35,7 +35,6 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         }
         self.prepareTableView()
         self.queryForPosts()
-        self.tableView.contentOffset = CGPoint(x: 0, y: 0 - self.tableView.contentInset.top)
     }
     
     func pullToRefresh(sender: UIRefreshControl) {
@@ -177,7 +176,10 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         if section == 0 {
             return 1
         } else if section == 1 {
-            return self.user.bio != nil ? 1 : 0
+            guard let userExt = User.current().userExtension else {
+                return 0
+            }
+            return userExt.bio != nil ? 1 : 0
         } else if section == 2 {
             return (Engagement.current().profileFields?.count ?? 0) + 2
         } else {
@@ -209,7 +211,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
             cell.setDefaults()
             cell.verticalInset = -10
             cell.contentLabel.textAlignment = .center
-            cell.text = self.user.bio
+            cell.text = User.current().userExtension?.bio
             return cell
         } else if indexPath.section == 2 {
             if indexPath.row == 0 {

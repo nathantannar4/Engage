@@ -127,7 +127,8 @@ let PF_CHANNEL_IMAGE                    = "image"
 let PF_CHANNEL_MEMBERS                  = "members"
 let PF_CHANNEL_ADMINS                   = "admins"
 let PF_CHANNEL_PRIVATE                  = "private"
-let PF_CHANNEL_UPDATED_AT               = "updatedAt"   
+let PF_CHANNEL_UPDATED_AT               = "updatedAt"
+let PF_CHANNEL_OBJECT_ID                = "objectId"
 
 /* Messages*/
 let PF_MESSAGE_CLASS_NAME				= "_Messages"				//	Class name

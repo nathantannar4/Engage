@@ -66,7 +66,7 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
         let rightButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         
         leftButton.setImage(Icon.Google.close, for: .normal)
-        rightButton.setImage(Icon.Google.send, for: .normal)
+        rightButton.setTitle("Comment", for: .normal)
         
         leftButton.addTarget(self, action: #selector(dismissToolbar), for: .touchUpInside)
         rightButton.addTarget(self, action: #selector(sendComment), for: .touchUpInside)

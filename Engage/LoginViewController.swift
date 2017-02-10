@@ -39,6 +39,7 @@ class LoginViewController: NTLoginViewController {
     override func emailLoginLogic(email: String, password: String) {
         
         // Freeze user interaction
+        self.view.endEditing(true)
         UIApplication.shared.beginIgnoringInteractionEvents()
         
         // Send login data to server to request session token
@@ -46,6 +47,8 @@ class LoginViewController: NTLoginViewController {
             UIApplication.shared.endIgnoringInteractionEvents()
             guard let user = object else {
                 Log.write(.error, error.debugDescription)
+                let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 60)
+                toast.show(duration: 1.0)
                 return
             }
             Log.write(.status, "Email Login Successful")
