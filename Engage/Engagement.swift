@@ -21,14 +21,6 @@ public class Engagement: Group {
             return name
         }
     }
-    public var profileFields: [String]? {
-        get {
-            return self.object.value(forKey: PF_ENGAGEMENTS_PROFILE_FIELDS) as? [String]
-        }
-        set {
-            self.object[PF_ENGAGEMENTS_PROFILE_FIELDS] = newValue
-        }
-    }
     public var altTeamName: String? {
         get {
             return self.object.value(forKey: PF_ENGAGEMENTS_SUBGROUP_NAME) as? String
@@ -43,14 +35,6 @@ public class Engagement: Group {
         }
         set {
             self.object[PF_ENGAGEMENT_COLOR] = newValue
-        }
-    }
-    public var hidden: Bool? {
-        get {
-            return self.object.value(forKey: PF_ENGAGEMENTS_HIDDEN) as? Bool
-        }
-        set {
-            self.object[PF_ENGAGEMENTS_HIDDEN] = newValue
         }
     }
     public var teams = [Team]()
@@ -186,9 +170,10 @@ public class Engagement: Group {
     
     public class func didSelect(with engagement: PFObject) {
         Engagement._current = Cache.retrieveEngagement(engagement)
-        User.current().loadExtension()
-        let navContainer = NTNavigationContainer(centerView: TabBarController())
-        navContainer.leftPanelWidth = 200
-        UIApplication.shared.keyWindow?.rootViewController = navContainer
+        User.current().loadExtension {
+            let navContainer = NTNavigationContainer(centerView: TabBarController())
+            navContainer.leftPanelWidth = 200
+            UIApplication.shared.keyWindow?.rootViewController = navContainer
+        }
     }
 }

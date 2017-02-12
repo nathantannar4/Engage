@@ -156,9 +156,8 @@ class MessagesViewController: NTTableViewController, UserSelectionDelegate {
         } else if section == 2 {
             header.textLabel?.text = "Other Channels"
             return header
-        } else {
-            return nil
         }
+        return nil
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -175,9 +174,8 @@ class MessagesViewController: NTTableViewController, UserSelectionDelegate {
         } else if section == 2 {
             // Channels
             return Engagement.current().otherChannels.count
-        } else {
-            return 0
         }
+        return 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -289,7 +287,7 @@ class MessagesViewController: NTTableViewController, UserSelectionDelegate {
                 }
             })
         }
-        join.backgroundColor = UIColor.green
+        join.backgroundColor = Color.darkGreen
         
         let delete = UITableViewRowAction(style: .normal, title: "Delete") { action, index in
             if index.section == 0 {

@@ -26,8 +26,8 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
         self.dataSource = self
         self.delegate = self
         self.tableView.contentInset.bottom = 100
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNewPost(sender:)))
         self.prepareTableView()
-        self.prepareButton()
         self.queryForPosts()
     }
     
@@ -49,23 +49,13 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
         refreshControl.addTarget(self, action: #selector(pullToRefresh(sender:)), for: UIControlEvents.valueChanged)
         self.tableView.refreshControl = refreshControl
     }
-    
-    func prepareButton() {
-        let button = UIButton()
-        button.frame = CGRect(x: self.view.frame.width - 75, y: self.view.frame.height - 175, width: 50, height: 50)
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.backgroundColor = Color.defaultNavbarBackground
-        button.addTarget(self, action: #selector(createNewPost(sender:)), for: .touchUpInside)
-        button.layer.shadowColor = Color.darkGray.cgColor
-        button.layer.shadowOpacity = 0.5
-        button.layer.shadowOffset = CGSize(width: 1, height: 1)
-        button.layer.shadowRadius = 2
-        button.setImage(Icon.Google.add, for: .normal)
-        button.tintColor = Color.defaultNavbarTint
-        self.view.addSubview(button)
-    }
         
     // MARK: User Actions
+    
+    func createNewPost(sender: UIBarButtonItem) {
+        let navVC = UINavigationController(rootViewController: EditPostViewController())
+        self.present(navVC, animated: true, completion: nil)
+    }
     
     func toggleLike(sender: UIButton) {
         guard let likes = self.posts[sender.tag].likes else {
@@ -108,7 +98,7 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
     
     func handleMore(sender: UIButton) {
         let post = self.posts[sender.tag]
-        if post.user.id == User.current().id {
+        if post.user?.id == User.current().id {
             post.handleByOwner(target: self, delegate: self, sender: sender)
         } else {
             post.handle(target: self, sender: sender)
@@ -127,11 +117,6 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
         self.posts.removeAll()
         self.reloadData()
         self.queryForPosts()
-    }
-    
-    func createNewPost(sender: UIButton) {
-        let navVC = UINavigationController(rootViewController: EditPostViewController())
-        self.present(navVC, animated: true, completion: nil)
     }
     
     // MARK: NTTableViewDataSource
@@ -166,8 +151,8 @@ class ActivityFeedViewController: NTTableViewController, NTTableViewDataSource, 
                 cell.imageView.layer.borderWidth = 1
                 cell.imageView.layer.borderColor = Color.defaultButtonTint.cgColor
                 cell.cornersRounded = [.topLeft, .topRight]
-                cell.title = self.posts[indexPath.section].user.fullname
-                cell.image = self.posts[indexPath.section].user.image
+                cell.title = self.posts[indexPath.section].user?.fullname
+                cell.image = self.posts[indexPath.section].user?.image
                 cell.accessoryButton.tag = indexPath.section
                 cell.accessoryButton.setImage(Icon.Apple.moreVerticalFilled, for: .normal)
                 cell.accessoryButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)

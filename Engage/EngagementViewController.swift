@@ -27,9 +27,7 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         self.title = self.engagement.name
         self.dataSource = self
         self.delegate = self
-        if self.getNTNavigationContainer == nil {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(dismiss(sender:)))
-        }
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Apple.info, style: .plain, target: self, action: #selector(groupOptions(sender:)))
         self.prepareTableView()
     }
     
@@ -45,7 +43,6 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         self.tableView.contentInset.top = 190
         self.tableView.contentInset.bottom = 100
         self.tableView.emptyHeaderHeight = 10
-        self.fadeInNavBarOnScroll = true
         let refreshControl = UIRefreshControl()
         if self.engagement.coverImage != nil {
             refreshControl.tintColor = UIColor.white
@@ -71,8 +68,66 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         self.hidesBottomBarWhenPushed = false
     }
     
+    func showEvents(sender: AnyObject) {
+        let selectionVC = UserListViewController(group: Engagement.current())
+        self.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(selectionVC, animated: true)
+        self.hidesBottomBarWhenPushed = false
+    }
+    
     func createTeam(sender: UIButton) {
         
+    }
+    
+    func groupOptions(sender: UIButton) {
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheetController.view.tintColor = Color.defaultNavbarTint
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
+        actionSheetController.addAction(cancelAction)
+        
+        if let admins = self.engagement.admins {
+            if admins.contains(User.current().id) {
+                let adminFunction: UIAlertAction = UIAlertAction(title: "Admin Functions", style: .default)
+                { action -> Void in
+                    
+                }
+                actionSheetController.addAction(adminFunction)
+            }
+        }
+        
+        guard let members = self.engagement.members else {
+            return
+        }
+        if members.contains(User.current().id) {
+            let leaveAction: UIAlertAction = UIAlertAction(title: "Leave Engagement", style: .default)
+            { action -> Void in
+                self.engagement.leave(user: User.current(), completion: { (success) in
+                    if success {
+                        self.reloadData()
+                        let toast = Toast(text: "Successfully left \(self.engagement.name!)", button: nil, color: Color.darkGray, height: 44)
+                        toast.show(duration: 1.5)
+                    }
+                })
+            }
+            actionSheetController.addAction(leaveAction)
+        } else {
+            let joinTeam: UIAlertAction = UIAlertAction(title: "Join Engagement", style: .default)
+            { action -> Void in
+                self.engagement.join(user: User.current(), completion: { (success) in
+                    if success {
+                        self.reloadData()
+                        let toast = Toast(text: "Successfully joined \(self.engagement.name!)", button: nil, color: Color.darkGray, height: 44)
+                        toast.show(duration: 1.5)
+                    }
+                })
+            }
+            actionSheetController.addAction(joinTeam)
+        }
+        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
+        
+        self.present(actionSheetController, animated: true, completion: nil)
     }
     
     func viewProfilePhoto() {
@@ -115,7 +170,7 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
         if section == 0 {
             return 1
         } else if section == 1 {
-            return 7
+            return 8
         } else if section == 2{
             return self.engagement.teams.count
         } else {
@@ -183,6 +238,17 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
             case 6:
                 let cell = NTMenuItemCell.initFromNib()
                 cell.horizontalInset = 10
+                cell.title = "Event Calendar"
+                cell.titleLabel.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+                cell.titleLabel.textColor = Color.defaultNavbarTint
+                cell.accessoryButton.setImage(Icon.Apple.arrowForward, for: .normal)
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showEvents(sender:)))
+                cell.addGestureRecognizer(tapGesture)
+                cell.accessoryButton.addTarget(self, action: #selector(showEvents(sender:)), for: .touchUpInside)
+                return cell
+            case 7:
+                let cell = NTMenuItemCell.initFromNib()
+                cell.horizontalInset = 10
                 cell.cornersRounded = [.bottomLeft, .bottomRight]
                 cell.cornerRadius = 5
                 cell.title = "\(self.engagement.members!.count) Members"
@@ -221,10 +287,8 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     
     func imageForStretchyView(in tableView: NTTableView) -> UIImage? {
         guard let image = Engagement.current().coverImage else {
-            self.fadeInNavBarOnScroll = false
             return nil
         }
-        self.fadeInNavBarOnScroll = true
         self.tableView.refreshControl?.tintColor = UIColor.white
         self.tableView.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         return image

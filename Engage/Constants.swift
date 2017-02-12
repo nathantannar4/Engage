@@ -47,6 +47,10 @@ let PF_POST_TO_OBJECT                   = "toObject"
 let PF_POST_TO_USER                     = "toUser"
 let PF_POST_LIKES                       = "likes"
 
+let PF_FLAGGED_POST_CLASSNAME           = "_Flagged_Posts"
+let PF_FLAGGED_POST_POST                = "post"
+let PF_FLAGGED_POST_REASON              = "reason"
+let PF_FLAGGED_POST_USER                = "user"
 
 /* Engagements */
 let PF_ENGAGEMENTS_CLASS_NAME           = "Engagements"             //  Class name
@@ -100,8 +104,6 @@ let PF_CONFERENCE_POSITIONS             = "positions"               //  Array
 let PF_CONFERENCE_SPONSORS              = "sponsors"                //  Array
 let PF_CONFERENCE_START                 = "start"                //  Array
 let PF_CONFERENCE_END                   = "end"                //  Array
-
-
 
 /* Events */
 let PF_EVENT_CLASS_NAME                 = "_Events"                  //  Class name

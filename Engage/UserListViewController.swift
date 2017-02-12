@@ -79,7 +79,7 @@ class UserListViewController: NTSearchViewController, NTTableViewDelegate {
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFontWeightMedium)
             cell.detailTextLabel?.textColor = Color.darkGray
         }
-        cell.imageView?.image = self.users[indexPath.row].image
+        cell.imageView?.image = self.users[indexPath.row].image?.cropToSquare()
         cell.imageView?.contentMode = .scaleAspectFill
         cell.imageView?.layer.cornerRadius = 25
         cell.imageView?.layer.borderWidth = 1

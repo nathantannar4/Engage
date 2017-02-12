@@ -27,7 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ParseMutableClientConfiguration.clientKey = CLIENT_KEY
             ParseMutableClientConfiguration.server = SERVER_URL
         });
+        Parse.enableLocalDatastore()
         Parse.initialize(with: config)
+        Parse.setLogLevel(.debug)
         FBSDKSettings.setAppID(FACEBOOK_APPLICATION_ID)
         PFFacebookUtils.initializeFacebook(applicationLaunchOptions: launchOptions)
         PFUser.enableRevocableSessionInBackground()

@@ -27,9 +27,7 @@ class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableV
         self.title = self.team.name
         self.dataSource = self
         self.delegate = self
-        if self.getNTNavigationContainer == nil {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(dismiss(sender:)))
-        }
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Apple.info, style: .plain, target: self, action: #selector(groupOptions(sender:)))
         self.prepareTableView()
     }
     
@@ -45,7 +43,6 @@ class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableV
         self.tableView.contentInset.top = 190
         self.tableView.contentInset.bottom = 100
         self.tableView.emptyHeaderHeight = 10
-        self.fadeInNavBarOnScroll = true
         let refreshControl = UIRefreshControl()
         if self.team.coverImage != nil {
             refreshControl.tintColor = UIColor.white
@@ -69,6 +66,57 @@ class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableV
         self.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(selectionVC, animated: true)
         self.hidesBottomBarWhenPushed = false
+    }
+    
+    func groupOptions(sender: UIButton) {
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheetController.view.tintColor = Color.defaultNavbarTint
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
+        actionSheetController.addAction(cancelAction)
+        
+        if let admins = self.team.admins {
+            if admins.contains(User.current().id) {
+                let adminFunction: UIAlertAction = UIAlertAction(title: "Admin Functions", style: .default)
+                { action -> Void in
+                    
+                }
+                actionSheetController.addAction(adminFunction)
+            }
+        }
+        
+        guard let members = self.team.members else {
+            return
+        }
+        if members.contains(User.current().id) {
+            let leaveAction: UIAlertAction = UIAlertAction(title: "Leave Team", style: .default)
+            { action -> Void in
+                self.team.leave(user: User.current(), completion: { (success) in
+                    if success {
+                        self.reloadData()
+                        let toast = Toast(text: "Successfully left \(self.team.name!)", button: nil, color: Color.darkGray, height: 44)
+                        toast.show(duration: 1.5)
+                    }
+                })
+            }
+            actionSheetController.addAction(leaveAction)
+        } else {
+            let joinTeam: UIAlertAction = UIAlertAction(title: "Join Team", style: .default)
+            { action -> Void in
+                self.team.join(user: User.current(), completion: { (success) in
+                    if success {
+                        self.reloadData()
+                        let toast = Toast(text: "Successfully joined \(self.team.name!)", button: nil, color: Color.darkGray, height: 44)
+                        toast.show(duration: 1.5)
+                    }
+                })
+            }
+            actionSheetController.addAction(joinTeam)
+        }
+        
+        actionSheetController.popoverPresentationController?.sourceView = self.view
+        
+        self.present(actionSheetController, animated: true, completion: nil)
     }
     
     func viewProfilePhoto() {
@@ -192,10 +240,8 @@ class TeamViewController: NTTableViewController, NTTableViewDataSource, NTTableV
     
     func imageForStretchyView(in tableView: NTTableView) -> UIImage? {
         guard let image = self.team.coverImage else {
-            self.fadeInNavBarOnScroll = false
             return nil
         }
-        self.fadeInNavBarOnScroll = true
         self.tableView.refreshControl?.tintColor = UIColor.white
         self.tableView.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         return image

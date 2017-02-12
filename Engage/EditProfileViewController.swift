@@ -32,12 +32,8 @@ class EditProfileViewController: FormViewController, UIImagePickerControllerDele
         self.tableView.contentInset.bottom = 100
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Google.check, style: .plain, target: self, action: #selector(saveButtonPressed(sender:)))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(cancelButtonPressed(sender:)))
-        if Color.defaultNavbarBackground.isLight {
-            UIApplication.shared.statusBarStyle = .default
-        } else {
-            UIApplication.shared.statusBarStyle = .lightContent
-        }
         
+        UIApplication.shared.statusBarStyle = .default
         self.configure()
     }
     
@@ -117,6 +113,17 @@ class EditProfileViewController: FormViewController, UIImagePickerControllerDele
             }.onTextChanged {
                 User.current().fullname = $0
         }
+        let emailRow = TextFieldRowFormer<ProfileFieldCell>(instantiateType: .Nib(nibName: "ProfileFieldCell")) { [weak self] in
+            $0.titleLabel.text = "Email"
+            $0.textField.keyboardType = .emailAddress
+            $0.textField.inputAccessoryView = self?.formerInputAccessoryView
+            }.configure {
+                $0.placeholder = "Add your email"
+                $0.text = User.current().email
+                $0.enabled = false
+            }.onTextChanged {
+                User.current().email = $0
+        }
         let phoneRow = TextFieldRowFormer<ProfileFieldCell>(instantiateType: .Nib(nibName: "ProfileFieldCell")) { [weak self] in
             $0.titleLabel.text = "Phone"
             $0.textField.keyboardType = .numberPad
@@ -140,7 +147,7 @@ class EditProfileViewController: FormViewController, UIImagePickerControllerDele
         // Create SectionFormers
         let imageSection = SectionFormer(rowFormer: onlyImageRow, coverPhotoSelectionRow, imageRow).set(headerViewFormer: TableFunctions.createHeader(text: "Images"))
         
-        let basicSection = SectionFormer(rowFormer: nameRow, phoneRow, infoRow).set(headerViewFormer: TableFunctions.createHeader(text: "Basic"))
+        let basicSection = SectionFormer(rowFormer: nameRow, emailRow, phoneRow, infoRow).set(headerViewFormer: TableFunctions.createHeader(text: "About"))
         
         self.former.append(sectionFormer: imageSection, basicSection)
             .onCellSelected { [weak self] _ in
@@ -170,8 +177,9 @@ class EditProfileViewController: FormViewController, UIImagePickerControllerDele
             })
         }
         
-        self.former.insert(sectionFormer: SectionFormer(rowFormers: customRow).set(headerViewFormer: TableFunctions.createHeader(text: "About")), toSection: self.former.sectionFormers.count)
+        self.former.insert(sectionFormer: SectionFormer(rowFormers: customRow), toSection: self.former.sectionFormers.count)
     }
+    
     
     // MARK: UIImagePickerControllerDelegate
     

@@ -67,7 +67,6 @@ class ChannelViewController: SLKTextViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        self.timer.invalidate()
         self.textInputbar.textView.text = String()
     }
     
@@ -109,7 +108,6 @@ class ChannelViewController: SLKTextViewController {
             self.typingIndicatorView!.canResignByTouch = true
         }
         
-        self.tableView.separatorStyle = .none
         self.tableView.backgroundColor = UIColor.groupTableViewBackground
         self.tableView.register(MessageTableViewCell.classForCoder(), forCellReuseIdentifier: MessengerCellIdentifier)
         
@@ -120,10 +118,10 @@ class ChannelViewController: SLKTextViewController {
         
         self.textView.registerMarkdownFormattingSymbol("*", withTitle: "Bold")
         self.textView.registerMarkdownFormattingSymbol("_", withTitle: "Italics")
-        self.textView.registerMarkdownFormattingSymbol("~", withTitle: "Strike")
-        self.textView.registerMarkdownFormattingSymbol("`", withTitle: "Code")
-        self.textView.registerMarkdownFormattingSymbol("```", withTitle: "Preformatted")
-        self.textView.registerMarkdownFormattingSymbol(">", withTitle: "Quote")
+        //self.textView.registerMarkdownFormattingSymbol("~", withTitle: "Strike")
+        //self.textView.registerMarkdownFormattingSymbol("`", withTitle: "Code")
+        //self.textView.registerMarkdownFormattingSymbol("```", withTitle: "Preformatted")
+        //self.textView.registerMarkdownFormattingSymbol(">", withTitle: "Quote")
     }
     
     
@@ -145,18 +143,35 @@ extension ChannelViewController {
     func configureDataSource() {
         
         if self.channel.isNew {
-            self.tableView.reloadSections([0], with: .automatic)
+            self.channel.isNew = false
+            self.tableView.reloadSections([0], with: .none)
+            self.updateBadge()
+        }
+    }
+    
+    func updateBadge() {
+        var counter = 0
+        for chat in Engagement.current().chats {
+            counter += chat.isNew ? 1 : 0
+        }
+        for channel in Engagement.current().myChannels {
+            counter += channel.isNew ? 1 : 0
+        }
+        if counter == 0 {
+            self.tabBarController?.tabBar.items?[4].badgeValue = nil
+        } else {
+            self.tabBarController?.tabBar.items?[4].badgeValue = String(counter)
         }
     }
     
     func configureActionItems() {
         
         //let arrowItem = UIBarButtonItem(image: UIImage(named: "icn_arrow_down"), style: .plain, target: self, action: #selector(MessageViewController.hideOrShowTextInputbar(_:)))
-        let typeItem = UIBarButtonItem(image: UIImage(named: "icn_typing"), style: .plain, target: self, action: #selector(ChannelViewController.simulateUserTyping(_:)))
+        //let typeItem = UIBarButtonItem(image: UIImage(named: "icn_typing"), style: .plain, target: self, action: #selector(ChannelViewController.simulateUserTyping(_:)))
         //let appendItem = UIBarButtonItem(image: UIImage(named: "icn_append"), style: .plain, target: self, action: #selector(MessageViewController.fillWithText(_:)))
         //let pipItem = UIBarButtonItem(image: UIImage(named: "icn_pic"), style: .plain, target: self, action: #selector(MessageViewController.togglePIPWindow(_:)))
         let infoItem = UIBarButtonItem(image: Icon.Apple.info, style: .plain, target: self, action: #selector(showGroupInfo))
-        self.navigationItem.rightBarButtonItems = [infoItem, typeItem]
+        self.navigationItem.rightBarButtonItems = [infoItem]
     }
     
     // MARK: - Action Methods
@@ -278,8 +293,35 @@ extension ChannelViewController {
     }
     
     func showGroupInfo() {
-        let vc = EditChannelViewController(channel: self.channel)
-        self.present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        guard let members = self.channel.members else {
+            Toast.genericErrorMessage()
+            return
+        }
+        guard let isPrivate = self.channel.isPrivate else {
+            Toast.genericErrorMessage()
+            return
+        }
+        if members.count <= 2 && isPrivate {
+            var userId = String()
+            if members[0] != User.current().id {
+                userId = members[0]
+            } else {
+                userId = members[1]
+            }
+            guard let user = Cache.retrieveUser(userId) else {
+                Toast.genericErrorMessage()
+                return
+            }
+            let vc = ProfileViewController(user: user)
+            self.present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        } else {
+            let vc = EditChannelViewController(channel: self.channel)
+            self.present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        }
+    }
+    
+    func selectUserFromList(users: [User]) {
+        
     }
 }
 
@@ -375,7 +417,7 @@ extension ChannelViewController {
         // This little trick validates any pending auto-correction or auto-spelling just after hitting the 'Send' button
         self.textView.refreshFirstResponder()
         
-        self.channel.addMessage(text: self.textView.text, file: nil) { (success) in
+        self.channel.addMessage(user: User.current(), text: self.textView.text, file: nil) { (success) in
             if success {
                 let indexPath = IndexPath(row: 0, section: 0)
                 let rowAnimation: UITableViewRowAnimation = self.isInverted ? .bottom : .top
@@ -542,17 +584,21 @@ extension ChannelViewController {
         let cell = self.tableView.dequeueReusableCell(withIdentifier: MessengerCellIdentifier) as! MessageTableViewCell
         cell.titleLabel.textColor = UIColor.black
         cell.indexPath = indexPath
-        cell.usedForMessage = true
+        cell.usedForMessage = false
         cell.transform = self.tableView.transform
  
         let index = self.tableView(self.tableView, numberOfRowsInSection: indexPath.section) - indexPath.row - 1
         
         cell.titleLabel.text = self.channel.messages[index].user?.fullname
         cell.thumbnailView.image = self.channel.messages[index].user?.image
-        cell.bodyLabel.text = self.channel.messages[index].text
+        cell.bodyLabel.font = UIFont.systemFont(ofSize: 14)
+        cell.bodyLabel.attributedText = self.channel.messages[index].text?.parseAttributes().linkUsers(fromList: self.channel.usernames!)
+    
         
         return cell
     }
+    
+    
     
     func autoCompletionCellForRowAtIndexPath(_ indexPath: IndexPath) -> MessageTableViewCell {
         
@@ -589,7 +635,7 @@ extension ChannelViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if tableView == self.tableView {
-            let message = self.channel.messages[(indexPath as NSIndexPath).row]
+            let message = self.channel.messages[indexPath.row]
             
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineBreakMode = .byWordWrapping
@@ -606,14 +652,14 @@ extension ChannelViewController {
             width -= 25.0
             
             let titleBounds = (message.user?.object.value(forKey: PF_USER_FULLNAME) as? NSString)?.boundingRect(with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-            let bodyBounds = (message.text as? NSString)?.boundingRect(with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            let bodyBounds = (message.text! as NSString).boundingRect(with: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
             
             if message.text?.characters.count == 0 {
                 return 0
             }
             
             var height = titleBounds?.height ?? 44
-            height += bodyBounds?.height ?? 0
+            height += bodyBounds.height
             height += 40
             
             if height < kMessageTableViewCellMinimumHeight {

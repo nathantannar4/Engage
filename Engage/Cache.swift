@@ -77,7 +77,7 @@ public class Cache {
         }
         Log.write(.status, "Caching User with id \(userObject.objectId!)")
         let user = User(fromObject: userObject)
-        user.loadExtension()
+        user.loadExtension(completion: nil)
         Cache.add(user)
         return user
     }
@@ -88,7 +88,14 @@ public class Cache {
                 return user
             }
         }
-        return nil
+        let userQuery = PFUser.query()
+        userQuery?.whereKey(PF_USER_OBJECTID, equalTo: id)
+        do {
+            let userObject = try userQuery?.getFirstObject()
+            return Cache.retrieveUser(userObject as! PFUser)
+        } catch _ {
+            return nil
+        }
     }
     
     public static func retrieveTeam(_ teamObject: PFObject) -> Team {

@@ -41,7 +41,7 @@ public class Channel {
             return name
         }
         set {
-            self.object[PF_CHANNEL_NAME] = newValue
+            self.object[PF_CHANNEL_NAME] = newValue?.replacingOccurrences(of: " ", with: "_")
         }
     }
     public var isPrivate: Bool? {
@@ -179,7 +179,27 @@ public class Channel {
         channelQuery.whereKey(PF_CHANNEL_UPDATED_AT, greaterThan: self.updatedAt ?? Date())
         channelQuery.getFirstObjectInBackground { (object, error) in
             guard let channel = object else {
-                Log.write(.error, error.debugDescription)
+                if (error as? NSError)?.code != 101 {
+                    Log.write(.error, error.debugDescription)
+                    if let index = Engagement.current().chats.index(where: { (findChat) -> Bool in
+                        if self.id == findChat.id {
+                            return true
+                        }
+                        return false
+                    }) {
+                        Log.write(.warning, "Removing chat with id \(self.id)")
+                        Engagement.current().chats.remove(at: index)
+                    }
+                    if let index = Engagement.current().channels.index(where: { (findChannel) -> Bool in
+                        if self.id == findChannel.id {
+                            return true
+                        }
+                        return false
+                    }) {
+                        Log.write(.warning, "Removing channel with id \(self.id)")
+                        Engagement.current().channels.remove(at: index)
+                    }
+                } 
                 return
             }
             
@@ -217,7 +237,9 @@ public class Channel {
         messageQuery.limit = 100
         messageQuery.findObjectsInBackground { (objects, error) in
             guard let messages = objects else {
-                Log.write(.error, error.debugDescription)
+                if (error as? NSError)?.code != 101 {
+                    Log.write(.error, error.debugDescription)
+                }
                 completion?(false)
                 return
             }
@@ -228,17 +250,18 @@ public class Channel {
                     }
                     return false
                 }) {
-                    self.messages.append(Message(fromObject: message))
+                    let newMessage = Message(fromObject: message)
+                    self.messages.append(newMessage)
                 }
             }
             completion?(messages.count > 0)
         }
     }
     
-    public func addMessage(text: String?, file: PFFile?, completion: ((_ isNew: Bool) -> Void)?) {
+    public func addMessage(user: User, text: String?, file: PFFile?, completion: ((_ isNew: Bool) -> Void)?) {
         
         let newMessage = PFObject(className: Engagement.current().queryName! + PF_MESSAGE_CLASS_NAME)
-        newMessage[PF_MESSAGE_USER] = User.current().object
+        newMessage[PF_MESSAGE_USER] = user.object
         newMessage[PF_MESSAGE_CHANNEL] = self.object
         newMessage[PF_MESSAGE_TEXT] = text
         
@@ -357,6 +380,11 @@ public class Channel {
             completion?(success)
             if success {
                 Log.write(.status, "User \(user.id) joined channel \(self.id)")
+                if self.isPrivate! {
+                    self.addMessage(user: user, text: "_Joined the group_", file: nil, completion: nil)
+                } else {
+                    self.addMessage(user: user, text: "_Joined the channel_", file: nil, completion: nil)
+                }
             } else {
                 Toast.genericErrorMessage()
             }
@@ -369,8 +397,6 @@ public class Channel {
             return
         }
         if let index = members.index(of: user.id) {
-            members.remove(at: index)
-            self.members = members
             if var admins = self.admins {
                 if let adminIndex = admins.index(of: user.id) {
                     admins.remove(at: adminIndex)
@@ -380,11 +406,18 @@ public class Channel {
                     self.admins = admins
                 }
             }
+            members.remove(at: index)
+            self.members = members
         }
         self.save { (success) in
             completion?(success)
             if success {
                 Log.write(.status, "User \(user.id) left channel \(self.id)")
+                if self.isPrivate! {
+                    self.addMessage(user: user, text: "_Left the group_", file: nil, completion: nil)
+                } else {
+                    self.addMessage(user: user, text: "_Left the channel_", file: nil, completion: nil)
+                }
             } else {
                 Toast.genericErrorMessage()
             }

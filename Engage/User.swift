@@ -42,8 +42,8 @@ public class User {
             return self.object.value(forKey: PF_USER_FULLNAME) as? String
         }
         set {
-            self.object[PF_USER_FULLNAME] = newValue
-            self.object[PF_USER_FULLNAME] = newValue?.lowercased()
+            self.object[PF_USER_FULLNAME] = newValue?.lowercased().capitalized
+            self.object[PF_USER_FULLNAME_LOWER] = newValue?.lowercased()
         }
     }
     public var email: String? {
@@ -51,7 +51,9 @@ public class User {
             return self.object.email
         }
         set {
-            self.object.email = newValue
+            if newValue!.isValidEmail() {
+                self.object.email = newValue
+            }
         }
     }
     public var phone: String? {
@@ -104,7 +106,7 @@ public class User {
             self.coverImage = UIImage(data: imageData)
         }
         if Engagement.current() != nil {
-            self.loadExtension()
+            self.loadExtension(completion: nil)
         }
     }
     
@@ -139,13 +141,14 @@ public class User {
         User._current = Cache.retrieveUser(User.current().id)
     }
     
-    public func loadExtension() {
+    public func loadExtension(completion: (() -> Void)?) {
         let userExtenionQuery = PFQuery(className: Engagement.current().queryName! + PF_USER_CLASS_NAME)
         userExtenionQuery.includeKey(PF_USER_TEAM)
         userExtenionQuery.whereKey(PF_USER_EXTENSION, equalTo: User.current().object)
         userExtenionQuery.findObjectsInBackground { (objects, error) in
             guard let userExtensions = objects else {
                 Log.write(.error, error.debugDescription)
+                completion?()
                 return
             }
             if userExtensions.count == 0 {
@@ -155,21 +158,28 @@ public class User {
                 newExtension.saveInBackground()
                 Log.write(.status, "Created extension for user \(self.id)")
                 self.userExtension = UserExtension(fromObject: newExtension)
+                
             } else if userExtensions.count == 1 {
                 self.userExtension = UserExtension(fromObject: userExtensions[0])
                 Log.write(.status, "Loaded extension for user \(self.id)")
+                
             } else {
+                self.userExtension = UserExtension(fromObject: userExtensions[0])
+                Log.write(.status, "Loaded extension for user \(self.id)")
+                
                 // Extra extensions exist
                 for index in 1...userExtensions.count {
                     Log.write(.warning, "An extra extension for user \(self.id) was deleted")
                     userExtensions[index].deleteInBackground()
                 }
             }
+            completion?()
         }
     }
     
     public class func didLogin(with user: PFUser) {
         User._current = User(fromObject: user)
+        PushNotication.parsePushUserAssign()
     }
     
     public func logout(_ target: UIViewController) {
@@ -183,7 +193,8 @@ public class User {
             
             let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .default) { action -> Void in
                 PFUser.logOut()
-                let navContainer = NTNavigationContainer(centerView: LoginViewController())
+                PushNotication.parsePushUserResign()
+                let navContainer = NTNavigationContainer(centerView: UINavigationController(rootViewController: LoginViewController()))
                 UIApplication.shared.keyWindow?.rootViewController = navContainer
             }
             actionSheetController.addAction(logoutAction)
@@ -228,13 +239,7 @@ public class User {
                 Log.write(.status, "User is not associated with a team")
                 return
             }
-            team.fetchInBackground { (object, error) in
-                guard let usersTeam = object else {
-                    Log.write(.error, error.debugDescription)
-                    return
-                }
-                self.team = Cache.retrieveTeam(usersTeam)
-            }
+            self.team = Cache.retrieveTeam(team)
         }
         
         // MARK: Public Functions

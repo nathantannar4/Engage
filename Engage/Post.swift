@@ -8,6 +8,7 @@
 
 import Foundation
 import Parse
+import Photos
 import NTUIKit
 
 public protocol PostModificationDelegate {
@@ -27,7 +28,17 @@ public class Post {
             return id
         }
     }
-    public var user: User!
+    public var user: User? {
+        get {
+            guard let user = object.object(forKey: PF_MESSAGE_USER) as? PFUser else {
+                return nil
+            }
+            return Cache.retrieveUser(user)
+        }
+        set {
+            self.object[PF_POST_USER] = newValue?.object
+        }
+    }
     public var content: String? {
         get {
             return self.object.value(forKey: PF_POST_INFO) as? String
@@ -59,11 +70,9 @@ public class Post {
     public init(fromObject object: PFObject) {
         self.object = object
         
-        guard let objectUser = object.object(forKey: PF_POST_USER) as? PFUser else {
-            Log.write(.error, "Object with ID \(object.objectId!) did not have a cooresponding user")
-            return
+        if let objectUser = object.object(forKey: PF_POST_USER) as? PFUser {
+            let _ = Cache.retrieveUser(objectUser)
         }
-        self.user = Cache.retrieveUser(objectUser)
         
         guard let file = self.object.value(forKey: PF_POST_IMAGE) as? PFFile else {
             return
@@ -98,8 +107,8 @@ public class Post {
     }
     
     public init(text: String?, image: UIImage?) {
-        self.user = User.current()
         self.object = PFObject(className: Engagement.current().queryName! + PF_POST_CLASSNAME)
+        self.user = User.current()
         self.object[PF_POST_INFO] = text ?? ""
         self.object[PF_POST_COMMENTS] = []
         self.object[PF_POST_COMMENT_DATES] = []
@@ -290,7 +299,6 @@ public class Post {
             let delete: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
                 self.object.deleteInBackground(block: { (success: Bool, error: Error?) in
                     if success {
-                        let undoButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.undo, target: self, action: #selector(self.undoDeletion))
                         let toast = Toast(text: "Post Deleted", button: nil, color: Color.darkGray, height: 44)
                         toast.show(target.view, duration: 2.0)
                         delegate.didDeletePost()
@@ -319,18 +327,88 @@ public class Post {
         
         if self.image != nil {
             let editAction: UIAlertAction = UIAlertAction(title: "Save Photo", style: .default) { action -> Void in
-                
+                PHPhotoLibrary.shared().performChanges({ PHAssetChangeRequest.creationRequestForAsset(from: self.image!)}, completionHandler: { success, error in
+                    if success {
+                        let toast = Toast(text: "Photo saved to camera roll", button: nil, color: Color.darkGray, height: 44)
+                        toast.show(duration: 1.5)
+                    } else {
+                        let toast = Toast(text: "Could not save photo", button: nil, color: Color.darkGray, height: 44)
+                        toast.show(duration: 1.5)
+                    }
+                })
             }
             actionSheetController.addAction(editAction)
         }
         
         let deleteAction: UIAlertAction = UIAlertAction(title: "Report", style: .default) { action -> Void in
-            
+            self.reportPost(target: target)
         }
         actionSheetController.addAction(deleteAction)
         
         actionSheetController.popoverPresentationController?.sourceView = sender
         actionSheetController.popoverPresentationController?.sourceRect = sender.bounds
+        
+        target.present(actionSheetController, animated: true, completion: nil)
+    }
+    
+    private func reportPost(target: UIViewController) {
+        let actionSheetController: UIAlertController = UIAlertController(title: "Flag Post As", message: nil, preferredStyle: .actionSheet)
+        actionSheetController.view.tintColor = Color.defaultNavbarTint
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
+        actionSheetController.addAction(cancelAction)
+        
+        let inappropriateAction: UIAlertAction = UIAlertAction(title: "Inappropriate Content", style: .default) { action -> Void in
+            let flagObject = PFObject(className: Engagement.current().queryName! + PF_FLAGGED_POST_CLASSNAME)
+            flagObject[PF_FLAGGED_POST_POST] = self.object
+            flagObject[PF_FLAGGED_POST_REASON] = "Inappropriate Content"
+            flagObject[PF_FLAGGED_POST_USER] = User.current().object
+            flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                if error == nil {
+                    let toast = Toast(text: "Post flagged", button: nil, color: Color.darkGray, height: 44)
+                    toast.dismissOnTap = true
+                    toast.show(duration: 1.5)
+                } else {
+                    Toast.genericErrorMessage()
+                }
+            })
+        }
+        actionSheetController.addAction(inappropriateAction)
+        
+        let offensiveAction: UIAlertAction = UIAlertAction(title: "Offensive Content", style: .default) { action -> Void in
+            let flagObject = PFObject(className: Engagement.current().queryName! + PF_FLAGGED_POST_CLASSNAME)
+            flagObject[PF_FLAGGED_POST_POST] = self.object
+            flagObject[PF_FLAGGED_POST_REASON] = "Offensive Content"
+            flagObject[PF_FLAGGED_POST_USER] = User.current().object
+            flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                if error == nil {
+                    let toast = Toast(text: "Post flagged", button: nil, color: Color.darkGray, height: 44)
+                    toast.dismissOnTap = true
+                    toast.show(duration: 1.5)
+                } else {
+                    Toast.genericErrorMessage()
+                }
+            })
+        }
+        actionSheetController.addAction(offensiveAction)
+        
+        let spamAction: UIAlertAction = UIAlertAction(title: "Spam", style: .default) { action -> Void in
+            let flagObject = PFObject(className: Engagement.current().queryName! + PF_FLAGGED_POST_CLASSNAME)
+            flagObject[PF_FLAGGED_POST_POST] = self.object
+            flagObject[PF_FLAGGED_POST_REASON] = "Spam"
+            flagObject[PF_FLAGGED_POST_USER] = User.current().object
+            flagObject.saveInBackground(block: { (success: Bool, error: Error?) in
+                if error == nil {
+                    let toast = Toast(text: "Post flagged", button: nil, color: Color.darkGray, height: 44)
+                    toast.dismissOnTap = true
+                    toast.show(duration: 1.5)
+                } else {
+                    Toast.genericErrorMessage()
+                }
+            })
+        }
+        actionSheetController.addAction(spamAction)
+        actionSheetController.popoverPresentationController?.sourceView = target.view
         
         target.present(actionSheetController, animated: true, completion: nil)
     }

@@ -62,7 +62,9 @@ public class Group {
             return self.object.value(forKey: PF_ENGAGEMENTS_EMAIL) as? String
         }
         set {
-            self.object[PF_ENGAGEMENTS_EMAIL] = newValue
+            if newValue!.isValidEmail() {
+                self.object[PF_ENGAGEMENTS_EMAIL] = newValue
+            }
         }
     }
     public var address: String? {
@@ -83,10 +85,26 @@ public class Group {
     }
     public var password: String? {
         get {
+            let pwd = self.object.value(forKey: PF_ENGAGEMENTS_PASSWORD) as? String
+            if pwd == nil {
+                self.password = String()
+            }
             return self.object.value(forKey: PF_ENGAGEMENTS_PASSWORD) as? String
         }
         set {
             self.object[PF_ENGAGEMENTS_PASSWORD] = newValue
+        }
+    }
+    public var hidden: Bool? {
+        get {
+            let isHidden = self.object.value(forKey: PF_ENGAGEMENTS_HIDDEN) as? Bool
+            if isHidden == nil {
+                self.hidden = false
+            }
+            return self.object.value(forKey: PF_ENGAGEMENTS_HIDDEN) as? Bool
+        }
+        set {
+            self.object[PF_ENGAGEMENTS_HIDDEN] = newValue
         }
     }
     public var members: [String]? {
@@ -111,6 +129,18 @@ public class Group {
         }
         set {
             self.object[PF_ENGAGEMENTS_POSITIONS] = newValue
+        }
+    }
+    public var profileFields: [String]? {
+        get {
+            let fields = self.object.value(forKey: PF_ENGAGEMENTS_PROFILE_FIELDS) as? [String]
+            if fields == nil {
+                self.profileFields = [String]()
+            }
+            return self.object.value(forKey: PF_ENGAGEMENTS_PROFILE_FIELDS) as? [String]
+        }
+        set {
+            self.object[PF_ENGAGEMENTS_PROFILE_FIELDS] = newValue
         }
     }
     
@@ -194,8 +224,6 @@ public class Group {
             return
         }
         if let index = members.index(of: user.id) {
-            members.remove(at: index)
-            self.members = members
             if var admins = self.admins {
                 if let adminIndex = admins.index(of: user.id) {
                     admins.remove(at: adminIndex)
@@ -208,6 +236,8 @@ public class Group {
                     self.admins = admins
                 }
             }
+            members.remove(at: index)
+            self.members = members
         }
         self.save { (success) in
             completion?(success)
@@ -259,5 +289,19 @@ public class Group {
             }
         }
         return nil
+    }
+    
+    public func setPosition(forUser user: User, position: String, completion: ((_ success: Bool) -> Void)?) {
+        self.object[position.lowercased()] = user.id
+        self.save { (success) in
+            completion?(success)
+        }
+    }
+    
+    public func emptyPosition(_ position: String, completion: ((_ success: Bool) -> Void)?) {
+        self.object[position.lowercased()] = NSNull()
+        self.save { (success) in
+            completion?(success)
+        }
     }
 }

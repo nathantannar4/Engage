@@ -26,14 +26,38 @@ class LoginViewController: NTLoginViewController {
                 if let object = objects?.first {
                     User.didLogin(with: PFUser.current()!)
                     Engagement.didSelect(with: object)
+                } else {
+                    let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                    toast.show(duration: 2.0)
                 }
             })
         }
     }
     
-    override func registerButtonPressed() {
-        let vc = UINavigationController(rootViewController: RegisterViewController())
-        self.present(vc, animated: true, completion: nil)
+    override func emailRegisterLogic(email: String, password: String, name: String) {
+        
+        // Freeze user interaction
+        self.view.endEditing(true)
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        
+        // Create new user
+        let user = PFUser()
+        user.username = email
+        user.email = email
+        user.password = password
+        user[PF_USER_FULLNAME] = name
+        user[PF_USER_FULLNAME_LOWER] = name.lowercased()
+        
+        // Save new user
+        user.signUpInBackground { (success, error) -> Void in
+            UIApplication.shared.endIgnoringInteractionEvents()
+            if success {
+                User.didLogin(with: PFUser.current()!)
+            } else {
+                Log.write(.error, error.debugDescription)
+                Toast.genericErrorMessage()
+            }
+        }
     }
     
     override func emailLoginLogic(email: String, password: String) {
@@ -47,8 +71,8 @@ class LoginViewController: NTLoginViewController {
             UIApplication.shared.endIgnoringInteractionEvents()
             guard let user = object else {
                 Log.write(.error, error.debugDescription)
-                let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 60)
-                toast.show(duration: 1.0)
+                let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                toast.show(duration: 2.0)
                 return
             }
             Log.write(.status, "Email Login Successful")

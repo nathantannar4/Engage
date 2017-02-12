@@ -141,7 +141,7 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
     }
     
     func handleMore(sender: UIButton) {
-        if self.post.user.id == User.current().id {
+        if self.post.user?.id == User.current().id {
             self.post.handleByOwner(target: self, delegate: self, sender: sender)
         } else {
             self.post.handle(target: self, sender: sender)
@@ -201,8 +201,8 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
                 cell.imageView.layer.borderWidth = 1
                 cell.imageView.layer.borderColor = Color.defaultButtonTint.cgColor
                 cell.cornersRounded = [.topLeft, .topRight]
-                cell.title = self.post.user.fullname
-                cell.image = self.post.user.image
+                cell.title = self.post.user?.fullname
+                cell.image = self.post.user?.image
                 
                 cell.accessoryButton.setImage(Icon.Apple.moreVerticalFilled, for: .normal)
                 cell.accessoryButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)
@@ -299,7 +299,7 @@ class PostDetailViewController: NTTableViewController, NTTableViewDataSource, NT
         }
         if indexPath.section == 0 {
             if indexPath.row == 0 {
-                let profileVC = ProfileViewController(user: self.post.user)
+                let profileVC = ProfileViewController(user: self.post.user!)
                 self.present(UINavigationController(rootViewController: profileVC), animated: true, completion: nil)
             } else if indexPath.row == 1 {
                 guard let image = self.post.image else {

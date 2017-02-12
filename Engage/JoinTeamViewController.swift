@@ -13,14 +13,6 @@ import Parse
 
 class JoinTeamViewController: NTTableViewController, NTTableViewDataSource, NTTableViewDelegate {
     
-    private var engagement: Engagement!
-    
-    // MARK: - Initializers
-    public convenience init(engagement: Engagement) {
-        self.init()
-        self.engagement = engagement
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,12 +56,12 @@ class JoinTeamViewController: NTTableViewController, NTTableViewDataSource, NTTa
     
     func tableView(_ tableView: NTTableView, cellForHeaderInSection section: Int) -> NTHeaderCell? {
         let header = NTHeaderCell.initFromNib()
-        header.titleLabel.text = self.engagement.teams[section].name
+        header.titleLabel.text = Engagement.current().teams[section].name
         return header
     }
     
     func numberOfSections(in tableView: NTTableView) -> Int {
-        return self.engagement.teams.count
+        return Engagement.current().teams.count
     }
     
     func tableView(_ tableView: NTTableView, rowsInSection section: Int) -> Int {
@@ -85,7 +77,7 @@ class JoinTeamViewController: NTTableViewController, NTTableViewDataSource, NTTa
             cell.contentImageView.layer.borderWidth = 2
             cell.contentImageView.layer.borderColor = UIColor.white.cgColor
             cell.contentImageView.layer.cornerRadius = 5
-            cell.image = self.engagement.teams[indexPath.section].coverImage
+            cell.image = Engagement.current().teams[indexPath.section].coverImage
             
             if cell.image == nil {
                 cell.contentImageView.removeFromSuperview()
@@ -96,7 +88,7 @@ class JoinTeamViewController: NTTableViewController, NTTableViewDataSource, NTTa
             let cell = NTMenuItemCell.initFromNib()
             cell.horizontalInset = 10
             cell.cornerRadius = 5
-            if self.engagement.teams[indexPath.section].coverImage == nil {
+            if Engagement.current().teams[indexPath.section].coverImage == nil {
                 cell.cornersRounded = .allCorners
             } else {
                 cell.cornersRounded = [.bottomLeft, .bottomRight]
@@ -117,7 +109,7 @@ class JoinTeamViewController: NTTableViewController, NTTableViewDataSource, NTTa
     // MARK: NTTableViewDelegate
     
     func tableView(_ tableView: NTTableView, didSelectRowAt indexPath: IndexPath) {
-        let team = self.engagement.teams[indexPath.section]
+        let team = Engagement.current().teams[indexPath.section]
         let teamVC = TeamViewController(team: team)
         self.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(teamVC, animated: true)

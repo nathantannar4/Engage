@@ -21,7 +21,6 @@
 		38118E2A1E27E25C0042F9C1 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E291E27E25C0042F9C1 /* MenuViewController.swift */; };
 		38118E2C1E27E3290042F9C1 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E2B1E27E3290042F9C1 /* ProfileViewController.swift */; };
 		38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */; };
-		38118E321E282C6B0042F9C1 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E311E282C6B0042F9C1 /* String.swift */; };
 		38118E341E2830300042F9C1 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38118E331E2830300042F9C1 /* Comment.swift */; };
 		389937671E41AFE200AA2E1D /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937661E41AFE200AA2E1D /* Group.swift */; };
 		389937691E41B14400AA2E1D /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937681E41B14400AA2E1D /* Team.swift */; };
@@ -33,7 +32,6 @@
 		3899377F1E4571F500AA2E1D /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3899377E1E4571F500AA2E1D /* Channel.swift */; };
 		389937811E45744600AA2E1D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937801E45744600AA2E1D /* Message.swift */; };
 		389937831E45830200AA2E1D /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937821E45830200AA2E1D /* MessagesViewController.swift */; };
-		389937A51E4676D000AA2E1D /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937A41E4676D000AA2E1D /* RegisterViewController.swift */; };
 		389937A81E46D52D00AA2E1D /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937A71E46D52D00AA2E1D /* CalendarViewController.swift */; };
 		389937AA1E46D54200AA2E1D /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937A91E46D54200AA2E1D /* Event.swift */; };
 		389937B01E46D99600AA2E1D /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389937AB1E46D99600AA2E1D /* LocationPickerViewController.swift */; };
@@ -74,6 +72,7 @@
 		3899381B1E4D16E700AA2E1D /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389938181E4D16E700AA2E1D /* PushNotification.swift */; };
 		3899381D1E4D16E700AA2E1D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3899381A1E4D16E700AA2E1D /* Device.swift */; };
 		3899381F1E4D1C2200AA2E1D /* EditChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3899381E1E4D1C2200AA2E1D /* EditChannelViewController.swift */; };
+		389938211E4E5ED900AA2E1D /* AdminFunctionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389938201E4E5ED900AA2E1D /* AdminFunctionsViewController.swift */; };
 		38A5B8DB1E372216009E280B /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8DA1E372216009E280B /* EditProfileViewController.swift */; };
 		38A5B8DD1E372474009E280B /* FormerInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8DC1E372474009E280B /* FormerInputAccessoryView.swift */; };
 		38A5B9071E3724C2009E280B /* ColorListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B8E01E3724C2009E280B /* ColorListCell.swift */; };
@@ -130,7 +129,6 @@
 		38118E2D1E282BD10042F9C1 /* Engage-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Engage-Bridging-Header.h"; sourceTree = "<group>"; };
 		38118E2E1E282BD20042F9C1 /* NSDate+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utilities.h"; sourceTree = "<group>"; };
 		38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utilities.m"; sourceTree = "<group>"; };
-		38118E311E282C6B0042F9C1 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		38118E331E2830300042F9C1 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		389937661E41AFE200AA2E1D /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		389937681E41B14400AA2E1D /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -145,7 +143,6 @@
 		3899377E1E4571F500AA2E1D /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		389937801E45744600AA2E1D /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		389937821E45830200AA2E1D /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
-		389937A41E4676D000AA2E1D /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		389937A71E46D52D00AA2E1D /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		389937A91E46D54200AA2E1D /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		389937AB1E46D99600AA2E1D /* LocationPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
@@ -188,6 +185,7 @@
 		389938181E4D16E700AA2E1D /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
 		3899381A1E4D16E700AA2E1D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		3899381E1E4D1C2200AA2E1D /* EditChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditChannelViewController.swift; sourceTree = "<group>"; };
+		389938201E4E5ED900AA2E1D /* AdminFunctionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminFunctionsViewController.swift; sourceTree = "<group>"; };
 		38A5B8DA1E372216009E280B /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		38A5B8DC1E372474009E280B /* FormerInputAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormerInputAccessoryView.swift; sourceTree = "<group>"; };
 		38A5B8E01E3724C2009E280B /* ColorListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorListCell.swift; sourceTree = "<group>"; };
@@ -250,6 +248,7 @@
 				3899376B1E4309C300AA2E1D /* TeamViewController.swift */,
 				389937F21E46DFEA00AA2E1D /* JoinTeamViewController.swift */,
 				380A89C91E3F1A1900BD8E37 /* EditGroupViewController.swift */,
+				389938201E4E5ED900AA2E1D /* AdminFunctionsViewController.swift */,
 			);
 			name = "Engagement / Team";
 			sourceTree = "<group>";
@@ -263,7 +262,7 @@
 			name = "User Selection";
 			sourceTree = "<group>";
 		};
-		380F6F0D1E2C4A8B008C7675 /* Objects */ = {
+		380F6F0D1E2C4A8B008C7675 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				380F6F011E2AC721008C7675 /* Cache.swift */,
@@ -277,16 +276,15 @@
 				38118E331E2830300042F9C1 /* Comment.swift */,
 				389937A91E46D54200AA2E1D /* Event.swift */,
 			);
-			name = Objects;
+			name = Models;
 			sourceTree = "<group>";
 		};
-		380F6F0E1E2C4A96008C7675 /* View Controllers */ = {
+		380F6F0E1E2C4A96008C7675 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				38118E291E27E25C0042F9C1 /* MenuViewController.swift */,
 				389937F41E47B0B700AA2E1D /* TabBarController.swift */,
 				38F7DFC61E24C7320001BA91 /* LoginViewController.swift */,
-				389937A41E4676D000AA2E1D /* RegisterViewController.swift */,
 				380A89D11E3F1C6F00BD8E37 /* User Selection */,
 				380F6F0F1E2C4AA0008C7675 /* Activity Feed */,
 				384628161E373B90004B39D0 /* Profile */,
@@ -294,7 +292,7 @@
 				389937711E45681500AA2E1D /* Messages */,
 				389937A61E46D50B00AA2E1D /* Events */,
 			);
-			name = "View Controllers";
+			name = Views;
 			sourceTree = "<group>";
 		};
 		380F6F0F1E2C4AA0008C7675 /* Activity Feed */ = {
@@ -312,15 +310,10 @@
 			children = (
 				3899377D1E45683300AA2E1D /* SLKTextViewController Assets */,
 				38A5B8DF1E37249F009E280B /* Former */,
-				38118E311E282C6B0042F9C1 /* String.swift */,
-				38F7DFD61E24C8D60001BA91 /* Constants.swift */,
 				389938181E4D16E700AA2E1D /* PushNotification.swift */,
 				3899381A1E4D16E700AA2E1D /* Device.swift */,
-				38F7DFD81E24C9100001BA91 /* Config.swift */,
 				38118E2E1E282BD20042F9C1 /* NSDate+Utilities.h */,
 				38118E2F1E282BD20042F9C1 /* NSDate+Utilities.m */,
-				38F7DFD01E24C7320001BA91 /* Info.plist */,
-				38118E2D1E282BD10042F9C1 /* Engage-Bridging-Header.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -416,6 +409,17 @@
 			name = CVCalendar;
 			sourceTree = "<group>";
 		};
+		389938231E4FB15100AA2E1D /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				38F7DFD61E24C8D60001BA91 /* Constants.swift */,
+				38F7DFD81E24C9100001BA91 /* Config.swift */,
+				38F7DFD01E24C7320001BA91 /* Info.plist */,
+				38118E2D1E282BD10042F9C1 /* Engage-Bridging-Header.h */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
 		38A5B8DE1E37248B009E280B /* Former Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -481,11 +485,12 @@
 			isa = PBXGroup;
 			children = (
 				38F7DFC41E24C7320001BA91 /* AppDelegate.swift */,
-				380F6F0E1E2C4A96008C7675 /* View Controllers */,
-				380F6F0D1E2C4A8B008C7675 /* Objects */,
+				380F6F0E1E2C4A96008C7675 /* Views */,
+				380F6F0D1E2C4A8B008C7675 /* Models */,
 				38F7DFC81E24C7320001BA91 /* Main.storyboard */,
 				38F7DFCB1E24C7320001BA91 /* Assets.xcassets */,
 				38F7DFCD1E24C7320001BA91 /* LaunchScreen.storyboard */,
+				389938231E4FB15100AA2E1D /* Config */,
 				38118E1E1E26FE2E0042F9C1 /* Supporting Files */,
 			);
 			path = Engage;
@@ -671,6 +676,7 @@
 				389937E41E46D9BD00AA2E1D /* CVCalendarViewPresentationMode.swift in Sources */,
 				38118E261E2709A80042F9C1 /* Engagement.swift in Sources */,
 				389937E21E46D9BD00AA2E1D /* CVCalendarViewAppearanceDelegate.swift in Sources */,
+				389938211E4E5ED900AA2E1D /* AdminFunctionsViewController.swift in Sources */,
 				38A5B8DD1E372474009E280B /* FormerInputAccessoryView.swift in Sources */,
 				389937D71E46D9BD00AA2E1D /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				38A5B9211E3724C2009E280B /* ProfileHeaderCell.swift in Sources */,
@@ -689,13 +695,11 @@
 				389937DB1E46D9BD00AA2E1D /* CVCalendarMonthContentViewController.swift in Sources */,
 				38118E301E282BD20042F9C1 /* NSDate+Utilities.m in Sources */,
 				38F7DFC51E24C7320001BA91 /* AppDelegate.swift in Sources */,
-				38118E321E282C6B0042F9C1 /* String.swift in Sources */,
 				380A89CA1E3F1A1900BD8E37 /* EditGroupViewController.swift in Sources */,
 				38A5B9191E3724C2009E280B /* HeaderCell.swift in Sources */,
 				38A5B91D1E3724C2009E280B /* MapCell.swift in Sources */,
 				389937EF1E46D9BD00AA2E1D /* CVStatus.swift in Sources */,
 				389937E81E46D9BD00AA2E1D /* CVDate.swift in Sources */,
-				389937A51E4676D000AA2E1D /* RegisterViewController.swift in Sources */,
 				389937F01E46D9BD00AA2E1D /* CVWeekdaySymbolType.swift in Sources */,
 				38A5B9291E3724C2009E280B /* TitleCell.swift in Sources */,
 				389937D41E46D9BD00AA2E1D /* CVAuxiliaryView.swift in Sources */,

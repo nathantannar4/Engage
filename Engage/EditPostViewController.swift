@@ -37,11 +37,7 @@ class EditPostViewController: FormViewController, UIImagePickerControllerDelegat
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: Icon.Google.check, style: .plain, target: self, action: #selector(saveButtonPressed(sender:)))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(cancelButtonPressed(sender:)))
         
-        if Color.defaultNavbarBackground.isLight {
-            UIApplication.shared.statusBarStyle = .default
-        } else {
-            UIApplication.shared.statusBarStyle = .lightContent
-        }
+        UIApplication.shared.statusBarStyle = .default
         self.tableView.contentInset.top = 10
         self.tableView.contentInset.bottom = 100
         

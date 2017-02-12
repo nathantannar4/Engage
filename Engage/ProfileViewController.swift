@@ -30,7 +30,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         self.dataSource = self
         self.delegate = self
         self.tableView.emptyFooterHeight = 10
-        if self.getNTNavigationContainer == nil {
+        if self.navigationController?.viewControllers[0] == self && self.getNTNavigationContainer == nil {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Google.close, style: .plain, target: self, action: #selector(dismiss(sender:)))
         }
         self.prepareTableView()
@@ -117,7 +117,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     func handleMore(sender: UIButton) {
         let post = self.posts[sender.tag]
-        if post.user.id == User.current().id {
+        if post.user?.id == User.current().id {
             post.handleByOwner(target: self, delegate: self, sender: sender)
         } else {
             post.handle(target: self, sender: sender)
@@ -266,8 +266,8 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
                 cell.imageView.layer.borderWidth = 1
                 cell.imageView.layer.borderColor = Color.defaultButtonTint.cgColor
                 cell.cornersRounded = [.topLeft, .topRight]
-                cell.title = self.posts[section].user.fullname
-                cell.image = self.posts[section].user.image
+                cell.title = self.posts[section].user?.fullname
+                cell.image = self.posts[section].user?.image
                 cell.accessoryButton.tag = section
                 cell.accessoryButton.setImage(Icon.Apple.moreVerticalFilled, for: .normal)
                 cell.accessoryButton.addTarget(self, action: #selector(handleMore(sender:)), for: .touchUpInside)
@@ -327,10 +327,8 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
     
     func imageForStretchyView(in tableView: NTTableView) -> UIImage? {
         guard let image = self.user.coverImage else {
-            self.fadeInNavBarOnScroll = false
             return nil
         }
-        self.fadeInNavBarOnScroll = true
         self.tableView.refreshControl?.tintColor = UIColor.white
         self.tableView.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName : UIColor.white])
         return image
@@ -361,7 +359,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
                 return
             }
             self.user = Cache.retrieveUser(updatedUser)
-            self.reloadData()
+            self.tableView.reloadSections([0,1,2], with: .none)
             self.queryForPosts()
         }
     }
@@ -372,9 +370,8 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
         } else {
             self.isQuerying = true
         }
-        self.posts.removeAll()
         let postQuery = PFQuery(className: Engagement.current().queryName! + PF_POST_CLASSNAME)
-        postQuery.skip = self.posts.count
+        //postQuery.skip = self.posts.count
         postQuery.limit = 10
         postQuery.whereKey(PF_POST_USER, equalTo: self.user.object)
         postQuery.includeKey(PF_POST_USER)
@@ -384,6 +381,7 @@ class ProfileViewController: NTTableViewController, NTTableViewDataSource, NTTab
                 Log.write(.error, error.debugDescription)
                 return
             }
+            self.posts.removeAll()
             for post in posts {
                 self.posts.append(Cache.retrievePost(post))
             }
