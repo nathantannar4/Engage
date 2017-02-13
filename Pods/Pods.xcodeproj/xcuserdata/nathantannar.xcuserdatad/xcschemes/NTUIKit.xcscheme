@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '186AAC74E15FD49600CF627C8D513A5F'
+               BlueprintIdentifier = '22CE782611533756015DF628BCF4F355'
                BlueprintName = 'NTUIKit'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'NTUIKit.framework'>

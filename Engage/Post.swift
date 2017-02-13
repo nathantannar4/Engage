@@ -137,7 +137,9 @@ public class Post {
             completion?(success)
             if error != nil {
                 Log.write(.error, error.debugDescription)
-                Toast.genericErrorMessage()
+                let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                toast.dismissOnTap = true
+                toast.show(duration: 1.0)
             } else {
                 Cache.update(self)
             }
@@ -169,13 +171,17 @@ public class Post {
                             toast.dismissOnTap = true
                             toast.show(duration: 1.0)
                         } else {
-                            Toast.genericErrorMessage()
+                            let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                            toast.dismissOnTap = true
+                            toast.show(duration: 1.0)
                         }
                     }
                 } else {
                     // Unfreeze user interaction
                     UIApplication.shared.endIgnoringInteractionEvents()
-                    Toast.genericErrorMessage()
+                    let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                    toast.dismissOnTap = true
+                    toast.show(duration: 1.0)
                 }
             }
         } else {
@@ -189,8 +195,6 @@ public class Post {
                     let toast = Toast(text: "Post Uploaded", button: nil, color: Color.darkGray, height: 44)
                     toast.dismissOnTap = true
                     toast.show(duration: 1.0)
-                } else {
-                    Toast.genericErrorMessage()
                 }
             }
         }

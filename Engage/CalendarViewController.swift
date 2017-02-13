@@ -119,8 +119,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     }
     
     func loadEvents() {
-        /*
-        let eventQuery = PFQuery(className: "\(Engagement.sharedInstance.name!.replacingOccurrences(of: " ", with: "_"))_\(PF_EVENTS_CLASS_NAME)")
+        let eventQuery = PFQuery(className: Engagement.current().queryName! + PF_EVENTS_CLASS_NAME)
         eventQuery.order(byAscending: "start")
         eventQuery.whereKey("start", greaterThan: currentDay.subtractingHours(7))
         eventQuery.whereKey("start", lessThan: (currentDay.addingMonths(1) as NSDate).addingHours(17) as NSDate)
@@ -152,7 +151,6 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
                 self.calendarView.contentController.refreshPresentedMonth()
             }
         }
-        */
     }
 
     // MARK: - CVCalendarViewDelegate & CVCalendarMenuViewDelegate

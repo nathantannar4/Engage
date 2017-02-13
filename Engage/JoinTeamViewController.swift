@@ -45,7 +45,8 @@ class JoinTeamViewController: NTTableViewController, NTTableViewDataSource, NTTa
     // MARK: User Action
     
     func createTeam(sender: UIButton) {
-        
+        let navVC = UINavigationController(rootViewController: CreateGroupViewController(asEngagement: true))
+        self.present(navVC, animated: true, completion: nil)
     }
     
     func joinTeam(sender: AnyObject) {

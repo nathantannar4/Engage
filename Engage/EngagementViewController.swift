@@ -69,14 +69,15 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     }
     
     func showEvents(sender: AnyObject) {
-        let selectionVC = UserListViewController(group: Engagement.current())
+        let eventsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "calendarVC") as! CalendarViewController
         self.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(selectionVC, animated: true)
+        self.navigationController?.pushViewController(eventsVC, animated: true)
         self.hidesBottomBarWhenPushed = false
     }
     
     func createTeam(sender: UIButton) {
-        
+        let navVC = UINavigationController(rootViewController: CreateGroupViewController(asEngagement: true))
+        self.present(navVC, animated: true, completion: nil)
     }
     
     func groupOptions(sender: UIButton) {
@@ -104,9 +105,10 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
             { action -> Void in
                 self.engagement.leave(user: User.current(), completion: { (success) in
                     if success {
-                        self.reloadData()
                         let toast = Toast(text: "Successfully left \(self.engagement.name!)", button: nil, color: Color.darkGray, height: 44)
                         toast.show(duration: 1.5)
+                        
+                        self.engagement.didResign()
                     }
                 })
             }
@@ -185,8 +187,8 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
             cell.setDefaults()
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewProfilePhoto))
             cell.imageView.addGestureRecognizer(tapGesture)
-            cell.image = Engagement.current().image
-            cell.name = Engagement.current().name
+            cell.image = self.engagement.image
+            cell.name = self.engagement.name
             if self.engagement.admins!.contains(User.current().id) {
                 cell.rightButton.setImage(Icon.Apple.editFilled, for: .normal)
                 cell.rightButton.addTarget(self, action: #selector(editEngagement(sender:)), for: .touchUpInside)
@@ -286,7 +288,7 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     }
     
     func imageForStretchyView(in tableView: NTTableView) -> UIImage? {
-        guard let image = Engagement.current().coverImage else {
+        guard let image = self.engagement.coverImage else {
             return nil
         }
         self.tableView.refreshControl?.tintColor = UIColor.white

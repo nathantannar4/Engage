@@ -54,6 +54,8 @@ let PF_FLAGGED_POST_USER                = "user"
 
 /* Engagements */
 let PF_ENGAGEMENTS_CLASS_NAME           = "Engagements"             //  Class name
+let PF_ENGAGEMENTS_OBJECT_ID            = "objectId"
+let PF_ENGAGEMENTS_UPDATED_AT            = "updatedAt"
 let PF_ENGAGEMENTS_NAME                 = "name"                    //  String
 let PF_ENGAGEMENTS_LOWERCASE_NAME       = "lowercase_name"          //  String
 let PF_ENGAGEMENTS_MEMBERS              = "members"                 //  Array
@@ -71,8 +73,7 @@ let PF_ENGAGEMENTS_EMAIL                = "email"                   //  String
 let PF_ENGAGEMENTS_URL                  = "url"                     //  String
 let PF_ENGAGEMENTS_POSITIONS            = "positions"               //  Array
 let PF_ENGAGEMENTS_SUBGROUP_NAME        = "subGroupName"            //  Array
-let PF_ENGAGEMENT_COLOR                 = "color"
-let PF_ENGAGEMENT_SPONSOR               = "sponsor"
+let PF_ENGAGEMENTS_COLOR                 = "color"
 
 /* Engagement Sub Groups */
 let PF_SUBGROUP_CLASS_NAME              = "_SubGroup"                //  Class Name

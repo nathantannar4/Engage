@@ -54,7 +54,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
             self?.former.deselect(animated: true)
             if (self?.pushNotificationText.characters.count)! > 1 && (self?.pushNotificationText.characters.count)! <= 140 {
                 let actionSheetController: UIAlertController = UIAlertController(title: "Send Push", message: "Select your audience", preferredStyle: .actionSheet)
-                actionSheetController.view.tintColor = MAIN_COLOR
+                actionSheetController.view.tintColor = Color.defaultNavbarTint
                 
                 let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
                     //Just dismiss the action sheet
@@ -67,7 +67,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
                     let vc = SelectUsersFromGroupViewController()
                     vc.delegate = self
                     let navVC = UINavigationController(rootViewController:  vc)
-                    navVC.navigationBar.barTintColor = MAIN_COLOR!
+                    navVC.navigationBar.barTintColor = Color.defaultNavbarTint!
                     self?.present(navVC, animated: true, completion: nil)
                 }
                 actionSheetController.addAction(selectMembersAction)
@@ -108,7 +108,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
         let emailRow = createMenu("Email Members") { [weak self] in
             self?.former.deselect(animated: true)
             let actionSheetController: UIAlertController = UIAlertController(title: "Email Members", message: "Select your audience", preferredStyle: .actionSheet)
-            actionSheetController.view.tintColor = MAIN_COLOR
+            actionSheetController.view.tintColor = Color.defaultNavbarTint
             
             let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
                 //Just dismiss the action sheet
@@ -120,7 +120,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
                 let vc = SelectUsersFromGroupViewController()
                 vc.delegate = self
                 let navVC = UINavigationController(rootViewController:  vc)
-                navVC.navigationBar.barTintColor = MAIN_COLOR!
+                navVC.navigationBar.barTintColor = Color.defaultNavbarTint!
                 self?.present(navVC, animated: true, completion: nil)
             }
             actionSheetController.addAction(selectMembersAction)
@@ -191,8 +191,8 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
                         mailComposeViewController.setToRecipients([PFUser.current()!.value(forKey: PF_USER_EMAIL) as! String])
                         mailComposeViewController.setMessageBody(exportString, isHTML: false)
                         mailComposeViewController.setSubject("[Notification] \(Engagement.sharedInstance.name!)")
-                        mailComposeViewController.view.tintColor = MAIN_COLOR
-                        mailComposeViewController.navigationBar.barTintColor = MAIN_COLOR!
+                        mailComposeViewController.view.tintColor = Color.defaultNavbarTint
+                        mailComposeViewController.navigationBar.barTintColor = Color.defaultNavbarTint!
                         if MFMailComposeViewController.canSendMail() {
                             self?.present(mailComposeViewController, animated: true, completion: { UIApplication.shared.statusBarStyle = .lightContent })
                         }
@@ -209,7 +209,7 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
     
     let createMenu: ((String, (() -> Void)?) -> RowFormer) = { text, onSelected in
         return LabelRowFormer<FormLabelCell>() {
-            $0.titleLabel.textColor = MAIN_COLOR
+            $0.titleLabel.textColor = Color.defaultNavbarTint
             $0.titleLabel.font = .boldSystemFont(ofSize: 16)
             $0.accessoryType = .disclosureIndicator
             }.configure {
@@ -228,8 +228,8 @@ class AdminFunctionsViewController: FormViewController, SelectUsersFromGroupDele
         mailComposeViewController.setToRecipients(emails)
         mailComposeViewController.setMessageBody("", isHTML: false)
         mailComposeViewController.setSubject("[Notification] \(Engagement.sharedInstance.name!)")
-        mailComposeViewController.view.tintColor = MAIN_COLOR
-        mailComposeViewController.navigationBar.barTintColor = MAIN_COLOR!
+        mailComposeViewController.view.tintColor = Color.defaultNavbarTint
+        mailComposeViewController.navigationBar.barTintColor = Color.defaultNavbarTint!
         if MFMailComposeViewController.canSendMail() {
             self.present(mailComposeViewController, animated: true, completion: { UIApplication.shared.statusBarStyle = .lightContent })
         }

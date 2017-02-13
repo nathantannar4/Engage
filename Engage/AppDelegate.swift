@@ -36,11 +36,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
  
         // Set default appearances
         UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -60), for:UIBarMetrics.default)
-        Color.defaultButtonTint = Color.blue.darker(by: 10)!
+        Color.defaultButtonTint = Color.blue
         Color.defaultNavbarTint = Color.blue
         Color.defaultTitle = UIColor.black
         UINavigationBar.appearance().tintColor = Color.defaultNavbarTint
         UINavigationBar.appearance().backgroundColor = Color.defaultNavbarBackground
+        let pc = UIPageControl.appearance()
+        pc.pageIndicatorTintColor = Color.defaultTitle
+        pc.currentPageIndicatorTintColor = Color.defaultNavbarTint
+        pc.backgroundColor = UIColor.groupTableViewBackground
+
         
         // Register for push notifications
         let center = UNUserNotificationCenter.current()
@@ -52,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initialize the window
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window!.backgroundColor = UIColor.white
-        self.window!.rootViewController = UINavigationController(rootViewController: LoginViewController())
+        self.window!.rootViewController = NTNavigationContainer(centerView: LoginViewController())
         self.window!.makeKeyAndVisible()
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)

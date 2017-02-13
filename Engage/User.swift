@@ -72,9 +72,24 @@ public class User {
             self.object[PF_USER_BLOCKED] = newValue
         }
     }
-    public var engagements: [String]? {
+    public var engagementsIds: [String] {
         get {
-            return self.object.value(forKey: PF_USER_ENGAGEMENTS) as? [String]
+            var ids = [String]()
+            guard let engagements = self.engagements else {
+                return ids
+            }
+            for engagement in engagements {
+                ids.append(engagement.objectId!)
+            }
+            return ids
+        }
+    }
+    public var engagements: [PFObject]? {
+        get {
+            guard let engagements = self.object.value(forKey: PF_USER_ENGAGEMENTS) as? [PFObject] else {
+                return [PFObject]()
+            }
+            return engagements
         }
         set {
             self.object[PF_USER_ENGAGEMENTS] = newValue
@@ -131,7 +146,9 @@ public class User {
             if error != nil {
                 Log.write(.error, "Could not save user")
                 Log.write(.error, error.debugDescription)
-                Toast.genericErrorMessage()
+                let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                toast.dismissOnTap = true
+                toast.show(duration: 1.0)
                 completion?(success)
             }
         }
@@ -180,6 +197,21 @@ public class User {
     public class func didLogin(with user: PFUser) {
         User._current = User(fromObject: user)
         PushNotication.parsePushUserAssign()
+        if let id = UserDefaults.standard.value(forKey: "currentEngagement") as? String {
+            let engagmentQuery = PFQuery(className: PF_ENGAGEMENTS_CLASS_NAME)
+            engagmentQuery.whereKey(PF_ENGAGEMENTS_OBJECT_ID, equalTo: id)
+            engagmentQuery.getFirstObjectInBackground(block: { (object, error) in
+                guard let engagement = object else {
+                    let navContainer = NTNavigationContainer(centerView: NTPageViewController(viewControllers: [UINavigationController(rootViewController: EngageInfoViewController()),UINavigationController(rootViewController: EngagementHomeViewController()), UINavigationController(rootViewController: DiscoverEngagementsViewController())], initialIndex: 1))
+                    UIApplication.shared.keyWindow?.rootViewController = navContainer
+                    return
+                }
+                Engagement.didSelect(with: engagement)
+            })
+        } else {
+            let navContainer = NTNavigationContainer(centerView: NTPageViewController(viewControllers: [UINavigationController(rootViewController: EngageInfoViewController()),UINavigationController(rootViewController: EngagementHomeViewController()), UINavigationController(rootViewController: DiscoverEngagementsViewController())], initialIndex: 1))
+            UIApplication.shared.keyWindow?.rootViewController = navContainer
+        }
     }
     
     public func logout(_ target: UIViewController) {
@@ -191,10 +223,11 @@ public class User {
             let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
             actionSheetController.addAction(cancelAction)
             
-            let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .default) { action -> Void in
+            let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .destructive) { action -> Void in
                 PFUser.logOut()
                 PushNotication.parsePushUserResign()
-                let navContainer = NTNavigationContainer(centerView: UINavigationController(rootViewController: LoginViewController()))
+                UserDefaults.standard.set("", forKey: "currentEngagement")
+                let navContainer = NTNavigationContainer(centerView: LoginViewController())
                 UIApplication.shared.keyWindow?.rootViewController = navContainer
             }
             actionSheetController.addAction(logoutAction)

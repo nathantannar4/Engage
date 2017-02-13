@@ -29,12 +29,20 @@ public class Engagement: Group {
             self.object[PF_ENGAGEMENTS_SUBGROUP_NAME] = newValue
         }
     }
-    public var color: String? {
+    public var color: UIColor? {
         get {
-            return self.object.value(forKey: PF_ENGAGEMENT_COLOR) as? String
+            guard let colorHex = self.object.value(forKey: PF_ENGAGEMENTS_COLOR) as? String else {
+                return Color.defaultNavbarTint
+            }
+            return UIColor(hexString: colorHex)
+        }
+    }
+    public var colorHex: String? {
+        get {
+            return self.object.value(forKey: PF_ENGAGEMENTS_COLOR) as? String
         }
         set {
-            self.object[PF_ENGAGEMENT_COLOR] = newValue
+            self.object[PF_ENGAGEMENTS_COLOR] = newValue
         }
     }
     public var teams = [Team]()
@@ -91,16 +99,6 @@ public class Engagement: Group {
             return array
         }
     }
-    
-    // MARK: Initialization
-    
-    public override init(fromObject object: PFObject) {
-        super.init(fromObject: object)
-        
-        self.updateTeams()
-        self.updateChannels()
-    }
-    
     
     // MARK: Public Functions
     
@@ -170,10 +168,91 @@ public class Engagement: Group {
     
     public class func didSelect(with engagement: PFObject) {
         Engagement._current = Cache.retrieveEngagement(engagement)
+        Engagement._current?.updateTeams()
+        Engagement._current?.updateChannels()
+        
+        UserDefaults.standard.set(engagement.objectId, forKey: "currentEngagement")
+        
         User.current().loadExtension {
-            let navContainer = NTNavigationContainer(centerView: TabBarController())
-            navContainer.leftPanelWidth = 200
+            let pageContainer = NTPageViewController(viewControllers: [UINavigationController(rootViewController: EngageInfoViewController()),UINavigationController(rootViewController: EngagementHomeViewController()), UINavigationController(rootViewController: DiscoverEngagementsViewController())], initialIndex: 1)
+            pageContainer.view.backgroundColor = UIColor.groupTableViewBackground
+            let navContainer = NTNavigationContainer(centerView: TabBarController(), leftView: pageContainer, rightView: nil)
+            navContainer.leftPanelWidth = 300
             UIApplication.shared.keyWindow?.rootViewController = navContainer
+        }
+    }
+    
+    public func didResign() {
+        let index = User.current().engagementsIds.index(of: self.id)!
+        User.current().engagements?.remove(at: index)
+        User.current().save(completion: nil)
+        
+        UserDefaults.standard.set(nil, forKey: "currentEngagement")
+        
+        let navContainer = NTNavigationContainer(centerView: NTPageViewController(viewControllers: [UINavigationController(rootViewController: EngageInfoViewController()),UINavigationController(rootViewController: EngagementHomeViewController()), UINavigationController(rootViewController: DiscoverEngagementsViewController())], initialIndex: 1))
+        UIApplication.shared.keyWindow?.rootViewController = navContainer
+    }
+    
+    public class func didSelect(with engagement: Engagement) {
+        Engagement._current = engagement
+        Engagement._current?.updateTeams()
+        Engagement._current?.updateChannels()
+        
+        UserDefaults.standard.set(engagement.id, forKey: "currentEngagement")
+        
+        User.current().loadExtension {
+            let pageContainer = NTPageViewController(viewControllers: [UINavigationController(rootViewController: EngageInfoViewController()),UINavigationController(rootViewController: EngagementHomeViewController()), UINavigationController(rootViewController: DiscoverEngagementsViewController())], initialIndex: 1)
+            pageContainer.view.backgroundColor = UIColor.groupTableViewBackground
+            let navContainer = NTNavigationContainer(centerView: TabBarController(), leftView: pageContainer, rightView: nil)
+            navContainer.leftPanelWidth = 300
+            UIApplication.shared.keyWindow?.rootViewController = navContainer
+        }
+    }
+    
+    public func join(target: UIViewController) {
+        
+        if !self.password!.isEmpty {
+            let actionSheetController: UIAlertController = UIAlertController(title: "Password", message: "This Engagement is password protected", preferredStyle: .alert)
+            actionSheetController.view.tintColor = Color.defaultNavbarTint
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
+            actionSheetController.addAction(cancelAction)
+            
+            let nextAction: UIAlertAction = UIAlertAction(title: "Join", style: .default) { action -> Void in
+                guard let password = actionSheetController.textFields![0].text else {
+                    let toast = Toast(text: "Incorrect Password", button: nil, color: Color.darkGray, height: 44)
+                    toast.show(duration: 1.5)
+                    return
+                }
+                
+                if password == self.password {
+                    self.join(user: User.current(), completion: { (success) in
+                        if success {
+                            Engagement.didSelect(with: self)
+                            User.current().engagements?.append(self.object)
+                            User.current().save(completion: nil)
+                        }
+                    })
+                } else {
+                    let toast = Toast(text: "Incorrect Password", button: nil, color: Color.darkGray, height: 44)
+                    toast.show(duration: 1.5)
+                }
+            }
+            actionSheetController.addAction(nextAction)
+            
+            actionSheetController.addTextField { textField -> Void in
+                textField.textColor = Color.darkGray
+                textField.isSecureTextEntry = true
+            }
+            target.present(actionSheetController, animated: true, completion: nil)
+        } else {
+            self.join(user: User.current(), completion: { (success) in
+                if success {
+                    Engagement.didSelect(with: self)
+                    User.current().engagements?.append(self.object)
+                    User.current().save(completion: nil)
+                }
+            })
         }
     }
 }

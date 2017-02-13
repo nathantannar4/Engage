@@ -119,7 +119,9 @@ public class Channel {
             if error != nil {
                 Log.write(.error, "Could not save channel")
                 Log.write(.error, error.debugDescription)
-                Toast.genericErrorMessage()
+                let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                toast.dismissOnTap = true
+                toast.show(duration: 1.0)
                 completion?(success)
             }
         }

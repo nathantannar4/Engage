@@ -1,5 +1,5 @@
 //
-//  SelectSingleViewController.swift
+//  UserSelectionViewController.swift
 //  Engage
 //
 //  Created by Tannar, Nathan on 2016-07-10.

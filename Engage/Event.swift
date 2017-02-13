@@ -33,7 +33,7 @@ class Event {
         }
     }
     public var image: UIImage?
-    public var name: String? {
+    public var title: String? {
         get {
             return self.object.value(forKey: PF_EVENT_NAME) as? String
         }

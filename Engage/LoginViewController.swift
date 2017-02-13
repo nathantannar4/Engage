@@ -19,18 +19,20 @@ class LoginViewController: NTLoginViewController {
         self.loginOptions = [.facebook, .email]
         self.logo = UIImage(named: "Engage_Logo")
         
+        self.tableView.isHidden = true
         if PFUser.current() != nil {
-            let query = PFQuery(className: "Engagements")
-            query.whereKey("name", equalTo: "Test")
-            query.findObjectsInBackground(block: { (objects, error) in
-                if let object = objects?.first {
-                    User.didLogin(with: PFUser.current()!)
-                    Engagement.didSelect(with: object)
-                } else {
-                    let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+            let query = PFQuery(className: PF_ENGAGEMENTS_CLASS_NAME)
+            query.getFirstObjectInBackground(block: { (object, error) in
+                if error != nil {
+                    let toast = Toast(text: error!.localizedDescription, button: nil, color: Color.darkGray, height: 44)
                     toast.show(duration: 2.0)
+                    self.tableView.isHidden = false
+                } else {
+                    User.didLogin(with: PFUser.current()!)
                 }
             })
+        } else {
+            self.tableView.isHidden = false
         }
     }
     
@@ -38,26 +40,41 @@ class LoginViewController: NTLoginViewController {
         
         // Freeze user interaction
         self.view.endEditing(true)
-        UIApplication.shared.beginIgnoringInteractionEvents()
         
-        // Create new user
-        let user = PFUser()
-        user.username = email
-        user.email = email
-        user.password = password
-        user[PF_USER_FULLNAME] = name
-        user[PF_USER_FULLNAME_LOWER] = name.lowercased()
+        let alertController = UIAlertController(title: "EULA", message: "By registering with Engage you accept the End-User License Agreement", preferredStyle: .alert)
         
-        // Save new user
-        user.signUpInBackground { (success, error) -> Void in
-            UIApplication.shared.endIgnoringInteractionEvents()
-            if success {
-                User.didLogin(with: PFUser.current()!)
-            } else {
-                Log.write(.error, error.debugDescription)
-                Toast.genericErrorMessage()
+        let viewAction = UIAlertAction(title: "View", style: .default) { action in
+            self.showEULA()
+        }
+        alertController.addAction(viewAction)
+        
+        let acceptAction = UIAlertAction(title: "Accept", style: .cancel) { action in
+            UIApplication.shared.beginIgnoringInteractionEvents()
+            
+            // Create new user
+            let user = PFUser()
+            user.username = email
+            user.email = email
+            user.password = password
+            user[PF_USER_FULLNAME] = name
+            user[PF_USER_FULLNAME_LOWER] = name.lowercased()
+            user[PF_USER_ENGAGEMENTS] = []
+            
+            // Save new user
+            user.signUpInBackground { (success, error) -> Void in
+                UIApplication.shared.endIgnoringInteractionEvents()
+                if success {
+                    User.didLogin(with: PFUser.current()!)
+                } else {
+                    Log.write(.error, error.debugDescription)
+                    let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                    toast.show(duration: 1.5)
+                }
             }
         }
+        alertController.addAction(acceptAction)
+        
+        self.present(alertController, animated: true, completion: nil)
     }
     
     override func emailLoginLogic(email: String, password: String) {
@@ -77,13 +94,6 @@ class LoginViewController: NTLoginViewController {
             }
             Log.write(.status, "Email Login Successful")
             User.didLogin(with: user)
-            let query = PFQuery(className: "Engagements")
-            query.whereKey("name", equalTo: "Test")
-            query.findObjectsInBackground(block: { (objects, error) in
-                if let object = objects?.first {
-                    Engagement.didSelect(with: object)
-                }
-            })
         }
     }
     
@@ -110,16 +120,31 @@ class LoginViewController: NTLoginViewController {
                 let lastName = userData["last_name"] as! String
                 User.current().fullname = firstName + " " + lastName
                 User.current().save(completion: nil)
-                
-                let query = PFQuery(className: "Engagements")
-                query.whereKey("name", equalTo: "Test")
-                query.findObjectsInBackground(block: { (objects, error) in
-                    if let object = objects?.first {
-                        Engagement.didSelect(with: object)
-                    }
-                })
             })
         }
     }
+    
+    func showEULA() {
+        // Create HTML based text view controller for the EULA agreement
+        let vc = NTViewController()
+        vc.view.backgroundColor = UIColor.groupTableViewBackground
+        vc.view.frame = vc.view.frame.insetBy(dx: 20, dy: 50)
+        vc.view.layer.cornerRadius = 5
+        vc.view.layer.borderWidth = 1
+        vc.view.layer.borderColor = Color.darkGray.cgColor
+        let label = UITextView()
+        vc.view.addSubview(label)
+        label.bindFrameToSuperviewBounds()
+        if let filepath = Bundle.main.path(forResource: "EULA", ofType: "html") {
+            do {
+                let str = try NSAttributedString(data: String(contentsOfFile: filepath)
+                    .data(using: String.Encoding.unicode, allowLossyConversion: true)!, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType], documentAttributes: nil)
+                label.textColor = Color.defaultTitle
+                label.attributedText = str
+                self.getNTNavigationContainer?.presentOverlay(vc, from: .bottom)
+            } catch {
+                print(error)
+            }
+        }
+    }
 }
-

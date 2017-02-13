@@ -179,7 +179,9 @@ public class Group {
             if error != nil {
                 Log.write(.error, "Could not save engagement")
                 Log.write(.error, error.debugDescription)
-                Toast.genericErrorMessage()
+                let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                toast.dismissOnTap = true
+                toast.show(duration: 1.0)
             }
         }
     }
@@ -303,5 +305,14 @@ public class Group {
         self.save { (success) in
             completion?(success)
         }
+    }
+    
+    class func topWindow() -> UIWindow? {
+        for window in UIApplication.shared.windows.reversed() {
+            if window.windowLevel == UIWindowLevelNormal && !window.isHidden && window.frame != CGRect.zero {
+                return window
+            }
+        }
+        return nil
     }
 }
