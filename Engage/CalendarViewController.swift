@@ -12,57 +12,15 @@ import Former
 import Parse
 
 class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
-    
-    private let listView: UITableView = {
-        let listView = UITableView(frame: CGRect.zero, style: .grouped)
-        listView.bounces = false
-        listView.backgroundColor = .clear
-        listView.sectionHeaderHeight = 0
-        listView.sectionFooterHeight = 0
-        listView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.01))
-        listView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.01))
-        listView.translatesAutoresizingMaskIntoConstraints = false
-        return listView
-    }()
-    
-    private lazy var listFormer: Former = Former(tableView: self.listView)
-    
-    
-    func setup() {
-        view.insertSubview(listView, at: 0)
-        let tableConstraints = [
-            NSLayoutConstraint.constraints(
-                withVisualFormat: "V:|-0-[table]-0-|",
-                options: [],
-                metrics: nil,
-                views: ["table": listView]
-            ),
-            NSLayoutConstraint.constraints(
-                withVisualFormat: "H:|-0-[table]-0-|",
-                options: [],
-                metrics: nil,
-                views: ["table": listView]
-            )
-            ].flatMap { $0 }
-        view.addConstraints(tableConstraints)
-    }
-    
-    struct CalendarColor {
-        static let selectedText = UIColor.white
-        static let text = UIColor.black
-        static let textDisabled = UIColor.gray
-        static let selectionBackground = Color.defaultNavbarTint
-    }
-    
+  
     struct EventStruct {
         let day: Int!
-        let object: PFObject!
+        let model: Event!
     }
     
-    // MARK: - Properties
-    @IBOutlet weak var calendarView: CVCalendarView!
-    @IBOutlet weak var menuView: CVCalendarMenuView!
-    @IBOutlet weak var tableView: UITableView!
+    var calendarView: CVCalendarView = CVCalendarView()
+    var menuView: CVCalendarMenuView = CVCalendarMenuView()
+    var tableView: UITableView = UITableView()
     private lazy var former: Former = Former(tableView: self.tableView)
     
     var selectedDay:DayView!
@@ -71,69 +29,84 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     var events = [EventStruct]()
     var eventDates = [Int]()
     
-    var previewView = true
-    
     // MARK: - Life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.view.backgroundColor = UIColor.white
+        self.view.addSubview(self.menuView)
+        self.view.addSubview(self.calendarView)
+        self.view.addSubview(self.tableView)
+        self.menuView.bindFrameToSuperviewTopBounds(withHeight: 50)
+        self.calendarView.bindFrameToSuperviewTopBounds(withHeight: 350, withTopInset: 50)
+        self.tableView.bindFrameToSuperviewBounds(withTopInset: 400)
+        self.menuView.delegate = self
+        self.calendarView.calendarDelegate = self
+        self.calendarView.calendarAppearanceDelegate = self
+        
+        
         self.setTitleView(title: "Events", subtitle: CVDate(date: NSDate() as Date).globalDescription, titleColor: Color.defaultTitle, subtitleColor: Color.defaultSubtitle)
         self.menuView.backgroundColor = Color.defaultNavbarTint
         self.tableView.separatorStyle = .none
-        
-        self.setup()
-        self.listView.isHidden = true
         
         let currentMonth = currentDay.month
         while currentDay.month == currentMonth {
             currentDay = currentDay.subtractingDays(1) as NSDate
         }
         
-        currentDay = (currentDay.addingDays(1) as NSDate).atStartOfDay() as NSDate
+        self.currentDay = (currentDay.addingDays(1) as NSDate).atStartOfDay() as NSDate
         
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(image: Icon.Google.add, style: .plain, target: self, action: #selector(createEvent)), UIBarButtonItem(image: Icon.Google.moreVertical, style: .plain, target: self, action: #selector(switchView))]
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createEvent))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         refreshMonth()
     }
-    
+
     func refreshMonth() {
         if self.former.sectionFormers.count > 0 {
-            self.former.removeAll()
-            self.former.reload()
+            self.former.removeAllUpdate(rowAnimation: .fade)
         }
         self.events.removeAll()
         self.eventDates.removeAll()
-        calendarView.contentController.refreshPresentedMonth()
-        loadEvents()
+        self.calendarView.contentController.refreshPresentedMonth()
+        self.loadEvents()
     }
  
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        calendarView.commitCalendarViewUpdate()
-        menuView.commitMenuViewUpdate()
+        self.calendarView.commitCalendarViewUpdate()
+        self.menuView.commitMenuViewUpdate()
     }
     
+    // MARK: User Actions
+    
+    func createEvent() {
+        let navVC = UINavigationController(rootViewController: EditEventViewController())
+        self.present(navVC, animated: true, completion: nil)
+    }
+    
+    // MARK: Backend
+    
     func loadEvents() {
-        let eventQuery = PFQuery(className: Engagement.current().queryName! + PF_EVENTS_CLASS_NAME)
-        eventQuery.order(byAscending: "start")
-        eventQuery.whereKey("start", greaterThan: currentDay.subtractingHours(7))
-        eventQuery.whereKey("start", lessThan: (currentDay.addingMonths(1) as NSDate).addingHours(17) as NSDate)
-        eventQuery.includeKey(PF_EVENTS_ORGANIZER)
+        let eventQuery = PFQuery(className: Engagement.current().queryName! + PF_EVENT_CLASS_NAME)
+        eventQuery.order(byAscending: PF_EVENT_START)
+        eventQuery.whereKey(PF_EVENT_START, greaterThan: currentDay.subtractingHours(7))
+        eventQuery.whereKey(PF_EVENT_START, lessThan: (currentDay.addingMonths(1) as NSDate).addingHours(17) as NSDate)
+        eventQuery.includeKey(PF_EVENT_ORGANIZER)
         eventQuery.findObjectsInBackground { (events: [PFObject]?, error: Error?) in
-            SVProgressHUD.dismiss()
             if error == nil {
                 for event in events! {
-                    var eventDayStart = (event[PF_EVENTS_START] as! NSDate).day
-                    let eventDayEnd = (event[PF_EVENTS_END] as! NSDate).day
+                    var eventDayStart = (event[PF_EVENT_START] as! NSDate).day
+                    let eventDayEnd = (event[PF_EVENT_END] as! NSDate).day
                     // Event does not carry over to another month
                     if eventDayStart <= eventDayEnd {
                         while eventDayStart <= eventDayEnd {
-                            let newEvent = EventStruct(day: eventDayStart, object: event)
+                            let newEvent = EventStruct(day: eventDayStart, model: Event(fromObject: event))
                             self.events.append(newEvent)
                             self.eventDates.append(eventDayStart)
                             eventDayStart += 1
@@ -141,7 +114,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
                     } else {
                         // Event carries over to the next month
                         while eventDayStart <= 31 {
-                            let newEvent = EventStruct(day: eventDayStart, object: event)
+                            let newEvent = EventStruct(day: eventDayStart, model: Event(fromObject: event))
                             self.events.append(newEvent)
                             self.eventDates.append(eventDayStart)
                             eventDayStart += 1
@@ -153,7 +126,7 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
         }
     }
 
-    // MARK: - CVCalendarViewDelegate & CVCalendarMenuViewDelegate
+    // MARK: CVCalendarViewDelegate & CVCalendarMenuViewDelegate
     
     /// Required method to implement!
     func presentationMode() -> CalendarMode {
@@ -185,51 +158,37 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     }
     
     func didSelectDayView(_ dayView: CVCalendarDayView, animationDidFinish: Bool) {
-        
-        /*
-        print("\(dayView.date.commonDescription) is selected!")
-        selectedDay = dayView
-        Event.sharedInstance.clear()
-        Event.sharedInstance.start = dayView.date.convertedDate() as NSDate?
+        self.selectedDay = dayView
         
         // Update table
-        if self.former.sectionFormers.count > 0 {
-            self.former.removeAll()
-            self.former.reload()
-        }
+        self.former.removeAllUpdate(rowAnimation: .fade)
+        
         var eventRows = [CustomRowFormer<EventPreviewCell>]()
         for event in events {
             if event.day == dayView.date.day {
                 eventRows.append(CustomRowFormer<EventPreviewCell>(instantiateType: .Nib(nibName: "EventPreviewCell")) {
-                    $0.titleLabel.text = event.object[PF_EVENTS_TITLE] as? String
-                    $0.locationLabel.text = event.object[PF_EVENTS_LOCATION] as? String
-                    $0.notesLabel.text = event.object[PF_EVENTS_INFO] as? String
-                    if (event.object[PF_EVENTS_ALL_DAY] as! Bool) {
+                    $0.titleLabel.text = event.model.title
+                    $0.locationLabel.text = event.model.location
+                    $0.notesLabel.text = event.model.info
+                    if (event.model.isAllDay) {
                         $0.startLabel.text = "All-Day"
-                        $0.endLabel.text = (event.object[PF_EVENTS_START] as? NSDate)?.shortDateString
+                        $0.endLabel.text = String.mediumDateNoTime(date: event.model.start!)
                     } else {
-                        $0.startLabel.text = (event.object[PF_EVENTS_START] as? NSDate)?.shortTimeString
-                        $0.endLabel.text = (event.object[PF_EVENTS_END] as? NSDate)?.shortTimeString
+                        $0.startLabel.text = String.mediumDateShortTime(date: event.model.start!)
+                        $0.endLabel.text = String.mediumDateShortTime(date: event.model.end!)
                     }
                     }.configure {
                         $0.rowHeight = UITableViewAutomaticDimension
                     }.onSelected { _ in
                         self.former.deselect(animated: true)
-                        
-                        let eventDetailVC = EventDetailViewController()
-                        eventDetailVC.event = event.object
-                        Event.sharedInstance.object = event.object
-                        let navVC = UINavigationController(rootViewController: eventDetailVC)
-                        navVC.navigationBar.barTintColor = Color.defaultNavbarTint!
+                        let navVC = UINavigationController(rootViewController: EventDetailViewController(event: event.model))
                         self.present(navVC, animated: true, completion: nil)
                     })
             }
         }
         if eventRows.count > 0 {
-            self.former.append(sectionFormer: SectionFormer(rowFormers: eventRows).set(headerViewFormer: TableFunctions.createFooter(text: "Events That Day")))
-            self.former.reload()
+            self.former.insertUpdate(sectionFormer: SectionFormer(rowFormers: eventRows), toSection: 0, rowAnimation: .fade)
         }
-        */
     }
     
     func presentedDateUpdated(_ date: CVDate) {
@@ -380,92 +339,22 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
     
     func dayLabelColor(by weekDay: Weekday, status: CVStatus, present: CVPresent) -> UIColor? {
         switch (weekDay, status, present) {
-        case (_, .selected, _), (_, .highlighted, _): return CalendarColor.selectedText
-        case (_, .in, _): return CalendarColor.text
-        default: return CalendarColor.textDisabled
+        case (_, .selected, _), (_, .highlighted, _): return Color.defaultTitle
+        case (_, .in, _): return Color.defaultSubtitle
+        default: return UIColor.black
         }
     }
     
     func dayLabelBackgroundColor(by weekDay: Weekday, status: CVStatus, present: CVPresent) -> UIColor? {
         switch (weekDay, status, present) {
-        case (_, .selected, _), (_, .highlighted, _): return CalendarColor.selectionBackground
+        case (_, .selected, _), (_, .highlighted, _): return Color.defaultNavbarTint
         default: return nil
         }
     }
     
-    func switchView() {
-        /*
-        if self.previewView {
-            
-            // Update table
-            if self.listFormer.sectionFormers.count > 0 {
-                self.listFormer.removeAll()
-                self.listFormer.reload()
-            }
-            var eventRows = [CustomRowFormer<EventFeedCell>]()
-            var loadedEvents = [String]()
-            for event in events {
-                if !loadedEvents.contains(event.object!.objectId!) {
-                    loadedEvents.append(event.object!.objectId!)
-                    eventRows.append(CustomRowFormer<EventFeedCell> (instantiateType: .Nib(nibName: "EventFeedCell")) {
-                        $0.title.text = event.object[PF_EVENTS_TITLE] as? String
-                        $0.info.text = event.object![PF_EVENTS_INFO] as? String
-                        $0.location.text = event.object![PF_EVENTS_LOCATION] as? String
-                        $0.organizer.text = "Organizer: \((event.object![PF_EVENTS_ORGANIZER] as? PFUser)?.value(forKey: PF_USER_FULLNAME) as! String)"
-                        $0.attendence.text = "\((event.object![PF_EVENTS_CONFIRMED] as! [PFUser]).count) Confirmed, \((event.object![PF_EVENTS_MAYBE] as! [PFUser]).count) Maybe"
-                        let startDate = event.object![PF_EVENTS_START] as! NSDate
-                        let endDate = event.object![PF_EVENTS_END] as! NSDate
-                        $0.time.text = "Starts: \(startDate.mediumString!) \nEnds: \(endDate.mediumString!)"
-                        if (event.object![PF_EVENTS_ALL_DAY] as! Bool) {
-                            $0.time.text = "Starts: \(startDate.mediumDateString!) \nEnds: \(endDate.mediumDateString!)"
-                        }
-                        }.configure {
-                            $0.rowHeight = UITableViewAutomaticDimension
-                        }.onSelected { _ in
-                            
-                            self.former.deselect(animated: true)
-                            
-                            let eventDetailVC = EventDetailViewController()
-                            eventDetailVC.event = event.object
-                            Event.sharedInstance.object = event.object
-                            let navVC = UINavigationController(rootViewController: eventDetailVC)
-                            navVC.navigationBar.barTintColor = Color.defaultNavbarTint!
-                            self.present(navVC, animated: true, completion: nil)
-                    })
-
-                }
-            }
-            if eventRows.count > 0 {
-                self.listFormer.append(sectionFormer: SectionFormer(rowFormers: eventRows).set(headerViewFormer: TableFunctions.createFooter(text: "Events This Month")))
-                self.listFormer.reload()
-            } else {
-                let zeroRow = LabelRowFormer<ImageCell>(instantiateType: .Nib(nibName: "ImageCell")) {_ in
-                    }.configure {
-                        $0.rowHeight = 0
-                }
-                self.listFormer.append(sectionFormer: SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createFooter(text: "No Events This Month")))
-                self.listFormer.reload()
-            }
-            self.listView.isHidden = false
-            self.calendarView.isHidden = true
-            self.tableView.isHidden = true
-            self.menuView.isHidden = true
-            self.previewView = false
-            
-        } else {
-            self.listView.isHidden = true
-            self.calendarView.isHidden = false
-            self.tableView.isHidden = false
-            self.menuView.isHidden = false
-            self.previewView = true
-        }
-        */
-    }
-    
     func toggleMonthViewWithMonthOffset(offset: Int) {
         let calendar = NSCalendar.current
-//        let calendarManager = calendarView.manager
-        var components = Manager.componentsForDate(NSDate() as Date) // from today
+        var components = Manager.componentsForDate(Date())
         
         components.month! += offset
         
@@ -474,32 +363,14 @@ class CalendarViewController: UIViewController, CVCalendarViewDelegate, CVCalend
         self.calendarView.toggleViewWithDate(resultDate)
     }
     
-    func didShowNextMonthView(_ date: Date)
-    {
-//        let calendar = NSCalendar.currentCalendar()
-//        let calendarManager = calendarView.manager
-        let components = Manager.componentsForDate(date as Date) // from today
-        currentDay = currentDay.addingMonths(1) as NSDate
-        refreshMonth()
-        print("Showing Month: \(components.month)")
+    func didShowNextMonthView(_ date: Date) {
+        self.currentDay = currentDay.addingMonths(1) as NSDate
+        self.refreshMonth()
     }
     
     
-    func didShowPreviousMonthView(_ date: Date)
-    {
-//        let calendar = NSCalendar.currentCalendar()
-//        let calendarManager = calendarView.manager
-        let components = Manager.componentsForDate(date as Date) // from today
-        currentDay = currentDay.subtractingMonths(1) as NSDate
-        refreshMonth()
-        print("Showing Month: \(components.month)")
-    }
-    
-    // Menu Controller
-    // Handle the menu toggle event.
-    internal func createEvent() {
-        //let navVC = UINavigationController(rootViewController: CreateSimpleEventViewController())
-        //navVC.navigationBar.barTintColor = Color.defaultNavbarTint!
-        //self.present(navVC, animated: true, completion: nil)
+    func didShowPreviousMonthView(_ date: Date) {
+        self.currentDay = currentDay.subtractingMonths(1) as NSDate
+        self.refreshMonth()
     }
 }

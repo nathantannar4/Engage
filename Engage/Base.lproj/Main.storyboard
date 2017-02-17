@@ -38,23 +38,25 @@
                                 <rect key="frame" x="0.0" y="407" width="375" height="260"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="260" id="7Rg-Ej-iTN"/>
+                                    <constraint firstAttribute="height" constant="260" id="2su-V6-oXg"/>
                                 </constraints>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="FNO-8B-5w7" firstAttribute="bottom" secondItem="QZZ-3c-Pp2" secondAttribute="top" id="1Kd-ML-GSp"/>
-                            <constraint firstAttribute="trailing" secondItem="gJt-v8-9AX" secondAttribute="trailing" id="AQi-Ug-3od"/>
-                            <constraint firstItem="tor-GL-oSX" firstAttribute="top" secondItem="OhE-22-b1n" secondAttribute="top" constant="52" id="FlN-DM-Wkq"/>
-                            <constraint firstItem="FNO-8B-5w7" firstAttribute="top" secondItem="tor-GL-oSX" secondAttribute="bottom" constant="8" symbolic="YES" id="JAL-Pb-OAD"/>
-                            <constraint firstItem="tor-GL-oSX" firstAttribute="leading" secondItem="FNO-8B-5w7" secondAttribute="leading" id="R5z-bL-Ol9"/>
-                            <constraint firstItem="gJt-v8-9AX" firstAttribute="top" secondItem="ZMQ-Xb-TWe" secondAttribute="bottom" id="VM1-WW-GXH"/>
-                            <constraint firstItem="tor-GL-oSX" firstAttribute="top" secondItem="gJt-v8-9AX" secondAttribute="bottom" constant="8" symbolic="YES" id="W5R-ni-nWl"/>
-                            <constraint firstItem="gJt-v8-9AX" firstAttribute="leading" secondItem="tor-GL-oSX" secondAttribute="leading" id="YlO-6b-L7u"/>
-                            <constraint firstItem="gJt-v8-9AX" firstAttribute="leading" secondItem="OhE-22-b1n" secondAttribute="leading" id="a5S-nD-FOF"/>
-                            <constraint firstItem="tor-GL-oSX" firstAttribute="trailing" secondItem="FNO-8B-5w7" secondAttribute="trailing" id="nXP-a9-Nrc"/>
-                            <constraint firstItem="gJt-v8-9AX" firstAttribute="trailing" secondItem="tor-GL-oSX" secondAttribute="trailing" id="qVd-el-NtC"/>
+                            <constraint firstAttribute="trailing" secondItem="tor-GL-oSX" secondAttribute="trailing" id="4c6-LV-h1N"/>
+                            <constraint firstAttribute="trailing" secondItem="gJt-v8-9AX" secondAttribute="trailing" id="G9F-J7-UpY"/>
+                            <constraint firstItem="tor-GL-oSX" firstAttribute="leading" secondItem="OhE-22-b1n" secondAttribute="leading" id="Hml-3r-Uj9"/>
+                            <constraint firstItem="FNO-8B-5w7" firstAttribute="top" secondItem="tor-GL-oSX" secondAttribute="bottom" constant="8" id="Jzh-mA-elL"/>
+                            <constraint firstItem="FNO-8B-5w7" firstAttribute="centerX" secondItem="gJt-v8-9AX" secondAttribute="centerX" id="MKo-4E-lVX"/>
+                            <constraint firstItem="gJt-v8-9AX" firstAttribute="leading" secondItem="OhE-22-b1n" secondAttribute="leading" id="Mgl-ms-vC6"/>
+                            <constraint firstItem="gJt-v8-9AX" firstAttribute="top" secondItem="ZMQ-Xb-TWe" secondAttribute="bottom" id="NiI-Dn-6SG"/>
+                            <constraint firstAttribute="trailing" secondItem="FNO-8B-5w7" secondAttribute="trailing" id="O1t-Ef-Epg"/>
+                            <constraint firstItem="QZZ-3c-Pp2" firstAttribute="top" secondItem="FNO-8B-5w7" secondAttribute="bottom" id="SlB-b6-CSd"/>
+                            <constraint firstItem="tor-GL-oSX" firstAttribute="top" secondItem="gJt-v8-9AX" secondAttribute="bottom" constant="8" id="ehU-MO-TJF"/>
+                            <constraint firstItem="tor-GL-oSX" firstAttribute="centerX" secondItem="gJt-v8-9AX" secondAttribute="centerX" id="hay-Zs-Idb"/>
+                            <constraint firstItem="FNO-8B-5w7" firstAttribute="leading" secondItem="OhE-22-b1n" secondAttribute="leading" id="nKD-1a-DzZ"/>
+                            <constraint firstItem="tor-GL-oSX" firstAttribute="top" secondItem="OhE-22-b1n" secondAttribute="top" constant="52" id="uaq-2J-Z2M"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ECW-f1-oLf"/>
@@ -66,7 +68,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YRc-ct-KbH" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="372" y="-401"/>
+            <point key="canvasLocation" x="372" y="-401.64917541229386"/>
         </scene>
     </scenes>
 </document>

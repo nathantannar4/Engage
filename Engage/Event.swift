@@ -10,7 +10,7 @@ import Foundation
 import Parse
 import NTUIKit
 
-class Event {
+public class Event {
     
     public var object: PFObject
     public var id: String {
@@ -57,6 +57,14 @@ class Event {
             self.object[PF_EVENT_LOCATION] = newValue
         }
     }
+    public var url: String? {
+        get {
+            return self.object.value(forKey: PF_EVENT_URL) as? String
+        }
+        set {
+            self.object[PF_EVENT_URL] = newValue
+        }
+    }
     public var isPrivate: Bool? {
         get {
             return self.object.value(forKey: PF_EVENT_PRIVATE) as? Bool
@@ -81,15 +89,23 @@ class Event {
             self.object[PF_EVENT_END] = newValue
         }
     }
+    public var isAllDay: Bool {
+        get {
+            return (self.object.value(forKey: PF_EVENT_ALL_DAY) as? Bool) ?? false
+        }
+        set {
+            self.object[PF_EVENT_ALL_DAY] = newValue
+        }
+    }
     public var organizer: User? {
         get {
             guard let user = self.object.value(forKey: PF_EVENT_ORGANIZER) as? PFUser else {
                 return nil
             }
-            return Cache.retrieveUser(user)
+            return Cache.retrieveUser(user.objectId!)
         }
         set {
-            self.object[PF_EVENT_END] = newValue
+            self.object[PF_EVENT_ORGANIZER] = newValue?.object
         }
     }
     public var invites: [String]? {
@@ -116,7 +132,7 @@ class Event {
             self.object[PF_EVENT_DECLINED] = newValue
         }
     }
-    public var logitude: Double? {
+    public var longitude: Double? {
         get {
             return self.object.value(forKey: PF_EVENT_LONGITUDE) as? Double
         }
@@ -132,6 +148,16 @@ class Event {
             self.object[PF_EVENT_LATITUDE] = newValue
         }
     }
+    public var coordinate: CLLocationCoordinate2D? {
+        get {
+            if let long = self.longitude {
+                if let lat = self.latitude {
+                    return CLLocationCoordinate2D(latitude: lat, longitude: long)
+                }
+            }
+            return nil
+        }
+    }
     
     // MARK: Initialization
     
@@ -145,6 +171,42 @@ class Event {
                 return
             }
             self.image = UIImage(data: imageData)
+        }
+    }
+    
+    public init() {
+        self.object = PFObject(className: Engagement.current().queryName! + PF_EVENT_CLASS_NAME)
+        self.title = String()
+        self.image = nil
+        self.info = String()
+        self.location = String()
+        self.isPrivate = false
+        self.start = Date()
+        self.end = Date()
+        self.organizer = User.current()
+        self.invites = []
+        self.declined = []
+        self.accepted = []
+        self.longitude = Double()
+        self.latitude = Double()
+    }
+    
+    // MARK: Public 
+    
+    public func save(completion: ((_ success: Bool) -> Void)?) {
+        self.object.saveInBackground { (success, error) in
+            if success {
+                Cache.update(self)
+                completion?(success)
+            }
+            if error != nil {
+                Log.write(.error, "Could not save event")
+                Log.write(.error, error.debugDescription)
+                let toast = Toast(text: error?.localizedDescription, button: nil, color: Color.darkGray, height: 44)
+                toast.dismissOnTap = true
+                toast.show(duration: 1.0)
+                completion?(success)
+            }
         }
     }
 }

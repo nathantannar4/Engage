@@ -11,7 +11,14 @@ import NTUIKit
 import MapKit
 import CoreLocation
 
+public protocol LocationPickerDelegate {
+    func didSelectLocation(name: String, coordinate: CLLocationCoordinate2D)
+}
+
 open class LocationPickerViewController: UIViewController {
+    
+    public var delegate: LocationPickerDelegate?
+    
 	struct CurrentLocationListener {
 		let once: Bool
 		let action: (CLLocation) -> ()
@@ -367,35 +374,12 @@ extension LocationPickerViewController: MKMapViewDelegate {
 	public func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
 		completion?(location)
         
-        // Save location selected
-        var title = view.annotation?.title!
-        var address: String = ""
-        var city: String = ""
-        // Get Address
-        let index = title!.characters.index(of: ",")
-        if index != nil {
-            address = title!.substring(to: index!)
-            title = title!.replacingOccurrences(of: address + ",", with: "")
-            
-            // Get City
-            let index = title!.characters.index(of: ",")
-            if index != nil {
-                city = title!.substring(to: index!)
-            } else {
-                city = title!
-            }
-        }
-        
-        
-		if let navigation = navigationController, navigation.viewControllers.count > 1 {
-			navigation.popViewController(animated: true)
-		} else {
-            presentingViewController?.dismiss(animated: true, completion: {
-                let alert = UIAlertController(title: "Coordinate Selected", message: "You can change the name of the location without effecting the coordinate", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { _ in }))
-                self.present(alert, animated: true)
-            })
-		}
+        self.delegate?.didSelectLocation(name: view.annotation!.title!!, coordinate: view.annotation!.coordinate)
+        let alert = UIAlertController(title: "Coordinate Selected", message: "You can change the name of the location without effecting the coordinate", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
 	}
 	
 	public func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {

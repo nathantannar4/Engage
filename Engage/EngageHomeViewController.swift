@@ -133,7 +133,7 @@ class EngagementHomeViewController: NTTableViewController, NTTableViewDataSource
         if indexPath.section < self.engagements.count {
             let cell = NTPageHeaderCell.initFromNib()
             cell.setDefaults()
-            cell.image = self.engagements[indexPath.row].image != nil ? self.engagements[indexPath.row].image?.resizeImage(width: 40, height: 40, renderingMode: .alwaysOriginal) : #imageLiteral(resourceName: "hub").withRenderingMode(.alwaysTemplate)
+            cell.image = self.engagements[indexPath.section].image != nil ? self.engagements[indexPath.section].image : #imageLiteral(resourceName: "hub").withRenderingMode(.alwaysTemplate)
             cell.pageImageView.tintColor = self.engagements[indexPath.section].color
             cell.name = self.engagements[indexPath.section].name
             return cell

@@ -215,7 +215,7 @@ public class Engagement: Group {
             let actionSheetController: UIAlertController = UIAlertController(title: "Password", message: "This Engagement is password protected", preferredStyle: .alert)
             actionSheetController.view.tintColor = Color.defaultNavbarTint
             
-            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .destructive)
             actionSheetController.addAction(cancelAction)
             
             let nextAction: UIAlertAction = UIAlertAction(title: "Join", style: .default) { action -> Void in
@@ -246,13 +246,24 @@ public class Engagement: Group {
             }
             target.present(actionSheetController, animated: true, completion: nil)
         } else {
-            self.join(user: User.current(), completion: { (success) in
-                if success {
-                    Engagement.didSelect(with: self)
-                    User.current().engagements?.append(self.object)
-                    User.current().save(completion: nil)
-                }
-            })
+            let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Would you like to join \(self.name!)", preferredStyle: .alert)
+            actionSheetController.view.tintColor = Color.defaultNavbarTint
+            
+            let cancelAction: UIAlertAction = UIAlertAction(title: "No", style: .destructive)
+            actionSheetController.addAction(cancelAction)
+            
+            let nextAction: UIAlertAction = UIAlertAction(title: "Yes", style: .default) { action -> Void in
+                self.join(user: User.current(), completion: { (success) in
+                    if success {
+                        Engagement.didSelect(with: self)
+                        User.current().engagements?.append(self.object)
+                        User.current().save(completion: nil)
+                    }
+                })
+            }
+            actionSheetController.addAction(nextAction)
+            
+            target.present(actionSheetController, animated: true, completion: nil)
         }
     }
 }

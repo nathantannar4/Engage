@@ -122,6 +122,7 @@ let PF_EVENT_LONGITUDE                  = "longitude"
 let PF_EVENT_LATITUDE                   = "latitude"
 let PF_EVENT_PRIVATE                    = "private"
 let PF_EVENT_IMAGE                      = "image"
+let PF_EVENT_ALL_DAY                    = "allday"
 
 /* Channel */
 let PF_CHANNEL_CLASS_NAME               = "_Channels"

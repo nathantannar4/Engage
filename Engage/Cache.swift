@@ -22,6 +22,8 @@ public class Cache {
     
     public static var Posts = [Post]()
     
+    public static var Events = [Event]()
+    
     public static var ids = [String]()
     
     public static func add(_ object: AnyObject) {
@@ -40,6 +42,9 @@ public class Cache {
         } else if let post = object as? Post {
             Cache.ids.append(post.id)
             Cache.Posts.append(post)
+        } else if let event = object as? Event {
+            Cache.ids.append(event.id)
+            Cache.Events.append(event)
         } else {
             Log.write(.warning, "Could not cache object")
         }
@@ -56,6 +61,8 @@ public class Cache {
             let _ = Cache.retrieveChannel(channel.object)
         } else if let post = object as? Post {
             let _ = Cache.retrievePost(post.object)
+        } else if let event = object as? Event {
+            let _ = Cache.retrievePost(event.object)
         } else {
             Log.write(.warning, "Could updated cached object")
         }
@@ -114,6 +121,26 @@ public class Cache {
         }
         Log.write(.status, "Caching Team with id \(teamObject.objectId!)")
         let team = Team(fromObject: teamObject)
+        Cache.add(team)
+        return team
+    }
+    
+    public static func retrieveEvent(_ eventObject: PFObject) -> Event {
+        var index = 0
+        for event in Cache.Events {
+            if event.id == eventObject.objectId! {
+                if event.updatedAt == eventObject.updatedAt {
+                    return event
+                } else {
+                    let updatedEvent = Event(fromObject: eventObject)
+                    Cache.Events[index] = updatedEvent
+                    return updatedEvent
+                }
+            }
+            index += 1
+        }
+        Log.write(.status, "Caching Event with id \(eventObject.objectId!)")
+        let team = Event(fromObject: eventObject)
         Cache.add(team)
         return team
     }

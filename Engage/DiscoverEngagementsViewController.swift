@@ -27,7 +27,7 @@ class DiscoverEngagementsViewController: NTSearchViewController, NTTableViewDele
     override func updateResults() {
         let query = PFQuery(className: PF_ENGAGEMENTS_CLASS_NAME)
         query.cachePolicy = .cacheElseNetwork
-        query.limit = 100
+        query.limit = 1000
         query.order(byDescending: PF_ENGAGEMENTS_UPDATED_AT)
         query.whereKey(PF_ENGAGEMENTS_HIDDEN, equalTo: false)
         query.whereKey(PF_ENGAGEMENTS_LOWERCASE_NAME, contains: self.searchBar.text?.lowercased())

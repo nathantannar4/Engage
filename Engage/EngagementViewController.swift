@@ -69,14 +69,13 @@ class EngagementViewController: NTTableViewController, NTTableViewDataSource, NT
     }
     
     func showEvents(sender: AnyObject) {
-        let eventsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "calendarVC") as! CalendarViewController
         self.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(eventsVC, animated: true)
+        self.navigationController?.pushViewController(CalendarViewController(), animated: true)
         self.hidesBottomBarWhenPushed = false
     }
     
     func createTeam(sender: UIButton) {
-        let navVC = UINavigationController(rootViewController: CreateGroupViewController(asEngagement: true))
+        let navVC = UINavigationController(rootViewController: CreateGroupViewController(asTeam: true))
         self.present(navVC, animated: true, completion: nil)
     }
     

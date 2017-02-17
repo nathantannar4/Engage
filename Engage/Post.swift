@@ -293,7 +293,7 @@ public class Post {
         }
         actionSheetController.addAction(editAction)
         
-        let deleteAction: UIAlertAction = UIAlertAction(title: "Delete", style: .default) { action -> Void in
+        let deleteAction: UIAlertAction = UIAlertAction(title: "Delete", style: .destructive) { action -> Void in
             let alert = UIAlertController(title: "Are you sure?", message: "This cannot be undone.", preferredStyle: UIAlertControllerStyle.alert)
             alert.view.tintColor = Color.defaultNavbarTint
             
@@ -344,7 +344,7 @@ public class Post {
             actionSheetController.addAction(editAction)
         }
         
-        let deleteAction: UIAlertAction = UIAlertAction(title: "Report", style: .default) { action -> Void in
+        let deleteAction: UIAlertAction = UIAlertAction(title: "Report", style: .destructive) { action -> Void in
             self.reportPost(target: target)
         }
         actionSheetController.addAction(deleteAction)
