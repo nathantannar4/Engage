@@ -172,11 +172,14 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
 	}
 	
 	/// A preset wrapper around interimSpace.
-	open var interimSpacePreset = InterimSpacePreset.none {
-		didSet {
-            interimSpace = InterimSpacePresetToValue(preset: interimSpacePreset)
-		}
-	}
+    open var interimSpacePreset: InterimSpacePreset {
+        get {
+            return grid.interimSpacePreset
+        }
+        set(value) {
+            grid.interimSpacePreset = value
+        }
+    }
 	
 	/// A wrapper around grid.interimSpace.
 	@IBInspectable
@@ -240,7 +243,7 @@ open class CollectionReusableView: UICollectionReusableView, Pulseable {
         let p = point ?? center
         
         pulse.expandAnimation(point: p)
-        Motion.delay(time: 0.35) { [weak self] in
+        Animation.delay(time: 0.35) { [weak self] in
             self?.pulse.contractAnimation()
         }
     }

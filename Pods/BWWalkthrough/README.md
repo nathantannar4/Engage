@@ -2,7 +2,7 @@
 <img src="http://www.thinkandbuild.it/gifs/bwwalkthrough.png" width="200"/>
 </p>
 <br>
-[![CocoaPods](https://img.shields.io/cocoapods/v/BWWalkthrough.svg?maxAge=2592000)]() [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![CocoaPods](https://img.shields.io/cocoapods/v/BWWalkthrough.svg)]() [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Platform](https://img.shields.io/cocoapods/p/BWWalkthrough.svg?style=flat)](http://cocoadocs.org/docsets/BWWalkthrough)
 [![Twitter](https://img.shields.io/badge/twitter-@bitwaker-59ADEB.svg?style=flat)](http://twitter.com/bitwaker)
 
@@ -27,9 +27,12 @@ BWWT is essentially defined by 2 classes:
 BWWT is not a copy-paste-and-it-just-works class and it is not a fixed walkthrough template. If you need a simple no-configuration walkthrough, BWWT is not the right choice.
 
 ## Installation
-### With CocoaPods
+> Note: There is a known issue with IBOutlets and Carthage that prevents Outlets from working correctly. 
+> I see something similar reported for other [projects](https://github.com/xmartlabs/Eureka/issues/295) too. 
+> My suggestion is to follow the manual installation instructions, as it is just matter of drag and drop 2 files in your project. 
+> I know you cannot update the library automatically going that route... but IBOutlets are needed for a project like BWWalkthrough. 
 
-- Note: Installation through CocoaPods doesn't install the latest version of BWWalkthrough. Please use Carthage or the Manual installation instead. Follow #77 for more information.
+### With CocoaPods
 
 BWWalkthrough is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:

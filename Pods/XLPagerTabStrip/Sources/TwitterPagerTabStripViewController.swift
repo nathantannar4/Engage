@@ -1,7 +1,7 @@
 //  TwitterPagerTabStripViewController.swift
 //  XLPagerTabStrip ( https://github.com/xmartlabs/XLPagerTabStrip )
 //
-//  Copyright (c) 2016 Xmartlabs ( http://xmartlabs.com )
+//  Copyright (c) 2017 Xmartlabs ( http://xmartlabs.com )
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -87,7 +87,7 @@ open class TwitterPagerTabStripViewController: PagerTabStripViewController, Page
     open func updateIndicator(for viewController: PagerTabStripViewController, fromIndex: Int, toIndex: Int, withProgressPercentage progressPercentage: CGFloat, indexWasChanged: Bool) {
 
         // move indicator scroll view
-        let distance = distanceValue
+        guard let distance = distanceValue else { return }
         var xOffset: CGFloat = 0
         if fromIndex < toIndex {
             xOffset = distance * CGFloat(fromIndex) + distance * progressPercentage
@@ -124,7 +124,9 @@ open class TwitterPagerTabStripViewController: PagerTabStripViewController, Page
     }
     
     deinit {
-        titleView.removeObserver(self, forKeyPath: "frame")
+        if isViewLoaded {
+            titleView.removeObserver(self, forKeyPath: "frame")
+        }
     }
     
     open override func viewDidLayoutSubviews() {
@@ -191,7 +193,7 @@ open class TwitterPagerTabStripViewController: PagerTabStripViewController, Page
     }
     
     private func setNavigationViewItemsPosition(updateAlpha: Bool) {
-        let distance = distanceValue
+        guard let distance = distanceValue else { return }
         let isPortrait = UIApplication.shared.statusBarOrientation.isPortrait
         let navBarHeight: CGFloat = navigationController!.navigationBar.frame.size.height
         for (index, label) in childTitleLabels.enumerated() {
@@ -229,8 +231,7 @@ open class TwitterPagerTabStripViewController: PagerTabStripViewController, Page
         }
     }
     
-    private var distanceValue: CGFloat {
-        let middle = navigationController!.navigationBar.convert(navigationController!.navigationBar.center, to: titleView)
-        return middle.x
+    private var distanceValue: CGFloat? {
+        return navigationController.map { $0.navigationBar.convert($0.navigationBar.center, to: titleView) }?.x
     }
 }

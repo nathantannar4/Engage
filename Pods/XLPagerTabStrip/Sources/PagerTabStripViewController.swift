@@ -1,7 +1,7 @@
 //  PagerTabStripViewController.swift
 //  XLPagerTabStrip ( https://github.com/xmartlabs/XLPagerTabStrip )
 //
-//  Copyright (c) 2016 Xmartlabs ( http://xmartlabs.com )
+//  Copyright (c) 2017 Xmartlabs ( http://xmartlabs.com )
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -53,11 +53,7 @@ public protocol PagerTabStripDataSource: class {
 
 open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
     
-    @IBOutlet lazy open var containerView: UIScrollView! = { [unowned self] in
-        let containerView = UIScrollView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
-        containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        return containerView
-    }()
+    @IBOutlet weak public var containerView: UIScrollView!
     
     open weak var delegate: PagerTabStripDelegate?
     open weak var datasource: PagerTabStripDataSource?
@@ -91,6 +87,12 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
+        let conteinerViewAux = containerView ?? {
+            let containerView = UIScrollView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))
+            containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            return containerView
+        }()
+        containerView = conteinerViewAux
         if containerView.superview == nil {
             view.addSubview(containerView)
         }
@@ -103,11 +105,18 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
         containerView.showsHorizontalScrollIndicator = false
         containerView.isPagingEnabled = true
         reloadViewControllers()
+        
+        let childController = viewControllers[currentIndex]
+        addChildViewController(childController)
+        childController.view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        containerView.addSubview(childController.view)
+        childController.didMove(toParentViewController: self)
     }
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isViewAppearing = true
+        childViewControllers.forEach { $0.beginAppearanceTransition(true, animated: animated) }
     }
     
     override open func viewDidAppear(_ animated: Bool) {
@@ -115,6 +124,17 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
         lastSize = containerView.bounds.size
         updateIfNeeded()
         isViewAppearing = false
+        childViewControllers.forEach { $0.endAppearanceTransition() }
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        childViewControllers.forEach { $0.beginAppearanceTransition(false, animated: animated) }
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        childViewControllers.forEach { $0.endAppearanceTransition() }
     }
     
     override open func viewDidLayoutSubviews(){
@@ -122,8 +142,12 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
         updateIfNeeded()
     }
     
+    open override var shouldAutomaticallyForwardAppearanceMethods: Bool {
+        return false
+    }
+    
     open func moveToViewController(at index: Int, animated: Bool = true) {
-        guard isViewLoaded && view.window != nil else {
+        guard isViewLoaded && view.window != nil && currentIndex != index else {
             currentIndex = index
             return
         }
@@ -136,11 +160,11 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
             tmpViewControllers[fromIndex] = currentChildVC
             pagerTabStripChildViewControllersForScrolling = tmpViewControllers
             containerView.setContentOffset(CGPoint(x: pageOffsetForChild(at: fromIndex), y: 0), animated: false)
-            (navigationController?.view ?? view).isUserInteractionEnabled = false
+            (navigationController?.view ?? view).isUserInteractionEnabled = !animated
             containerView.setContentOffset(CGPoint(x: pageOffsetForChild(at: index), y: 0), animated: true)
         }
         else {
-            (navigationController?.view ?? view).isUserInteractionEnabled = false
+            (navigationController?.view ?? view).isUserInteractionEnabled = !animated
             containerView.setContentOffset(CGPoint(x: pageOffsetForChild(at: index), y: 0), animated: animated)
         }
     }
@@ -152,7 +176,7 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
     //MARK: - PagerTabStripDataSource
     
     open func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        assertionFailure("Sub-class must implement the PagerTabStripDataSource viewControllersForPagerTabStrip: method")
+        assertionFailure("Sub-class must implement the PagerTabStripDataSource viewControllers(for:) method")
         return []
     }
     
@@ -220,8 +244,8 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
                     childController.view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
                 }
                 else {
-                    addChildViewController(childController)
                     childController.beginAppearanceTransition(true, animated: false)
+                    addChildViewController(childController)
                     childController.view.frame = CGRect(x: offsetForChild(at: index), y: 0, width: view.bounds.width, height: containerView.bounds.height)
                     childController.view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
                     containerView.addSubview(childController.view)
@@ -231,8 +255,8 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
             }
             else {
                 if let _ = childController.parent {
-                    childController.willMove(toParentViewController: nil)
                     childController.beginAppearanceTransition(false, animated: false)
+                    childController.willMove(toParentViewController: nil)
                     childController.view.removeFromSuperview()
                     childController.removeFromParentViewController()
                     childController.endAppearanceTransition()
@@ -260,9 +284,11 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
         guard isViewLoaded else { return }
         for childController in viewControllers {
             if let _ = childController.parent {
-                childController.view.removeFromSuperview()
+                childController.beginAppearanceTransition(false, animated: false)
                 childController.willMove(toParentViewController: nil)
+                childController.view.removeFromSuperview()
                 childController.removeFromParentViewController()
+                childController.endAppearanceTransition()
             }
         }
         reloadViewControllers()
@@ -359,9 +385,9 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
         viewControllers = dataSource.viewControllers(for: self)
         // viewControllers
         guard viewControllers.count != 0 else {
-            fatalError("viewControllersForPagerTabStrip should provide at least one child view controller")
+            fatalError("viewControllers(for:) should provide at least one child view controller")
         }
-        viewControllers.forEach { if !($0 is IndicatorInfoProvider) { fatalError("Every view controller provided by PagerTabStripDataSource's viewControllersForPagerTabStrip method must conform to  InfoProvider") }}
+        viewControllers.forEach { if !($0 is IndicatorInfoProvider) { fatalError("Every view controller provided by PagerTabStripDataSource's viewControllers(for:) method must conform to  InfoProvider") }}
 
     }
     

@@ -1,7 +1,7 @@
 //  ButtonBarView.swift
 //  XLPagerTabStrip ( https://github.com/xmartlabs/XLPagerTabStrip )
 //
-//  Copyright (c) 2016 Xmartlabs ( http://xmartlabs.com )
+//  Copyright (c) 2017 Xmartlabs ( http://xmartlabs.com )
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -47,7 +47,7 @@ open class ButtonBarView: UICollectionView {
     
     internal var selectedBarHeight: CGFloat = 4 {
         didSet {
-            self.updateSlectedBarYPosition()
+            updateSelectedBarYPosition()
         }
     }
     var selectedBarAlignment: SelectedBarAlignment = .center
@@ -58,7 +58,7 @@ open class ButtonBarView: UICollectionView {
         addSubview(selectedBar)
     }
     
-    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+    public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         addSubview(selectedBar)
     }
@@ -165,10 +165,15 @@ open class ButtonBarView: UICollectionView {
         return contentOffset
     }
     
-    private func updateSlectedBarYPosition() {
+    private func updateSelectedBarYPosition() {
         var selectedBarFrame = selectedBar.frame
         selectedBarFrame.origin.y = frame.size.height - selectedBarHeight
         selectedBarFrame.size.height = selectedBarHeight
         selectedBar.frame = selectedBarFrame
+    }
+    
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        updateSelectedBarYPosition()
     }
 }
