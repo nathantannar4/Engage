@@ -16,10 +16,10 @@ import FontAwesomeKit
 /* Config */
 var VERSION = "1.1.0"
 var isWESST = false
-let APPLICATION_ID = ""
-let CLIENT_KEY = ""
-let SERVER_URL = ""
-let FACEBOOK_APPLICATION_ID = ""
+let APPLICATION_ID = "G0OYmfAMuI4ORbtWssrYWrwSfEqZbpxafRA8Mo2b"
+let CLIENT_KEY = "Ihk6kg7wyEHOvn914tYJw0ArgYzkzbrHp6TtZVNq"
+let SERVER_URL = "http://nathantannar.me:1337/parse"
+let FACEBOOK_APPLICATION_ID = "1328087523932712"
 
 var drawerController: DrawerController!
 

@@ -150,7 +150,7 @@ class EventDetailViewController: FormViewController, MKMapViewDelegate, CLLocati
                     })
             }
         }
-        self.former.insert(sectionFormer: (sectionFormer: SectionFormer(rowFormers: userRows).set(headerViewFormer: TableFunctions.createHeader(text: header))), toSection: section)
+        self.former.insert(sectionFormer: (sectionFormer: SectionFormer(rowFormers: userRows).set(headerViewFormer: TableFunctions.createHeader(text: header))) as! SectionFormer, toSection: section)
         self.former.reload()
     }
     
@@ -159,7 +159,7 @@ class EventDetailViewController: FormViewController, MKMapViewDelegate, CLLocati
             }.configure {
                 $0.rowHeight = 0
         }
-        self.former.append(sectionFormer: (sectionFormer: SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: header))))
+        self.former.append(sectionFormer: (sectionFormer: SectionFormer(rowFormer: zeroRow).set(headerViewFormer: TableFunctions.createHeader(text: header))) as! SectionFormer)
         self.former.reload()
     }
     
