@@ -1,6 +1,0 @@
-framework module M13PDFKit {
-  umbrella header "M13PDFKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

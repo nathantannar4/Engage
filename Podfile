@@ -8,7 +8,7 @@ use_frameworks!
 
 # Pods for Engage
 
-pod 'NTUIKit', :path => '~/Documents/NTUIKit'
+pod 'NTComponents', :path => '~/Documents/NTComponents'
 
 # Database Pods
 pod 'Parse'

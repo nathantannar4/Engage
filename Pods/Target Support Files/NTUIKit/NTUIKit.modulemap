@@ -1,6 +1,0 @@
-framework module NTUIKit {
-  umbrella header "NTUIKit-umbrella.h"
-
-  export *
-  module * { export * }
-}
