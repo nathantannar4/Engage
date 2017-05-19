@@ -2,12 +2,12 @@
 //  AppDelegate.swift
 //  Engage
 //
-//  Created by Nathan Tannar on 1/9/17.
+//  Created by Nathan Tannar on 5/11/17.
 //  Copyright © 2017 Nathan Tannar. All rights reserved.
 //
 
 import UIKit
-import NTUIKit
+import NTComponents
 import Parse
 import UserNotifications
 import ParseFacebookUtilsV4
@@ -21,7 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        // Initialize backend configuration
+        Color.Default.setPrimary(to: .white)
+        Color.Default.setSecondary(to: UIColor(hex: "#0288D1"))
+        
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
             ParseMutableClientConfiguration.applicationId = APPLICATION_ID
             ParseMutableClientConfiguration.clientKey = CLIENT_KEY
@@ -30,38 +32,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Parse.enableLocalDatastore()
         Parse.initialize(with: config)
         Parse.setLogLevel(.debug)
-        FBSDKSettings.setAppID(FACEBOOK_APPLICATION_ID)
-        PFFacebookUtils.initializeFacebook(applicationLaunchOptions: launchOptions)
         PFUser.enableRevocableSessionInBackground()
- 
-        // Set default appearances
-        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -60), for:UIBarMetrics.default)
-        Color.defaultButtonTint = Color.blue
-        Color.defaultNavbarTint = Color.blue
-        Color.defaultTitle = UIColor.black
-        UINavigationBar.appearance().tintColor = Color.defaultNavbarTint
-        UINavigationBar.appearance().backgroundColor = Color.defaultNavbarBackground
-        let pc = UIPageControl.appearance()
-        pc.pageIndicatorTintColor = Color.defaultTitle
-        pc.currentPageIndicatorTintColor = Color.defaultNavbarTint
-        pc.backgroundColor = UIColor.groupTableViewBackground
-
         
-        // Register for push notifications
+        
+        // Register for Push Notifications
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-            // Enable or disable features based on authorization.
         }
         application.registerForRemoteNotifications()
         
-        // Initialize the window
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window!.backgroundColor = UIColor.white
-        self.window!.rootViewController = NTNavigationContainer(centerView: LoginViewController())
-        self.window!.makeKeyAndVisible()
         
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = .white
+
+        //let dataSet = NTSlideDataSet(image: #imageLiteral(resourceName: "Engage_Logo"), title: "Engage", subtitle: "Create your own Social Network!", body: nil)
+        //let root = NTSlideShowViewController(dataSource: NTSlideShowDatasource(withValues: [dataSet]))
+        //root.completionViewController = LoginViewController()
+        window?.rootViewController = LoginViewController()
+        window?.makeKeyAndVisible()
+        
+        FBSDKSettings.setAppID(FACEBOOK_APPLICATION_ID)
+        PFFacebookUtils.initializeFacebook(applicationLaunchOptions: launchOptions)
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
+    
+    // MARK: - FacebookSDK
+    
+    func applicationDidBecomeActive(application: UIApplication!) {
+        FBSDKAppEvents.activateApp()
+    }
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
+    }
+
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

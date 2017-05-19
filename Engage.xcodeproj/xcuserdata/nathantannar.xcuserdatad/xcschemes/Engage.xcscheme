@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0820"
+   LastUpgradeVersion = "0830"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "38F7DFC01E24C7320001BA91"
+               BlueprintIdentifier = "389AF4081EC4589C0089E9C1"
                BuildableName = "Engage.app"
                BlueprintName = "Engage"
                ReferencedContainer = "container:Engage.xcodeproj">
@@ -28,11 +28,21 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "389AF41C1EC4589C0089E9C1"
+               BuildableName = "EngageTests.xctest"
+               BlueprintName = "EngageTests"
+               ReferencedContainer = "container:Engage.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "38F7DFC01E24C7320001BA91"
+            BlueprintIdentifier = "389AF4081EC4589C0089E9C1"
             BuildableName = "Engage.app"
             BlueprintName = "Engage"
             ReferencedContainer = "container:Engage.xcodeproj">
@@ -55,7 +65,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "38F7DFC01E24C7320001BA91"
+            BlueprintIdentifier = "389AF4081EC4589C0089E9C1"
             BuildableName = "Engage.app"
             BlueprintName = "Engage"
             ReferencedContainer = "container:Engage.xcodeproj">
@@ -74,7 +84,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "38F7DFC01E24C7320001BA91"
+            BlueprintIdentifier = "389AF4081EC4589C0089E9C1"
             BuildableName = "Engage.app"
             BlueprintName = "Engage"
             ReferencedContainer = "container:Engage.xcodeproj">

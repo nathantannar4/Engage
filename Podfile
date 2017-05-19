@@ -1,35 +1,20 @@
-# Uncomment this line to define a global platform for your project
-platform :ios, '8.2'
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
 
 target 'Engage' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
 
-# Comment this line if you're not using Swift and don't want to use dynamic frameworks
-use_frameworks!
-
-# Pods for Engage
-
-pod 'NTComponents', :path => '~/Documents/NTComponents'
-
-# Database Pods
-pod 'Parse'
-pod 'ParseUI'
-pod 'ParseFacebookUtilsV4'
-pod 'Bolts'
-
-# View Controller Pods
-pod 'SlackTextViewController'
-pod 'CVCalendar'
-# pod 'LocationPicker'
-pod 'Agrume'
-#pod 'BWWalkthrough'
-
-# UITableView Management Pods
-pod 'Former’
-pod 'DZNEmptyDataSet'
-
-# Other Pods
-pod 'BRYXBanner'
-pod 'M13PDFKit'
-pod 'ALTextInputBar'
+  # Pods for Engage
+  pod 'NTComponents', :path => '~/Documents/NTComponents'
+  pod 'Parse'
+  pod 'ParseUI'
+  pod 'ParseFacebookUtilsV4'
+  pod 'Bolts'
+  pod 'Agrume'
+  pod 'Former'
+  pod 'DZNEmptyDataSet'
+  pod 'JSQMessagesViewController'
+  # pod 'CVCalendar'
 
 end

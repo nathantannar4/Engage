@@ -361,44 +361,44 @@ public final class Agrume: UIViewController {
     if initialOrientation == .portrait {
       switch (currentDeviceOrientation()) {
       case .landscapeLeft:
-        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+        transform = CGAffineTransform(rotationAngle: .pi / 2)
       case .landscapeRight:
-        transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
+        transform = CGAffineTransform(rotationAngle: -(.pi / 2))
       case .portraitUpsideDown:
-        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+        transform = CGAffineTransform(rotationAngle: .pi)
       default:
         break
       }
     } else if initialOrientation == .portraitUpsideDown {
       switch (currentDeviceOrientation()) {
       case .landscapeLeft:
-        transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
+        transform = CGAffineTransform(rotationAngle: -(.pi / 2))
       case .landscapeRight:
-        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+        transform = CGAffineTransform(rotationAngle: .pi / 2)
       case .portrait:
-        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+        transform = CGAffineTransform(rotationAngle: .pi)
       default:
         break
       }
     } else if initialOrientation == .landscapeLeft {
       switch (currentDeviceOrientation()) {
       case .landscapeRight:
-        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+        transform = CGAffineTransform(rotationAngle: .pi)
       case .portrait:
-        transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
+        transform = CGAffineTransform(rotationAngle: -(.pi / 2))
       case .portraitUpsideDown:
-        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+        transform = CGAffineTransform(rotationAngle: .pi / 2)
       default:
         break
       }
     } else if initialOrientation == .landscapeRight {
       switch (currentDeviceOrientation()) {
       case .landscapeLeft:
-        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+        transform = CGAffineTransform(rotationAngle: .pi)
       case .portrait:
-        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+        transform = CGAffineTransform(rotationAngle: .pi / 2)
       case .portraitUpsideDown:
-        transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
+        transform = CGAffineTransform(rotationAngle: -(.pi / 2))
       default:
         break
       }
@@ -422,26 +422,10 @@ extension Agrume: UICollectionViewDataSource {
 
   public func collectionView(_ collectionView: UICollectionView,
                              cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    downloadTask?.cancel()
-
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Agrume.reuseIdentifier,
                                                   for: indexPath) as! AgrumeCell
     if let images = images {
       cell.image = images[indexPath.row]
-    } else if let imageUrls = imageUrls {
-      spinner.alpha = 1
-      let completion: DownloadCompletion = { [weak self] image in
-        cell.image = image
-        self?.spinner.alpha = 0
-      }
-
-      if let download = download {
-        download(imageUrls[indexPath.row], completion)
-      } else if let download = AgrumeServiceLocator.shared.downloadHandler {
-        download(imageUrls[indexPath.row], completion)
-      } else {
-        downloadImage(imageUrls[indexPath.row], completion: completion)
-      }
 		} else if let dataSource = dataSource {
 			spinner.alpha = 1
 			let index = indexPath.row
@@ -461,11 +445,7 @@ extension Agrume: UICollectionViewDataSource {
     return cell
   }
 
-  private func downloadImage(_ url: URL, completion: @escaping DownloadCompletion) {
-    downloadTask = ImageDownloader.downloadImage(url) { image in
-      completion(image)
-    }
-  }
+
 
 }
 
@@ -474,6 +454,23 @@ extension Agrume: UICollectionViewDelegate {
   public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                              forItemAt indexPath: IndexPath) {
     didScroll?(indexPath.row)
+    
+    if let imageUrls = imageUrls {
+      let completion: DownloadCompletion = { [weak self] image in
+        (cell as! AgrumeCell).image = image
+        self?.spinner.alpha = 0
+      }
+      
+      if let download = download {
+        download(imageUrls[indexPath.row], completion)
+      } else if let download = AgrumeServiceLocator.shared.downloadHandler {
+        spinner.alpha = 1
+        download(imageUrls[indexPath.row], completion)
+      } else {
+        spinner.alpha = 1
+        downloadImage(imageUrls[indexPath.row], completion: completion)
+      }
+    }
 		
 		if let dataSource = dataSource {
       let collectionViewCount = collectionView.numberOfItems(inSection: 0)
@@ -489,6 +486,12 @@ extension Agrume: UICollectionViewDelegate {
 				reload()
 			}
 		}
+  }
+  
+  private func downloadImage(_ url: URL, completion: @escaping DownloadCompletion) {
+    downloadTask = ImageDownloader.downloadImage(url) { image in
+      completion(image)
+    }
   }
   
   private func hasDataSourceCountChanged(dataSourceCount: Int, collectionViewCount: Int) -> Bool {
