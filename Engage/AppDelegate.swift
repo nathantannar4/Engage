@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         Color.Default.setPrimary(to: .white)
-        Color.Default.setSecondary(to: UIColor(hex: "#0288D1"))
+        Color.Default.setSecondary(to: UIColor(hex: "#31485e"))
         
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
             ParseMutableClientConfiguration.applicationId = APPLICATION_ID

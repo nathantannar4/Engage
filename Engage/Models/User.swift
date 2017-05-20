@@ -73,7 +73,7 @@ public class User {
             self.object[PF_USER_BLOCKED] = newValue
         }
     }
-    public var engagements: PFRelation<PFObject>? {
+    public var engagementRelations: PFRelation<PFObject>? {
         get {
             return self.object.relation(forKey: PF_USER_ENGAGEMENTS)
         }
@@ -81,12 +81,12 @@ public class User {
             self.object[PF_USER_ENGAGEMENTS] = newValue
         }
     }
+    public var engagements: [PFObject]?
     
     // MARK: Initialization
     
     public init(_ object: PFUser) {
         self.object = object
-        self.image = UIImage(named: "profile_blank")
         
         if let logoFile = self.object.value(forKey: PF_USER_PICTURE) as? PFFile {
             if let cachedItem = User.imageCache.object(forKey: NSString(string: logoFile.url!)) {
@@ -125,12 +125,35 @@ public class User {
     
     // MARK: Public Functions
     
-    public static func current() -> User! {
-        guard let user = self._current else {
-            Log.write(.error, "The current user was nil")
-            return nil
+    public static func current() -> User? {
+        return self._current
+    }
+    
+    public func login() {
+        User._current = self
+        let query = engagementRelations?.query()
+        query?.findObjectsInBackground(block: { (objects, error) in
+            guard let engagements = objects else {
+                NTPing(type: .isWarning, title: error?.localizedDescription).show()
+                return
+            }
+            User._current!.engagements = engagements
+            if engagements.count == 0 {
+                GettingStartedViewController().makeKeyAndVisible()
+            } else {
+                GettingStartedViewController().makeKeyAndVisible()
+            }
+        })
+    }
+    
+    public func logout() {
+        PFUser.logOutInBackground { (error) in
+            if error == nil {
+                LoginViewController().makeKeyAndVisible()
+            } else {
+                NTPing.genericErrorMessage()
+            }
         }
-        return user
     }
     
     public func save(completion: ((_ success: Bool) -> Void)?) {
@@ -164,7 +187,7 @@ public class User {
             if userExtensions.count == 0 {
                 // Extension does not exist yet
                 let newExtension = PFObject(className: Service.queryHome + PF_USER_CLASS_NAME)
-                newExtension[PF_USER_EXTENSION] = User.current().object
+                newExtension[PF_USER_EXTENSION] = User.current()?.object
                 newExtension.saveInBackground()
                 Log.write(.status, "Created extension for user \(self.id)")
                 self.userExtension = UserExtension(fromObject: newExtension)
@@ -186,6 +209,7 @@ public class User {
             completion?()
         }
     }
+    
     /*
     public class func didLogin(with user: PFUser) {
         User._current = User(user)
@@ -211,7 +235,7 @@ public class User {
         if self.id == User.current().id {
             
             let actionSheetController: UIAlertController = UIAlertController(title: "Are you sure?", message: "", preferredStyle: .alert)
-            actionSheetController.view.tintColor = Color.Defaults.Tint.NavigationBar
+            actionSheetController.view.tintColor = Color.Default.Tint.View.NavigationBar
             
             let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
             actionSheetController.addAction(cancelAction)
@@ -262,10 +286,10 @@ public class User {
         public init(fromObject object: PFObject) {
             self.object = object
             
-            guard let team = object.object(forKey: PF_USER_TEAM) as? PFObject else {
-                Log.write(.status, "User is not associated with a team")
-                return
-            }
+            //guard let team = object.object(forKey: PF_USER_TEAM) as? PFObject else {
+            //    Log.write(.status, "User is not associated with a team")
+            //    return
+            //}
             //self.team = Team(team)
         }
         
