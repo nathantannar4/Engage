@@ -74,7 +74,6 @@ class GettingStartedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        UIApplication.shared.statusBarStyle = .lightContent
         view.applyGradient(colours: [Color.Default.Tint.View.darker(by: 10), Color.Default.Tint.View.darker(by: 5), Color.Default.Tint.View, Color.Default.Tint.View.lighter(by: 5)], locations: [0.0, 0.1, 0.3, 1.0])
         
         view.addSubview(titleLabel)
@@ -98,6 +97,10 @@ class GettingStartedViewController: UIViewController {
         
         view.addSubview(signOutButton)
         signOutButton.anchor(nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: nil, topConstant: 0, leftConstant: 16, bottomConstant: 16, rightConstant: 0, widthConstant: 100, heightConstant: 32)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

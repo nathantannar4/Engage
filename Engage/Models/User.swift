@@ -75,13 +75,13 @@ public class User {
     }
     public var engagementRelations: PFRelation<PFObject>? {
         get {
-            return self.object.relation(forKey: PF_USER_ENGAGEMENTS)
+            return self.object.relation(forKey: PF_USER_ENGAGEMENT_RELATIONS)
         }
         set {
-            self.object[PF_USER_ENGAGEMENTS] = newValue
+            self.object[PF_USER_ENGAGEMENT_RELATIONS] = newValue
         }
     }
-    public var engagements: [PFObject]?
+    public var engagements: [Engagement]?
     
     // MARK: Initialization
     
@@ -137,23 +137,31 @@ public class User {
                 NTPing(type: .isWarning, title: error?.localizedDescription).show()
                 return
             }
-            User._current!.engagements = engagements
+            User._current!.engagements = engagements.map({ (object) -> Engagement in
+                return Engagement(object)
+            })
             if engagements.count == 0 {
                 GettingStartedViewController().makeKeyAndVisible()
             } else {
-                GettingStartedViewController().makeKeyAndVisible()
+                NTNavigationController(rootViewController: SideBarMenuViewController()).makeKeyAndVisible()
             }
         })
     }
     
     public func logout() {
-        PFUser.logOutInBackground { (error) in
-            if error == nil {
-                LoginViewController().makeKeyAndVisible()
-            } else {
-                NTPing.genericErrorMessage()
+        let logoutAction = NTActionSheetItem(title: "Sign Out") {
+            PFUser.logOutInBackground { (error) in
+                if error == nil {
+                    User._current = nil
+                    LoginViewController().makeKeyAndVisible()
+                } else {
+                    NTPing.genericErrorMessage()
+                }
             }
         }
+        let actionSheet = NTActionSheetViewController(title: nil, subtitle: nil, actions: [logoutAction])
+        actionSheet.addDismissAction(withText: "Cancel", icon: nil)
+        UIViewController.topController()?.present(actionSheet, animated: false, completion: nil)
     }
     
     public func save(completion: ((_ success: Bool) -> Void)?) {
@@ -294,7 +302,7 @@ public class User {
         }
         
         // MARK: Public Functions
-        /*
+        
         public func field(forIndex index: Int) -> String? {
             guard let profileFields = Engagement.current()?.profileFields else {
                 Log.write(.warning, "Engagements profile fields was nil")
@@ -311,7 +319,6 @@ public class User {
         public func setValue(_ newValue: String, forField field: String) {
             self.object[field] = newValue
         }
-        */
         
         public func save(completion: ((_ success: Bool) -> Void)?) {
             self.object.saveInBackground { (success, error) in

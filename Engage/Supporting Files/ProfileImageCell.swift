@@ -27,6 +27,7 @@ final class ProfileImageCell: UITableViewCell, LabelFormableRow {
         iconView.layer.borderWidth = 1
         iconView.layer.borderColor = Color.Default.Tint.View.cgColor
         iconView.layer.cornerRadius = 5
+        iconView.contentMode = .scaleAspectFill
     }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {

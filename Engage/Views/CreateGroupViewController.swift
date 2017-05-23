@@ -11,7 +11,7 @@ import Former
 import Agrume
 import Parse
 
-class CreateGroupViewController: NTSelfNavigatedViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CreateGroupViewController: NTNavigationViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -57,14 +57,7 @@ class CreateGroupViewController: NTSelfNavigatedViewController, UIImagePickerCon
         } else if name.characters.count >= 3 {
             group.create { (success) in
                 if success {
-                    DispatchQueue.executeAfter(1.5, closure: {
-                        let profileVC = NTProfileViewController()
-                        let tabVC = NTScrollableTabBarController(viewControllers: [profileVC])
-                        tabVC.title = "Engage"
-                        tabVC.subtitle = "Create your own Social Network"
-                        let navVC = NTNavigationContainer(centerView: tabVC, leftView: SideBarMenuViewController())
-                        navVC.makeKeyAndVisible()
-                    })
+                    Engagement.didSelect(with: self.group as! Engagement)
                 }
             }
         } else {
@@ -364,7 +357,7 @@ class CreateGroupViewController: NTSelfNavigatedViewController, UIImagePickerCon
             
             if image.size.width > 500 {
                 let resizeFactor = 500 / image.size.width
-                imageToBeSaved = (image.scale(to: resizeFactor * image.size.width)?.withRenderingMode(.alwaysOriginal))!
+                imageToBeSaved = image.resizeImage(width: image.size.width * resizeFactor, height: image.size.height * resizeFactor)!
             }
             
             switch self.imagePickerType {

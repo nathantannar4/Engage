@@ -15,7 +15,7 @@ PODS:
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
-  - NTComponents (0.0.2)
+  - NTComponents (0.0.3)
   - Parse (1.14.4):
     - Bolts/Tasks (~> 1.8)
   - ParseFacebookUtilsV4 (1.11.1):
@@ -52,7 +52,7 @@ SPEC CHECKSUMS:
   Former: 0b48a812c0d93b092b908d1b0574d0fd95c6b6f9
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
-  NTComponents: 9a544a8ea5c4c254877d360c70d98bc26fd19f2f
+  NTComponents: d4e35edc1d2af5158ce208c20d1eb280da159779
   Parse: b0aa91d2c435e53d4a9af26e741e014c9b35c42e
   ParseFacebookUtilsV4: 2f30c2b7021c8005d3042781da7ef87d06589421
   ParseUI: af2eba584799da4a9fbdac0e178662d7438b502e

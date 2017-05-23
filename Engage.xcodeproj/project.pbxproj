@@ -44,6 +44,9 @@
 		38FCFA791ED0D390007D3019 /* TitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38FCFA671ED0D390007D3019 /* TitleCell.xib */; };
 		38FCFA7A1ED0D390007D3019 /* DynamicHeightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA681ED0D390007D3019 /* DynamicHeightCell.swift */; };
 		38FCFA7B1ED0D390007D3019 /* DynamicHeightCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38FCFA691ED0D390007D3019 /* DynamicHeightCell.xib */; };
+		38FCFA841ED3E883007D3019 /* UserDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA831ED3E883007D3019 /* UserDatasource.swift */; };
+		38FCFA881ED3E982007D3019 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA871ED3E982007D3019 /* UserCell.swift */; };
+		38FCFA8A1ED3F0FA007D3019 /* EditUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA891ED3F0FA007D3019 /* EditUserViewController.swift */; };
 		92ACA59C6BB90C1665E9BBEC /* Pods_Engage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D533F048D873034BCEA956BD /* Pods_Engage.framework */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +94,9 @@
 		38FCFA671ED0D390007D3019 /* TitleCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TitleCell.xib; sourceTree = "<group>"; };
 		38FCFA681ED0D390007D3019 /* DynamicHeightCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicHeightCell.swift; sourceTree = "<group>"; };
 		38FCFA691ED0D390007D3019 /* DynamicHeightCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DynamicHeightCell.xib; sourceTree = "<group>"; };
+		38FCFA831ED3E883007D3019 /* UserDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserDatasource.swift; path = Datasources/UserDatasource.swift; sourceTree = "<group>"; };
+		38FCFA871ED3E982007D3019 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = Cells/UserCell.swift; sourceTree = "<group>"; };
+		38FCFA891ED3F0FA007D3019 /* EditUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditUserViewController.swift; sourceTree = "<group>"; };
 		9A03F5C067309D7A531B2526 /* Pods-EngageTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EngageTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EngageTests/Pods-EngageTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D533F048D873034BCEA956BD /* Pods_Engage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Engage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -131,6 +137,7 @@
 				389AF40C1EC4589C0089E9C1 /* AppDelegate.swift */,
 				389AF4391EC45A6C0089E9C1 /* Views */,
 				389AF4361EC45A6C0089E9C1 /* Models */,
+				38FCFA851ED3E88E007D3019 /* Datasources */,
 				389AF4311EC45A6C0089E9C1 /* Assets */,
 				389AF4371EC45A6C0089E9C1 /* Supporting Files */,
 				389AF42E1EC45A2C0089E9C1 /* LaunchScreen.storyboard */,
@@ -174,10 +181,11 @@
 			children = (
 				38FCFA551ED0C88B007D3019 /* Login/Welcome */,
 				38FCFA3F1ED00E93007D3019 /* FeedViewController.swift */,
-				38FCFA411ED00EA0007D3019 /* UserViewController.swift */,
+				38FCFA8B1ED3F0FE007D3019 /* User */,
 				38FCFA451ED00EE5007D3019 /* MessagesViewController.swift */,
 				38FCFA561ED0C899007D3019 /* Group */,
 				38FCFA571ED0C8A0007D3019 /* Menu */,
+				38FCFA861ED3E95D007D3019 /* Cells */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -232,6 +240,31 @@
 				38FCFA691ED0D390007D3019 /* DynamicHeightCell.xib */,
 			);
 			name = Former;
+			sourceTree = "<group>";
+		};
+		38FCFA851ED3E88E007D3019 /* Datasources */ = {
+			isa = PBXGroup;
+			children = (
+				38FCFA831ED3E883007D3019 /* UserDatasource.swift */,
+			);
+			name = Datasources;
+			sourceTree = "<group>";
+		};
+		38FCFA861ED3E95D007D3019 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				38FCFA871ED3E982007D3019 /* UserCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		38FCFA8B1ED3F0FE007D3019 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				38FCFA411ED00EA0007D3019 /* UserViewController.swift */,
+				38FCFA891ED3F0FA007D3019 /* EditUserViewController.swift */,
+			);
+			name = User;
 			sourceTree = "<group>";
 		};
 		505D5C5A5DA6FCBD6D537B71 /* Frameworks */ = {
@@ -395,6 +428,7 @@
 				38FCFA6C1ED0D390007D3019 /* MapCell.swift in Sources */,
 				38FCFA781ED0D390007D3019 /* TitleCell.swift in Sources */,
 				38FCFA521ED0C6B9007D3019 /* Group.swift in Sources */,
+				38FCFA881ED3E982007D3019 /* UserCell.swift in Sources */,
 				38FCFA1A1ECED7DF007D3019 /* User.swift in Sources */,
 				38FCFA721ED0D390007D3019 /* ProfileFieldCell.swift in Sources */,
 				38FCFA441ED00ED3007D3019 /* GroupViewController.swift in Sources */,
@@ -402,6 +436,7 @@
 				38FCFA161ECED494007D3019 /* Secrets.swift in Sources */,
 				38FCFA3E1ED00E5D007D3019 /* SideBarMenuViewController.swift in Sources */,
 				38FCFA4C1ED021F6007D3019 /* EngagementSearchViewController.swift in Sources */,
+				38FCFA841ED3E883007D3019 /* UserDatasource.swift in Sources */,
 				38FCFA711ED0D390007D3019 /* TableFunctions.swift in Sources */,
 				38FCFA741ED0D390007D3019 /* ProfileImageCell.swift in Sources */,
 				38FCFA4E1ED02231007D3019 /* CreateGroupViewController.swift in Sources */,
@@ -411,6 +446,7 @@
 				38FCFA401ED00E93007D3019 /* FeedViewController.swift in Sources */,
 				38FCFA481ED00F4F007D3019 /* GettingStartedViewController.swift in Sources */,
 				38FCFA461ED00EE5007D3019 /* MessagesViewController.swift in Sources */,
+				38FCFA8A1ED3F0FA007D3019 /* EditUserViewController.swift in Sources */,
 				389AF40D1EC4589C0089E9C1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

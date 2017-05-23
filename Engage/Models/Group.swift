@@ -190,15 +190,15 @@ public class Group {
     }
     
     public func create(completion: ((_ success: Bool) -> Void)?) {
+        self.admins = [User.current()!.id]
+        self.members = self.admins
         self.save { (success) in
             if success {
-                if let engagement = self as? Engagement {
-                    User.current()?.engagementRelations?.add(self.object)
-                    User.current()?.save(completion: nil)
-                    Engagement.didSelect(with: engagement)
-                }
+                User.current()?.engagementRelations?.add(self.object)
+                User.current()?.save(completion: { (success) in
+                    completion?(success)
+                })
             }
-            completion?(success)
         }
     }
     

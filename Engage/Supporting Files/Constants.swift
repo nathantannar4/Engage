@@ -73,6 +73,7 @@ let PF_ENGAGEMENTS_URL                  = "url"                     //  String
 let PF_ENGAGEMENTS_POSITIONS            = "positions"               //  Array
 let PF_ENGAGEMENTS_TEAM_NAME            = "teamName"                //  String
 let PF_ENGAGEMENTS_COLOR                = "color"
+let PF_USER_ENGAGEMENT_RELATIONS        = "engagements_relations"
 
 /* Engagement Sub Groups */
 let PF_SUBGROUP_CLASS_NAME              = "_Teams"                //  Class Name

@@ -48,8 +48,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //let dataSet = NTSlideDataSet(image: #imageLiteral(resourceName: "Engage_Logo"), title: "Engage", subtitle: "Create your own Social Network!", body: nil)
         //let root = NTSlideShowViewController(dataSource: NTSlideShowDatasource(withValues: [dataSet]))
         //root.completionViewController = LoginViewController()
-        window?.rootViewController = LoginViewController()
+        window?.rootViewController = UIViewController()
         window?.makeKeyAndVisible()
+        
+        if PFUser.current() != nil {
+            PFUser.current()?.fetchInBackground(block: { (object, error) in
+                guard let user = object as? PFUser else {
+                    return
+                }
+                User(user).login()
+            })
+        } else {
+            LoginViewController().makeKeyAndVisible()
+        }
         
         FBSDKSettings.setAppID(FACEBOOK_APPLICATION_ID)
         PFFacebookUtils.initializeFacebook(applicationLaunchOptions: launchOptions)

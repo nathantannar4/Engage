@@ -69,11 +69,12 @@ public class Engagement: Group {
     
     public class func didSelect(with engagement: Engagement) {
         Engagement._current = engagement
-        
-        
-        User.current()?.loadExtension {
-            
-        }
+        User.current()?.loadExtension(completion: {
+            let tabVC = NTScrollableTabBarController(viewControllers: [UserViewController(), GroupViewController()])
+            let menuNav = NTNavigationController(rootViewController: SideBarMenuViewController())
+            let navVC = NTNavigationContainer(centerView: tabVC, leftView: menuNav)
+            navVC.makeKeyAndVisible()
+        })
     }
     
     public func didResign() {
