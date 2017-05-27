@@ -1,37 +1,31 @@
 //
-//  UserDatasource.swift
+//  EngagementDatasource.swift
 //  Engage
 //
-//  Created by Nathan Tannar on 5/22/17.
+//  Created by Nathan Tannar on 5/23/17.
 //  Copyright © 2017 Nathan Tannar. All rights reserved.
 //
 
 import NTComponents
 
-open class UserDatasource: NTCollectionDatasource {
+open class EngagementDatasource: NTCollectionDatasource {
     
-    var user: User
+    var engagements: [Engagement]
     
-    public init(fromUser user: User) {
-        self.user = user
+    public init(forEngagements engagements: [Engagement]) {
+        self.engagements = engagements
     }
     
     open override func item(_ indexPath: IndexPath) -> Any? {
-        if indexPath.section == 0 {
-            return user
-        }
-        return nil
+        return engagements[indexPath.section]
     }
     
     open override func numberOfItems(_ section: Int) -> Int {
-        if section == 0 {
-            return 1
-        }
-        return 0
+        return 1
     }
     
     open override func numberOfSections() -> Int {
-        return 1
+        return engagements.count
     }
     
     open override func footerClasses() -> [NTCollectionViewCell.Type]? {
@@ -43,7 +37,6 @@ open class UserDatasource: NTCollectionDatasource {
     }
     
     open override func cellClasses() -> [NTCollectionViewCell.Type] {
-        return [UserHeaderCell.self]
+        return [EngagementPreviewCell.self]
     }
 }
-

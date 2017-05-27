@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3800A35D1ED53BD10024F259 /* EngagementDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3800A35C1ED53BD10024F259 /* EngagementDatasource.swift */; };
+		3800A35F1ED53C5D0024F259 /* EngagementPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3800A35E1ED53C5D0024F259 /* EngagementPreviewCell.swift */; };
+		3800A3631ED55FA80024F259 /* GroupHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3800A3621ED55FA80024F259 /* GroupHeaderCell.swift */; };
+		3800A3651ED561E80024F259 /* GroupDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3800A3641ED561E80024F259 /* GroupDatasource.swift */; };
 		389AF40D1EC4589C0089E9C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389AF40C1EC4589C0089E9C1 /* AppDelegate.swift */; };
 		389AF4301EC45A2C0089E9C1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 389AF42E1EC45A2C0089E9C1 /* LaunchScreen.storyboard */; };
 		389AF43A1EC45A6C0089E9C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 389AF4321EC45A6C0089E9C1 /* Assets.xcassets */; };
@@ -45,7 +49,7 @@
 		38FCFA7A1ED0D390007D3019 /* DynamicHeightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA681ED0D390007D3019 /* DynamicHeightCell.swift */; };
 		38FCFA7B1ED0D390007D3019 /* DynamicHeightCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38FCFA691ED0D390007D3019 /* DynamicHeightCell.xib */; };
 		38FCFA841ED3E883007D3019 /* UserDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA831ED3E883007D3019 /* UserDatasource.swift */; };
-		38FCFA881ED3E982007D3019 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA871ED3E982007D3019 /* UserCell.swift */; };
+		38FCFA881ED3E982007D3019 /* UserHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA871ED3E982007D3019 /* UserHeaderCell.swift */; };
 		38FCFA8A1ED3F0FA007D3019 /* EditUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FCFA891ED3F0FA007D3019 /* EditUserViewController.swift */; };
 		92ACA59C6BB90C1665E9BBEC /* Pods_Engage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D533F048D873034BCEA956BD /* Pods_Engage.framework */; };
 /* End PBXBuildFile section */
@@ -55,6 +59,10 @@
 		1AE8B33FE3A4EE61C6D5B8A4 /* Pods-Engage.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Engage.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Engage/Pods-Engage.debug.xcconfig"; sourceTree = "<group>"; };
 		295334EA8AA928D9060D74CB /* Pods-EngageTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EngageTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-EngageTests/Pods-EngageTests.release.xcconfig"; sourceTree = "<group>"; };
 		30E4AACB51564030261A5C65 /* Pods-Engage.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Engage.release.xcconfig"; path = "Pods/Target Support Files/Pods-Engage/Pods-Engage.release.xcconfig"; sourceTree = "<group>"; };
+		3800A35C1ED53BD10024F259 /* EngagementDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EngagementDatasource.swift; path = Datasources/EngagementDatasource.swift; sourceTree = "<group>"; };
+		3800A35E1ED53C5D0024F259 /* EngagementPreviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EngagementPreviewCell.swift; path = Cells/EngagementPreviewCell.swift; sourceTree = "<group>"; };
+		3800A3621ED55FA80024F259 /* GroupHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GroupHeaderCell.swift; path = Cells/GroupHeaderCell.swift; sourceTree = "<group>"; };
+		3800A3641ED561E80024F259 /* GroupDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GroupDatasource.swift; path = Datasources/GroupDatasource.swift; sourceTree = "<group>"; };
 		389AF4091EC4589C0089E9C1 /* Engage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Engage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		389AF40C1EC4589C0089E9C1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		389AF42F1EC45A2C0089E9C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -95,7 +103,7 @@
 		38FCFA681ED0D390007D3019 /* DynamicHeightCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicHeightCell.swift; sourceTree = "<group>"; };
 		38FCFA691ED0D390007D3019 /* DynamicHeightCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DynamicHeightCell.xib; sourceTree = "<group>"; };
 		38FCFA831ED3E883007D3019 /* UserDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserDatasource.swift; path = Datasources/UserDatasource.swift; sourceTree = "<group>"; };
-		38FCFA871ED3E982007D3019 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = Cells/UserCell.swift; sourceTree = "<group>"; };
+		38FCFA871ED3E982007D3019 /* UserHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserHeaderCell.swift; path = Cells/UserHeaderCell.swift; sourceTree = "<group>"; };
 		38FCFA891ED3F0FA007D3019 /* EditUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditUserViewController.swift; sourceTree = "<group>"; };
 		9A03F5C067309D7A531B2526 /* Pods-EngageTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EngageTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EngageTests/Pods-EngageTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D533F048D873034BCEA956BD /* Pods_Engage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Engage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -246,6 +254,8 @@
 			isa = PBXGroup;
 			children = (
 				38FCFA831ED3E883007D3019 /* UserDatasource.swift */,
+				3800A35C1ED53BD10024F259 /* EngagementDatasource.swift */,
+				3800A3641ED561E80024F259 /* GroupDatasource.swift */,
 			);
 			name = Datasources;
 			sourceTree = "<group>";
@@ -253,7 +263,9 @@
 		38FCFA861ED3E95D007D3019 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				38FCFA871ED3E982007D3019 /* UserCell.swift */,
+				38FCFA871ED3E982007D3019 /* UserHeaderCell.swift */,
+				3800A3621ED55FA80024F259 /* GroupHeaderCell.swift */,
+				3800A35E1ED53C5D0024F259 /* EngagementPreviewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -424,23 +436,27 @@
 				38FCFA6F1ED0D390007D3019 /* EventPreviewCell.swift in Sources */,
 				389AF4431EC5B3260089E9C1 /* LoginViewController.swift in Sources */,
 				38FCFA541ED0C6BD007D3019 /* Engagement.swift in Sources */,
+				3800A35D1ED53BD10024F259 /* EngagementDatasource.swift in Sources */,
+				3800A3631ED55FA80024F259 /* GroupHeaderCell.swift in Sources */,
 				38FCFA761ED0D390007D3019 /* ImageCell.swift in Sources */,
 				38FCFA6C1ED0D390007D3019 /* MapCell.swift in Sources */,
 				38FCFA781ED0D390007D3019 /* TitleCell.swift in Sources */,
 				38FCFA521ED0C6B9007D3019 /* Group.swift in Sources */,
-				38FCFA881ED3E982007D3019 /* UserCell.swift in Sources */,
+				38FCFA881ED3E982007D3019 /* UserHeaderCell.swift in Sources */,
 				38FCFA1A1ECED7DF007D3019 /* User.swift in Sources */,
 				38FCFA721ED0D390007D3019 /* ProfileFieldCell.swift in Sources */,
 				38FCFA441ED00ED3007D3019 /* GroupViewController.swift in Sources */,
 				38FCFA7A1ED0D390007D3019 /* DynamicHeightCell.swift in Sources */,
 				38FCFA161ECED494007D3019 /* Secrets.swift in Sources */,
 				38FCFA3E1ED00E5D007D3019 /* SideBarMenuViewController.swift in Sources */,
+				3800A35F1ED53C5D0024F259 /* EngagementPreviewCell.swift in Sources */,
 				38FCFA4C1ED021F6007D3019 /* EngagementSearchViewController.swift in Sources */,
 				38FCFA841ED3E883007D3019 /* UserDatasource.swift in Sources */,
 				38FCFA711ED0D390007D3019 /* TableFunctions.swift in Sources */,
 				38FCFA741ED0D390007D3019 /* ProfileImageCell.swift in Sources */,
 				38FCFA4E1ED02231007D3019 /* CreateGroupViewController.swift in Sources */,
 				38FCFA6E1ED0D390007D3019 /* EventFeedCell.swift in Sources */,
+				3800A3651ED561E80024F259 /* GroupDatasource.swift in Sources */,
 				38FCFA2E1ECEDA63007D3019 /* Service.swift in Sources */,
 				38FCFA701ED0D390007D3019 /* FormerInputAccessoryView.swift in Sources */,
 				38FCFA401ED00E93007D3019 /* FeedViewController.swift in Sources */,

@@ -90,9 +90,9 @@ class EngagementSearchViewController: NTNavigationViewController, UITableViewDat
         
         cell.textLabel?.text = self.engagements[indexPath.row].name
         cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
-        if let members = self.engagements[indexPath.row].members {
-            cell.detailTextLabel?.text = "\(members.count) Members"
-        }
+//        if let members = self.engagements[indexPath.row].members {
+//            cell.detailTextLabel?.text = "\(members.count) Members"
+//        }
         
         cell.imageView?.image = self.engagements[indexPath.row].image?.scale(to: 40)
         cell.imageView?.tintColor = self.engagements[indexPath.row].color
@@ -118,8 +118,8 @@ class EngagementSearchViewController: NTNavigationViewController, UITableViewDat
         query.limit = 25
         query.order(byDescending: PF_ENGAGEMENTS_UPDATED_AT)
         query.whereKey(PF_ENGAGEMENTS_HIDDEN, equalTo: false)
-        if let currentEngagements = User.current()?.engagementRelations {
-            query.whereKey(PF_ENGAGEMENTS_OBJECT_ID, doesNotMatchKey: PF_ENGAGEMENTS_OBJECT_ID, in: currentEngagements.query())
+        if let engagements = User.current()?.engagements {
+            query.whereKey(PF_ENGAGEMENTS_OBJECT_ID, doesNotMatchKey: PF_ENGAGEMENTS_OBJECT_ID, in: engagements.query())
         }
         query.whereKey(PF_ENGAGEMENTS_LOWERCASE_NAME, contains: self.searchField.text?.lowercased())
         query.findObjectsInBackground(block: { (objects, error) in

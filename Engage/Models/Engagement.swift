@@ -50,8 +50,8 @@ public class Engagement: Group {
     
     convenience init() {
         self.init(PFObject(className: PF_ENGAGEMENTS_CLASS_NAME))
-        self.members = [User.current()!.id]
-        self.admins = [User.current()!.id]
+        self.members.add(User.current()!.object)
+        self.admins.add(User.current()!.object)
         self.positions = []
         self.profileFields = []
     }
@@ -70,17 +70,11 @@ public class Engagement: Group {
     public class func didSelect(with engagement: Engagement) {
         Engagement._current = engagement
         User.current()?.loadExtension(completion: {
-            let tabVC = NTScrollableTabBarController(viewControllers: [UserViewController(), GroupViewController()])
+            let tabVC = NTScrollableTabBarController(viewControllers: [UserViewController(), GroupViewController(forGroup: engagement)])
+            tabVC.title = engagement.name
             let menuNav = NTNavigationController(rootViewController: SideBarMenuViewController())
             let navVC = NTNavigationContainer(centerView: tabVC, leftView: menuNav)
             navVC.makeKeyAndVisible()
         })
-    }
-    
-    public func didResign() {
-        User.current()?.engagementRelations?.remove(self.object)
-        User.current()?.save(completion: nil)
-        
-
     }
 }

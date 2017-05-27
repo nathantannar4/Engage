@@ -99,29 +99,17 @@ public class Group {
             self.object[PF_ENGAGEMENTS_PASSWORD] = newValue
         }
     }
-    public var hidden: Bool? {
+    public var members: PFRelation<PFObject> {
         get {
-            let isHidden = self.object.value(forKey: PF_ENGAGEMENTS_HIDDEN) as? Bool
-            if isHidden == nil {
-                self.hidden = false
-            }
-            return self.object.value(forKey: PF_ENGAGEMENTS_HIDDEN) as? Bool
-        }
-        set {
-            self.object[PF_ENGAGEMENTS_HIDDEN] = newValue
-        }
-    }
-    public var members: [String]? {
-        get {
-            return self.object.value(forKey: PF_ENGAGEMENTS_MEMBERS) as? [String]
+            return self.object.relation(forKey: PF_ENGAGEMENTS_MEMBERS)
         }
         set {
             self.object[PF_ENGAGEMENTS_MEMBERS] = newValue
         }
     }
-    public var admins: [String]? {
+    public var admins: PFRelation<PFObject> {
         get {
-            return self.object.value(forKey: PF_ENGAGEMENTS_ADMINS) as? [String]
+            return self.object.relation(forKey: PF_ENGAGEMENTS_ADMINS)
         }
         set {
             self.object[PF_ENGAGEMENTS_ADMINS] = newValue
@@ -190,11 +178,9 @@ public class Group {
     }
     
     public func create(completion: ((_ success: Bool) -> Void)?) {
-        self.admins = [User.current()!.id]
-        self.members = self.admins
         self.save { (success) in
             if success {
-                User.current()?.engagementRelations?.add(self.object)
+                User.current()?.engagements?.add(self.object)
                 User.current()?.save(completion: { (success) in
                     completion?(success)
                 })
@@ -203,113 +189,72 @@ public class Group {
     }
     
     public func promote(user: User, completion: ((_ success: Bool) -> Void)?) {
-        guard var admins = self.admins else {
-            completion?(false)
-            return
-        }
-        admins.append(user.id)
-        self.admins = admins
+        self.admins.add(user.object)
         self.save { (success) in
             completion?(success)
             if success {
                 Log.write(.status, "User \(user.id) was promoted to an admin in group \(self.id)")
-            } else {
-                NTPing.genericErrorMessage()
+                NTPing(type: .isSuccess, title: "\(user.fullname!) is now an admin").show()
             }
         }
     }
     
     public func demote(user: User, completion: ((_ success: Bool) -> Void)?) {
-        guard var admins = self.admins else {
-            completion?(false)
-            return
-        }
-        if let index = admins.index(of: user.id) {
-            if admins.count <= 1 {
+        self.admins.remove(user.object)
+        let query = admins.query()
+        query.getFirstObjectInBackground { (object, error) in
+            if object == nil {
+                // No objects exist, user cannot be demoted
+                self.admins.add(user.object)
                 NTToast(text: "You are the only admin.").show()
-                NTPing(type: .isWarning, title: "Cannot Resign").show()
+                NTPing(type: .isWarning, title: "You cannot resign").show()
                 completion?(false)
             } else {
-                admins.remove(at: index)
-                self.admins = admins
                 self.save { (success) in
                     completion?(success)
                     if success {
                         Log.write(.status, "User \(user.id) was demoted in group \(self.id)")
-                    } else {
-                        NTPing.genericErrorMessage()
+                        NTPing(type: .isSuccess, title: "\(user.fullname!) is no longer an admin").show()
                     }
                 }
             }
-        } else {
-            completion?(false)
         }
     }
 
     public func join(user: User, completion: ((_ success: Bool) -> Void)?) {
-        guard var members = self.members else {
-            completion?(false)
-            return
-        }
-        
-        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: name, preferredStyle: .actionSheet)
-        actionSheetController.view.tintColor = Color.Default.Tint.View
-        
-        let joinAction: UIAlertAction = UIAlertAction(title: "Join", style: .default) { action -> Void in
-            members.append(user.id)
-            self.members = members
-            self.save { (success) in
-                completion?(success)
-                if success {
-                    Log.write(.status, "User \(user.id) joined group \(self.id)")
-                    if self is Engagement {
-                        User.current()?.engagementRelations?.add(self.object)
-                        User.current()?.save(completion: nil)
-                    }
-                } else {
-                    NTPing.genericErrorMessage()
+        self.members.add(user.object)
+        self.save { (success) in
+            completion?(success)
+            if success {
+                Log.write(.status, "User \(user.id) joined group \(self.id)")
+                if self is Engagement {
+                    User.current()?.engagements?.add(self.object)
+                    User.current()?.save(completion: nil)
                 }
             }
         }
-        actionSheetController.addAction(joinAction)
-        
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .destructive)
-        actionSheetController.addAction(cancelAction)
-        
-        Group.topWindow()?.rootViewController?.present(actionSheetController, animated: true, completion: nil)
     }
     
     public func leave(user: User, completion: ((_ success: Bool) -> Void)?) {
-        guard var members = self.members else {
-            completion?(false)
-            return
-        }
-        if let index = members.index(of: user.id) {
-            if var admins = self.admins {
-                if let adminIndex = admins.index(of: user.id) {
-                    admins.remove(at: adminIndex)
-                    if admins.count == 0 {
-                        NTToast(text: "You are the only admin. You can delete the group.").show()
-                        NTPing(type: .isWarning, title: "Cannot Leave").show()
-                        completion?(false)
-                        return
-                    }
-                    self.admins = admins
-                }
-            }
-            members.remove(at: index)
-            self.members = members
-        }
-        self.save { (success) in
-            if success {
-                Log.write(.status, "User \(user.id) left group \(self.id)")
-                if user.id == User.current()?.id, let engagement = self as? Engagement {
-                    engagement.didResign()
-                }
+        let admins = self.admins
+        self.admins.remove(user.object)
+        let query = admins.query()
+        query.getFirstObjectInBackground { (object, error) in
+            if object == nil {
+                self.admins = admins
+                NTToast(text: "You are the only admin. You can delete the group.").show()
+                NTPing(type: .isWarning, title: "You cannot leave").show()
+                completion?(false)
             } else {
-                NTPing.genericErrorMessage()
+                self.members.remove(user.object)
+                self.save { (success) in
+                    if success {
+                        Log.write(.status, "User \(user.id) left group \(self.id)")
+                        NTPing(type: .isSuccess, title: "You left \(self.name!)").show()
+                    }
+                    completion?(success)
+                }
             }
-            completion?(success)
         }
     }
     
@@ -367,14 +312,5 @@ public class Group {
         self.save { (success) in
             completion?(success)
         }
-    }
-    
-    class func topWindow() -> UIWindow? {
-        for window in UIApplication.shared.windows.reversed() {
-            if window.windowLevel == UIWindowLevelNormal && !window.isHidden && window.frame != CGRect.zero {
-                return window
-            }
-        }
-        return nil
     }
 }

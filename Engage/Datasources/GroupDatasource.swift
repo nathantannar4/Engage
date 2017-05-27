@@ -1,33 +1,27 @@
 //
-//  UserDatasource.swift
+//  GroupDatasource.swift
 //  Engage
 //
-//  Created by Nathan Tannar on 5/22/17.
+//  Created by Nathan Tannar on 5/23/17.
 //  Copyright © 2017 Nathan Tannar. All rights reserved.
 //
 
 import NTComponents
 
-open class UserDatasource: NTCollectionDatasource {
+open class GroupDatasource: NTCollectionDatasource {
     
-    var user: User
+    var group: Group
     
-    public init(fromUser user: User) {
-        self.user = user
+    public init(forGroup group: Group) {
+        self.group = group
     }
     
     open override func item(_ indexPath: IndexPath) -> Any? {
-        if indexPath.section == 0 {
-            return user
-        }
-        return nil
+        return group
     }
     
     open override func numberOfItems(_ section: Int) -> Int {
-        if section == 0 {
-            return 1
-        }
-        return 0
+        return 1
     }
     
     open override func numberOfSections() -> Int {
@@ -43,7 +37,6 @@ open class UserDatasource: NTCollectionDatasource {
     }
     
     open override func cellClasses() -> [NTCollectionViewCell.Type] {
-        return [UserHeaderCell.self]
+        return [GroupHeaderCell.self]
     }
 }
-

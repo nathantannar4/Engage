@@ -77,7 +77,6 @@ class CreateGroupViewController: NTNavigationViewController, UIImagePickerContro
     convenience init(asEngagement: Bool) {
         self.init()
         self.group = Engagement()
-        self.group.name = String()
     }
     
     // MARK: - Form
@@ -248,24 +247,6 @@ class CreateGroupViewController: NTNavigationViewController, UIImagePickerContro
             }.onTextChanged {
                 self.group.email = $0
         }
-        let hiddenRow = SegmentedRowFormer<FormSegmentedCell>() {
-            $0.titleLabel.text = "Hide group in search?"
-            $0.titleLabel.font = Font.Default.Body
-            $0.formSegmented().tintColor = Color.Default.Tint.View
-            }.configure {
-                $0.segmentTitles = ["  No  ", "  Yes  "]
-                if self.group.hidden! {
-                    $0.selectedIndex = 1
-                } else {
-                    $0.selectedIndex = 0
-                }
-            }.onSegmentSelected { (index, choice) in
-                if index == 0 {
-                    self.group.hidden = false
-                } else {
-                    self.group.hidden = true
-                }
-        }
         let passwordRow = TextFieldRowFormer<ProfileFieldCell>(instantiateType: .Nib(nibName: "ProfileFieldCell")) { [weak self] in
             $0.titleLabel.text = "Password"
             $0.textField.inputAccessoryView = self?.formerInputAccessoryView
@@ -303,7 +284,7 @@ class CreateGroupViewController: NTNavigationViewController, UIImagePickerContro
         
         let aboutSection = SectionFormer(rowFormer: nameRow, customCheckRow, infoRow, urlRow, addressRow, phoneRow, emailRow).set(headerViewFormer: TableFunctions.createHeader(text: "About"))
         
-        let securitySection = SectionFormer(rowFormer: hiddenRow, passwordChoiceRow).set(headerViewFormer: TableFunctions.createHeader(text: "Security & Privacy"))
+        let securitySection = SectionFormer(rowFormer: passwordChoiceRow).set(headerViewFormer: TableFunctions.createHeader(text: "Security & Privacy"))
         
         self.former.append(sectionFormer: imageSection, aboutSection)
             .onCellSelected { [weak self] _ in
@@ -316,16 +297,10 @@ class CreateGroupViewController: NTNavigationViewController, UIImagePickerContro
     }
     
     private func presentImagePicker() {
-        let picker = UIImagePickerController()
+        let picker = NTImagePickerController()
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = false
-        picker.navigationBar.barTintColor = Color.Default.Background.NavigationBar
-        picker.navigationBar.tintColor = Color.Default.Tint.NavigationBar
-        picker.navigationBar.shadowImage = UIImage()
-        picker.navigationBar.isTranslucent = false
-        picker.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        picker.navigationBar.setDefaultShadow()
         present(picker, animated: true, completion: nil)
     }
     

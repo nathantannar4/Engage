@@ -19,6 +19,10 @@ class UserViewController: NTCollectionViewController {
         datasource = UserDatasource(fromUser: User.current()!)
         collectionView?.refreshControl = refreshControl()
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         let menuButton = UIBarButtonItem(image: Icon.MoreVertical.scale(to: 25), style: .plain, target: self, action: #selector(handleMore))
         getNTNavigationContainer?.centerView.navigationItem.rightBarButtonItem = menuButton
@@ -30,11 +34,6 @@ class UserViewController: NTCollectionViewController {
             items.append(
                 NTActionSheetItem(title: "Edit", icon: nil, action: {
                     self.navigationController?.pushViewController(EditUserViewController(), animated: true)
-                })
-            )
-            items.append(
-                NTActionSheetItem(title: "Leave Engagement", icon: nil, action: {
-                    
                 })
             )
         } else {
@@ -82,7 +81,7 @@ class UserViewController: NTCollectionViewController {
     override open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         if indexPath.section == 0 {
-            return CGSize(width: view.frame.width, height: 266)
+            return CGSize(width: view.frame.width, height: 310)
         }
         
         return CGSize(width: view.frame.width, height: 44)

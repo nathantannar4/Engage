@@ -18,11 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         Color.Default.setPrimary(to: .white)
         Color.Default.setSecondary(to: UIColor(hex: "#31485e"))
+        Color.Default.setTertiary(to: UIColor(hex: "#31485e"))
         
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
             ParseMutableClientConfiguration.applicationId = APPLICATION_ID
@@ -50,10 +50,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //root.completionViewController = LoginViewController()
         window?.rootViewController = UIViewController()
         window?.makeKeyAndVisible()
-        
+
         if PFUser.current() != nil {
             PFUser.current()?.fetchInBackground(block: { (object, error) in
                 guard let user = object as? PFUser else {
+                    LoginViewController().makeKeyAndVisible()
                     return
                 }
                 User(user).login()

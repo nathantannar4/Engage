@@ -14,9 +14,26 @@ struct Service {
     static let sharedInstance = Service()
     static var queryHome: String {
         get {
-            return "dev" //Engagement.current()?.queryName ?? "nil"
+            return Engagement.current()?.queryName ?? "nil"
         }
     }
+    
+    func fetchEngagementDatasource(forUser user: User?, completion: @escaping (EngagementDatasource) -> ()) {
+        let engagementQuery = user?.engagements?.query()
+        engagementQuery?.findObjectsInBackground { (objects, error) in
+            guard let objects = objects else {
+                Log.write(.error, error.debugDescription)
+                NTPing(type: .isDanger, title: error?.localizedDescription).show()
+                return
+            }
+            let engagements = objects.map({ (object) -> Engagement in
+                return Engagement(object)
+            })
+            let datasource = EngagementDatasource(forEngagements: engagements)
+            completion(datasource)
+        }
+    }
+    
     /*
     func fetchHomeDatasource(completion: @escaping (HomeDatasource) -> ()) {
         let engagementQuery = User.current().engagements?.query()

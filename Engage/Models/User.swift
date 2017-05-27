@@ -73,15 +73,15 @@ public class User {
             self.object[PF_USER_BLOCKED] = newValue
         }
     }
-    public var engagementRelations: PFRelation<PFObject>? {
+    public var engagements: PFRelation<PFObject>? {
         get {
-            return self.object.relation(forKey: PF_USER_ENGAGEMENT_RELATIONS)
+            return self.object.relation(forKey: PF_USER_ENGAGEMENTS)
         }
         set {
-            self.object[PF_USER_ENGAGEMENT_RELATIONS] = newValue
+            self.object[PF_USER_ENGAGEMENTS] = newValue
+            
         }
     }
-    public var engagements: [Engagement]?
     
     // MARK: Initialization
     
@@ -131,16 +131,9 @@ public class User {
     
     public func login() {
         User._current = self
-        let query = engagementRelations?.query()
-        query?.findObjectsInBackground(block: { (objects, error) in
-            guard let engagements = objects else {
-                NTPing(type: .isWarning, title: error?.localizedDescription).show()
-                return
-            }
-            User._current!.engagements = engagements.map({ (object) -> Engagement in
-                return Engagement(object)
-            })
-            if engagements.count == 0 {
+        let query = engagements?.query()
+        query?.getFirstObjectInBackground(block: { (object, error) in
+            if object == nil {
                 GettingStartedViewController().makeKeyAndVisible()
             } else {
                 NTNavigationController(rootViewController: SideBarMenuViewController()).makeKeyAndVisible()
@@ -217,53 +210,6 @@ public class User {
             completion?()
         }
     }
-    
-    /*
-    public class func didLogin(with user: PFUser) {
-        User._current = User(user)
-        PushNotication.parsePushUserAssign()
-        if let id = UserDefaults.standard.value(forKey: "currentEngagement") as? String {
-            let engagmentQuery = PFQuery(className: PF_ENGAGEMENTS_CLASS_NAME)
-            engagmentQuery.whereKey(PF_ENGAGEMENTS_OBJECT_ID, equalTo: id)
-            engagmentQuery.getFirstObjectInBackground(block: { (object, error) in
-                guard let engagement = object else {
-                    //let navContainer = NTNavigationContainer(centerView: NTPageViewController(viewControllers: [UINavigationController(rootViewController: EngageInfoViewController()),UINavigationController(rootViewController: EngagementHomeViewController()), UINavigationController(rootViewController: DiscoverEngagementsViewController())], initialIndex: 1))
-                    //UIApplication.shared.keyWindow?.rootViewController = navContainer
-                    return
-                }
-                Engagement.didSelect(with: Engagement(engagement))
-            })
-        } else {
-            let navContainer = NTNavigationContainer(centerView: NTPageViewController(viewControllers: [NTNavigationController(rootViewController: InfoViewController()), NTNavigationController(rootViewController: HomeViewController()), NTNavigationController(rootViewController: DiscoverViewController())], initialIndex: 1))
-            UIApplication.shared.keyWindow?.rootViewController = navContainer
-        }
-    }
-    
-    public func logout(_ target: UIViewController) {
-        if self.id == User.current().id {
-            
-            let actionSheetController: UIAlertController = UIAlertController(title: "Are you sure?", message: "", preferredStyle: .alert)
-            actionSheetController.view.tintColor = Color.Default.Tint.View.NavigationBar
-            
-            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel)
-            actionSheetController.addAction(cancelAction)
-            
-            let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .destructive) { action -> Void in
-                PFUser.logOut()
-                PushNotication.parsePushUserResign()
-                UserDefaults.standard.set(nil, forKey: "currentEngagement")
-                let navContainer = NTNavigationContainer(centerView: LoginViewController())
-                UIApplication.shared.keyWindow?.rootViewController = navContainer
-            }
-            actionSheetController.addAction(logoutAction)
-            
-            actionSheetController.popoverPresentationController?.sourceView = target.view
-            target.present(actionSheetController, animated: true, completion: nil)
-        } else {
-            Log.write(.warning, "User is not logged in")
-        }
-    }
-    */
     
     // MARK: User Extension
     
