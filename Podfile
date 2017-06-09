@@ -8,13 +8,10 @@ target 'Engage' do
   # Pods for Engage
   pod 'NTComponents', :path => '~/Documents/NTComponents'
   pod 'Parse'
-  pod 'ParseUI'
   pod 'ParseFacebookUtilsV4'
   pod 'Bolts'
   pod 'Agrume'
-  pod 'Former'
-  pod 'DZNEmptyDataSet'
-  pod 'JSQMessagesViewController'
+  # pod 'JSQMessagesViewController'
   # pod 'CVCalendar'
 
 end

@@ -107,6 +107,14 @@ public class Group {
             self.object[PF_ENGAGEMENTS_MEMBERS] = newValue
         }
     }
+    public var memberCount: Int {
+        get {
+            return (self.object.value(forKey: PF_ENGAGEMENTS_MEMBER_COUNT) as? Int) ?? 0
+        }
+        set {
+            self.object[PF_ENGAGEMENTS_MEMBER_COUNT] = newValue
+        }
+    }
     public var admins: PFRelation<PFObject> {
         get {
             return self.object.relation(forKey: PF_ENGAGEMENTS_ADMINS)
@@ -177,17 +185,6 @@ public class Group {
         }
     }
     
-    public func create(completion: ((_ success: Bool) -> Void)?) {
-        self.save { (success) in
-            if success {
-                User.current()?.engagements?.add(self.object)
-                User.current()?.save(completion: { (success) in
-                    completion?(success)
-                })
-            }
-        }
-    }
-    
     public func promote(user: User, completion: ((_ success: Bool) -> Void)?) {
         self.admins.add(user.object)
         self.save { (success) in
@@ -223,6 +220,7 @@ public class Group {
 
     public func join(user: User, completion: ((_ success: Bool) -> Void)?) {
         self.members.add(user.object)
+        self.memberCount = self.memberCount + 1
         self.save { (success) in
             completion?(success)
             if success {
@@ -247,6 +245,7 @@ public class Group {
                 completion?(false)
             } else {
                 self.members.remove(user.object)
+                self.memberCount = self.memberCount - 1
                 self.save { (success) in
                     if success {
                         Log.write(.status, "User \(user.id) left group \(self.id)")

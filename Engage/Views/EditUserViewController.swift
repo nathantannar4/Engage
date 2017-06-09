@@ -8,7 +8,6 @@
 
 import UIKit
 import NTComponents
-import Former
 import Parse
 import Agrume
 

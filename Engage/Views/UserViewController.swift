@@ -25,7 +25,7 @@ class UserViewController: NTCollectionViewController {
         super.viewDidAppear(animated)
         
         let menuButton = UIBarButtonItem(image: Icon.MoreVertical.scale(to: 25), style: .plain, target: self, action: #selector(handleMore))
-        getNTNavigationContainer?.centerView.navigationItem.rightBarButtonItem = menuButton
+        navigationContainer?.centerView.navigationItem.rightBarButtonItem = menuButton
     }
     
     func handleMore() {
@@ -65,7 +65,7 @@ class UserViewController: NTCollectionViewController {
         collectionView?.refreshControl?.endRefreshing()
         
         if let parent = parent as? NTScrollableTabBarController {
-            parent.configureTabView()
+            parent.setupTabView()
         }
     }
     

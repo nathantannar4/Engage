@@ -5,7 +5,7 @@
   },
   "summary": "A collection of everything I find useful when developing any app!",
   "requires_arc": true,
-  "version": "0.0.3",
+  "version": "0.0.6",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -16,9 +16,9 @@
   "homepage": "https://github.com/nathantannar4/NTComponents",
   "source": {
     "git": "https://github.com/nathantannar4/NTComponents.git",
-    "tag": "0.0.3"
+    "tag": "0.0.6"
   },
   "frameworks": "UIKit",
   "source_files": "NTComponents/**/*.{swift}",
-  "resources": "NTComponents/**/*.{xcassets,oft,ttf,xib,storyboard}"
+  "resources": "NTComponents/**/*.{xcassets,otf,ttf,xib,storyboard}"
 }

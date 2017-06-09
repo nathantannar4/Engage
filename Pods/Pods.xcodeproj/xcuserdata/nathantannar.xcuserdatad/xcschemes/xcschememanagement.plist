@@ -14,32 +14,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>DZNEmptyDataSet.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>FBSDKCoreKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>FBSDKLoginKit.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Former.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>JSQMessagesViewController.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>JSQSystemSoundPlayer.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -59,11 +39,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>ParseUI.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-Engage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -73,16 +48,6 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>2A52779AA0BD86BA0CEB8753126ED2FE</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>2B3884F3D6C55986BEBFDD0B95F9C9CE</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>385DB888CC1D5D17133E1E61DE766879</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -102,12 +67,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A49653DE5C178056786C3F4942CA524F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A760316124FD796EF09C09479E9F0021</key>
+		<key>A0FDD0FD4F38E9093538816C68BF898E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -122,17 +82,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C7DCF2B547F7871B9BFD74DE93B0E173</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D0581AF7BF4A6DA140D280B19ECC7BFF</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D386C75EFD4F03725E4EFB866B600B9A</key>
+		<key>F11710078B3007FCA46E599D733BD110</key>
 		<dict>
 			<key>primary</key>
 			<true/>

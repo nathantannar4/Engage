@@ -84,8 +84,6 @@ class LoginViewController: NTLoginViewController, NTEmailAuthDelegate {
         
         PFUser.logInWithUsername(inBackground: email, password: password) { (object, error) -> Void in
             
-            controller.showActivityIndicator = false
-            
             guard let user = object else {
                 Log.write(.error, error.debugDescription)
                 NTPing(type: .isDanger, title: "Authorization Failed").show()
@@ -95,7 +93,10 @@ class LoginViewController: NTLoginViewController, NTEmailAuthDelegate {
             Log.write(.status, "Email Sign In Successful")
             controller.dismiss(animated: true, completion: {
                 NTPing(type: .isSuccess, title: "Authorization Success").show()
-                User(user).login()
+                DispatchQueue.executeAfter(1 , closure: {
+                    controller.showActivityIndicator = false
+                    User(user).login()
+                })
             })
         }
     }

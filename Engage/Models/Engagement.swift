@@ -58,7 +58,6 @@ public class Engagement: Group {
 
     // MARK: - Public Functions
     
-    
     public static func current() -> Engagement? {
         guard let engagement = self._current else {
             Log.write(.error, "The current engagement was nil")
@@ -67,13 +66,55 @@ public class Engagement: Group {
         return engagement
     }
     
-    public class func didSelect(with engagement: Engagement) {
+    public func upload(image: UIImage?, forKey key: String, completion: (() -> Void)?) {
+        
+        guard let image = image else {
+            completion?()
+            return
+        }
+        
+        NTToast(text: "Uploading Image...").show(duration: 1.0)
+        if let pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(image, 0.6)!) {
+            pictureFile.saveInBackground { (succeeded: Bool, error: Error?) -> Void in
+                if error != nil {
+                    Log.write(.error, error.debugDescription)
+                    NTPing(type: .isDanger, title: error?.localizedDescription.capitalized).show()
+                } else {
+                    NTToast(text: "Image Uploaded").show(duration: 1)
+                    self.object[key] = pictureFile
+                    completion?()
+                }
+            }
+            
+        }
+    }
+    
+    public func create(completion: ((_ success: Bool) -> Void)?) {
+        upload(image: coverImage, forKey: PF_ENGAGEMENTS_COVER_PHOTO) { 
+            upload(image: image, forKey: PF_ENGAGEMENTS_LOGO, completion: {
+                self.members.add(User.current()!.object)
+                self.admins.add(User.current()!.object)
+                self.memberCount = 1
+                self.save { (success) in
+                    if success {
+                        User.current()?.engagements?.add(self.object)
+                        User.current()?.save(completion: { (success) in
+                            completion?(success)
+                        })
+                    }
+                }
+            })
+        }
+    }
+    
+    public class func select(_ engagement: Engagement) {
         Engagement._current = engagement
         User.current()?.loadExtension(completion: {
             let tabVC = NTScrollableTabBarController(viewControllers: [UserViewController(), GroupViewController(forGroup: engagement)])
             tabVC.title = engagement.name
-            let menuNav = NTNavigationController(rootViewController: SideBarMenuViewController())
-            let navVC = NTNavigationContainer(centerView: tabVC, leftView: menuNav)
+//            let menuNav = NTNavigationController(rootViewController: SideBarMenuViewController())
+//            let navVC = NTNavigationContainer(centerView: tabVC, leftView: menuNav)
+            let navVC = NTNavigationContainer(centerView: tabVC)
             navVC.makeKeyAndVisible()
         })
     }

@@ -59,6 +59,7 @@ let PF_ENGAGEMENTS_UPDATED_AT           = "updatedAt"
 let PF_ENGAGEMENTS_NAME                 = "name"                    //  String
 let PF_ENGAGEMENTS_LOWERCASE_NAME       = "name_lower"          //  String
 let PF_ENGAGEMENTS_MEMBERS              = "members"                 //  Array
+let PF_ENGAGEMENTS_MEMBER_COUNT         = "member_count"                 //  Int
 let PF_ENGAGEMENTS_HIDDEN               = "hidden"                  //  Bool
 let PF_ENGAGEMENTS_PASSWORD             = "password"                //  String
 let PF_ENGAGEMENTS_ADMINS               = "admins"                  //  Array

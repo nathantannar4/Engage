@@ -34,21 +34,22 @@ class SideBarMenuViewController: NTCollectionViewController {
         navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createEngagement)), UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchEngagements))]
         
         // Add toolbar
-        navigationController?.setToolbarHidden(false, animated: false)
-        navigationController?.toolbar.isTranslucent = false
-        navigationController?.toolbar.tintColor = Color.Default.Tint.Toolbar
-        let items = [UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(logout)), UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)]
-        setToolbarItems(items, animated: false)
+//        navigationController?.setToolbarHidden(false, animated: false)
+//        navigationController?.toolbar.isTranslucent = false
+//        navigationController?.toolbar.tintColor = Color.Default.Tint.Toolbar
+//        let items = [UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(logout)), UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)]
+//        setToolbarItems(items, animated: false)
     }
     
     func createEngagement() {
-        let vc = CreateGroupViewController(asEngagement: true)
-        UIViewController.topController()?.presentViewController(vc, from: .right, completion: nil)
+        let group = Engagement(PFObject(className: PF_ENGAGEMENTS_CLASS_NAME))
+        let navVC = NTNavigationViewController(rootViewController: EditGroupViewController(fromGroup: group))
+        present(navVC, animated: true, completion: nil)
     }
     
     func searchEngagements() {
-        let vc = EngagementSearchViewController()
-        UIViewController.topController()?.presentViewController(vc, from: .right, completion: nil)
+        let navVC = NTNavigationViewController(rootViewController: GroupSearchViewController())
+        present(navVC, animated: true, completion: nil)
     }
     
     func helpButtonPressed() {
@@ -71,9 +72,9 @@ class SideBarMenuViewController: NTCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let engagement = (datasource as? EngagementDatasource)?.engagements[indexPath.section] {
-            getNTNavigationContainer?.toggleLeftPanel()
+            navigationContainer?.toggleLeftPanel()
             DispatchQueue.executeAfter(0.4, closure: {
-                Engagement.didSelect(with: engagement)
+                Engagement.select(engagement)
             })
         }
     }

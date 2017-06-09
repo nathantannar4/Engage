@@ -34,19 +34,44 @@ class GroupViewController: NTCollectionViewController {
         super.viewDidAppear(animated)
         
         let menuButton = UIBarButtonItem(image: Icon.MoreVertical.scale(to: 25), style: .plain, target: self, action: #selector(handleMore))
-        getNTNavigationContainer?.centerView.navigationItem.rightBarButtonItem = menuButton
+        navigationContainer?.centerView.navigationItem.rightBarButtonItem = menuButton
     }
     
     func handleMore() {
         var items = [NTActionSheetItem]()
-        items.append(
-            NTActionSheetItem(title: "Leave \((datasource as! GroupDatasource).group.name!)", icon: nil, action: {
-                
-            })
-        )
-        let actionSheet = NTActionSheetViewController(actions: items)
-        actionSheet.addDismissAction(withText: "Dismiss", icon: nil)
-        present(actionSheet, animated: false, completion: nil)
+        let group = (self.datasource as! GroupDatasource).group
+        let query = group.admins.query()
+        query.findObjectsInBackground { (objects, error) in
+            guard let users = objects else {
+                return
+            }
+            if users.contains(where: { (user) -> Bool in
+                if user.objectId == User.current()?.id {
+                    return true
+                }
+                return false
+            }) {
+                items.append(
+                    NTActionSheetItem(title: "Edit", icon: nil, action: {
+                        let vc = EditGroupViewController(fromGroup: group)
+                        let navVC = NTNavigationViewController(rootViewController: vc)
+                        self.present(navVC, animated: true, completion: nil)
+                    })
+                )
+            }
+            items.append(
+                NTActionSheetItem(title: "Leave \(group.name!)", icon: nil, action: {
+                    group.leave(user: User.current()!, completion: { (success) in
+                        if success {
+                            SideBarMenuViewController().makeKeyAndVisible()
+                        }
+                    })
+                })
+            )
+            let actionSheet = NTActionSheetViewController(actions: items)
+            actionSheet.addDismissAction(withText: "Dismiss", icon: nil)
+            self.present(actionSheet, animated: false, completion: nil)
+        }
     }
     
     
