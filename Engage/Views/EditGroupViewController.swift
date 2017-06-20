@@ -28,6 +28,7 @@ class EditGroupViewController: NTFormViewController, NTNavigationViewControllerD
     lazy var infoCell: NTFormCell = { [weak self] in
         let cell = NTFormLongInputCell()
         cell.title = "Info"
+        cell.placeholder = "A brief description about your group"
         cell.text = self?.group.info
         cell.onTextViewUpdate({ (textView) in
             self?.group.info = textView.text
@@ -38,6 +39,7 @@ class EditGroupViewController: NTFormViewController, NTNavigationViewControllerD
     lazy var urlCell: NTFormCell = { [weak self] in
         let cell = NTFormInputCell()
         cell.title = "URL"
+        cell.placeholder = "https://www.yourwebsite.com"
         cell.text = self?.group.url
         cell.onTextFieldUpdate({ (textField) in
             self?.group.url = textField.text
@@ -48,6 +50,7 @@ class EditGroupViewController: NTFormViewController, NTNavigationViewControllerD
     lazy var emailCell: NTFormCell = { [weak self] in
         let cell = NTFormInputCell()
         cell.title = "Email"
+        cell.placeholder = "johndoe@mail.ca"
         cell.text = self?.group.email
         cell.onTextFieldUpdate({ (textField) in
             self?.group.email = textField.text
@@ -65,7 +68,15 @@ class EditGroupViewController: NTFormViewController, NTNavigationViewControllerD
         })
         cell.onTouchUpInsideActionButton({ (button) in
             cell.presentImagePicker(completion: { (image) in
-                self?.group.image = image
+                if self?.group.createdAt == nil {
+                    self?.group.image = image
+                } else {
+                    cell.image = nil
+                    self?.group.image = image
+                    self?.group.upload(image: image, forKey: PF_ENGAGEMENTS_LOGO, completion: {
+                        cell.image = image
+                    })
+                }
             })
         })
         return cell
@@ -85,9 +96,57 @@ class EditGroupViewController: NTFormViewController, NTNavigationViewControllerD
         })
         cell.onTouchUpInsideActionButton({ (button) in
             cell.presentImagePicker(completion: { (image) in
-                self?.group.coverImage = image
+                if self?.group.createdAt == nil {
+                    self?.group.coverImage = image
+                } else {
+                    cell.image = nil
+                    self?.group.coverImage = image
+                    self?.group.upload(image: image, forKey: PF_ENGAGEMENTS_COVER_PHOTO, completion: {
+                        cell.image = image
+                    })
+                }
             })
         })
+        return cell
+    }()
+    
+    lazy var positionsCell: NTFormTagInputCell = { [weak self] in
+        let cell = NTFormTagInputCell()
+        cell.title = "Group Positions"
+        if let positions = self?.group.positions {
+            cell.tagListView.addTags(positions)
+        }
+        cell.onTagAdded { (tagView, tagListView) in
+            if let title = tagView.titleLabel?.text {
+                self?.group.positions.append(title)
+            }
+        }
+        cell.onTagDeleted { (tagView, tagListView) in
+            if let title = tagView.titleLabel?.text, let index = self?.group.positions.index(of: title) {
+                self?.group.positions.remove(at: index)
+                tagListView.removeTagView(tagView)
+            }
+        }
+        return cell
+    }()
+    
+    lazy var profileFieldsCell: NTFormTagInputCell = { [weak self] in
+        let cell = NTFormTagInputCell()
+        cell.title = "Profile Fields"
+        if let positions = self?.group.profileFields {
+            cell.tagListView.addTags(positions)
+        }
+        cell.onTagAdded { (tagView, tagListView) in
+            if let title = tagView.titleLabel?.text {
+                self?.group.profileFields.append(title)
+            }
+        }
+        cell.onTagDeleted { (tagView, tagListView) in
+            if let title = tagView.titleLabel?.text, let index = self?.group.profileFields.index(of: title) {
+                self?.group.profileFields.remove(at: index)
+                tagListView.removeTagView(tagView)
+            }
+        }
         return cell
     }()
     
@@ -100,6 +159,7 @@ class EditGroupViewController: NTFormViewController, NTNavigationViewControllerD
             NTPing(type: .isInfo, title: "Please enter a name for your group").show()
             return
         }
+        
         let progress = NTProgressHUD()
         if group.createdAt == nil {
             // New Group
@@ -152,14 +212,18 @@ class EditGroupViewController: NTFormViewController, NTNavigationViewControllerD
         title = group.name != nil ? "Edit \(group.name!)" : "Create Group"
         navigationViewController?.delegate = self
         navigationViewController?.nextButton.image = Icon.Check
+        collectionView?.contentInset.bottom = 30
         
+       
         let photoSection = NTFormSection(fromRows: [coverPhotoCell, logoPhotoCell], withHeaderTitle: "Images", withFooterTitle: nil)
         let infoSection = NTFormSection(fromRows: [infoCell, urlCell, emailCell], withHeaderTitle: "Info", withFooterTitle: nil)
-        appendSections([photoSection, infoSection])
+        let customizationSection = NTFormSection(fromRows: [positionsCell, profileFieldsCell], withHeaderTitle: "Customization", withFooterTitle: nil)
+        
+        appendSections([photoSection, infoSection, customizationSection])
         
         if group.createdAt == nil {
             // New Group
-            insertSection(NTFormSection(fromRows: [nameCell], withHeaderTitle: "Name", withFooterTitle: nil), atIndex: 1)
+            insertSection(NTFormSection(fromRows: [nameCell], withHeaderTitle: "Name (cannot be changed)", withFooterTitle: nil), atIndex: 0)
         }
         
         reloadForm()

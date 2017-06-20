@@ -42,12 +42,12 @@ open class UserHeaderCell: NTCollectionViewCell {
     }()
     
     open let titleLabel: NTLabel = {
-        let label = NTLabel(style: .title)
+        let label = NTLabel(style: .headline)
         return label
     }()
     
     open let subtitleLabel: NTLabel = {
-        let label = NTLabel(style: .subtitle)
+        let label = NTLabel(style: .subhead)
         return label
     }()
     
@@ -78,7 +78,7 @@ open class UserHeaderCell: NTCollectionViewCell {
         titleLabel.anchor(view.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: 8, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 20)
         titleLabel.anchorCenterXToSuperview()
         
-        subtitleLabel.anchor(titleLabel.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: 6, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 15)
+        subtitleLabel.anchor(titleLabel.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: 2, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 15)
         subtitleLabel.anchorCenterXToSuperview()
     }
 }

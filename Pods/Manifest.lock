@@ -10,6 +10,9 @@ PODS:
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.23.0):
     - FBSDKCoreKit
+  - JSQMessagesViewController (7.3.4):
+    - JSQSystemSoundPlayer (~> 2.0.1)
+  - JSQSystemSoundPlayer (2.0.1)
   - NTComponents (0.0.6)
   - Parse (1.14.4):
     - Bolts/Tasks (~> 1.8)
@@ -23,6 +26,7 @@ PODS:
 DEPENDENCIES:
   - Agrume
   - Bolts
+  - JSQMessagesViewController
   - NTComponents (from `~/Documents/NTComponents`)
   - Parse
   - ParseFacebookUtilsV4
@@ -36,10 +40,12 @@ SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   FBSDKCoreKit: d7829f5a69901cd7296105328e4c3c3fc7da6518
   FBSDKLoginKit: 6b92bd65f319d669d2b0730e49db495ef1660566
+  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
+  JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   NTComponents: a6f9187b2d73b860bea4138f73cfc4860c433957
   Parse: b0aa91d2c435e53d4a9af26e741e014c9b35c42e
   ParseFacebookUtilsV4: 2f30c2b7021c8005d3042781da7ef87d06589421
 
-PODFILE CHECKSUM: ab66aeeff6a3d97ea1525eb9d9eb044fc33f5a4c
+PODFILE CHECKSUM: 0db1dc4544c11a9a39cd71b1117045134cd03cde
 
 COCOAPODS: 1.2.1

@@ -9,46 +9,36 @@
 import NTComponents
 import Parse
 
-class SideBarMenuViewController: NTCollectionViewController {
+class SideBarMenuViewController: NTTableViewController, UIViewControllerTransitioningDelegate{
     
-    // MARK: - Standard Methods
+    var engagements = [Engagement]()
     
-    override open func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
-        Service.sharedInstance.fetchEngagementDatasource(forUser: User.current(), completion: { (datasource) in
-            self.datasource = datasource
-        })
-        
         let rc = refreshControl()
-        rc?.tintColor = .white
-        rc?.attributedTitle = NSAttributedString(string: "Pull to Refresh", attributes: [NSForegroundColorAttributeName: UIColor.white])
-        collectionView?.refreshControl = rc
-        
-        // Change View Background
-        view.backgroundColor = .clear
-        view.applyGradient(colours: [Color.Default.Tint.View.darker(by: 10), Color.Default.Tint.View.darker(by: 5), Color.Default.Tint.View, Color.Default.Tint.View.lighter(by: 5)], locations: [0.0, 0.1, 0.3, 1.0])
+        tableView.refreshControl = rc
+        tableView.tableFooterView = UIView()
         
         // Add navigation items
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: Icon.Help?.scale(to: 25), style: .plain, target: self, action: #selector(helpButtonPressed))
         navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createEngagement)), UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchEngagements))]
         
-        // Add toolbar
-//        navigationController?.setToolbarHidden(false, animated: false)
-//        navigationController?.toolbar.isTranslucent = false
-//        navigationController?.toolbar.tintColor = Color.Default.Tint.Toolbar
-//        let items = [UIBarButtonItem(title: "Sign Out", style: .plain, target: self, action: #selector(logout)), UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)]
-//        setToolbarItems(items, animated: false)
+        handleRefresh()
     }
     
     func createEngagement() {
         let group = Engagement(PFObject(className: PF_ENGAGEMENTS_CLASS_NAME))
         let navVC = NTNavigationViewController(rootViewController: EditGroupViewController(fromGroup: group))
+        navVC.transitioningDelegate = self
+        navVC.modalPresentationStyle = .custom
         present(navVC, animated: true, completion: nil)
     }
     
     func searchEngagements() {
         let navVC = NTNavigationViewController(rootViewController: GroupSearchViewController())
+        navVC.transitioningDelegate = self
+        navVC.modalPresentationStyle = .custom
         present(navVC, animated: true, completion: nil)
     }
     
@@ -59,35 +49,57 @@ class SideBarMenuViewController: NTCollectionViewController {
     func logout() {
         User.current()?.logout()
     }
+
+    // MARK: - UITableViewDataSource
     
-    override func handleRefresh() {
-        collectionView?.refreshControl?.beginRefreshing()
-        Service.sharedInstance.fetchEngagementDatasource(forUser: User.current(), completion: { (datasource) in
-            DispatchQueue.main.async(execute: {
-                self.datasource = datasource
-                self.collectionView?.refreshControl?.endRefreshing()
-            })
-        })
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let engagement = (datasource as? EngagementDatasource)?.engagements[indexPath.section] {
-            navigationContainer?.toggleLeftPanel()
-            DispatchQueue.executeAfter(0.4, closure: {
-                Engagement.select(engagement)
-            })
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return engagements.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = NTTableViewCell()
+        
+        cell.textLabel?.text = self.engagements[indexPath.row].name
+        cell.textLabel?.font = Font.Default.Body.withSize(18)
+        cell.detailTextLabel?.text = "\(self.engagements[indexPath.row].memberCount) Members"
+    
+        cell.imageView?.contentMode = .scaleAspectFill
+        cell.imageView?.layer.cornerRadius = 5
+        cell.imageView?.layer.borderWidth = 1
+        cell.imageView?.layer.borderColor = Color.Default.Tint.View.cgColor
+        cell.imageView?.layer.masksToBounds = true
+        
+        
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        if engagements[indexPath.row].id != Engagement.current()?.id {
+            Engagement.select(engagements[indexPath.row])
         }
     }
     
-    
-    // MARK: - UICollectionViewDataSource Methods
-    
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return CGSize(width: view.frame.width, height: 160)
-    }
-    
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return .zero
+    override func handleRefresh() {
+        let query = User.current()?.engagements?.query()
+        query?.findObjectsInBackground(block: { (objects, error) in
+            guard let engagements = objects else {
+                Log.write(.error, error.debugDescription)
+                NTPing(type: .isDanger, title: error?.localizedDescription.capitalized).show()
+                return
+            }
+            self.engagements = engagements.map({ (engagement) -> Engagement in
+                return Engagement(engagement)
+            })
+            DispatchQueue.main.async {
+                self.tableView.refreshControl?.endRefreshing()
+                self.tableView.reloadData()
+            }
+        })
     }
 }

@@ -14,6 +14,8 @@ class GettingStartedViewController: NTLandingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.applyGradient(colours: [Color.Default.Background.NavigationBar.darker(by: 10), Color.Default.Background.NavigationBar.darker(by: 5), Color.Default.Background.NavigationBar, Color.Default.Background.NavigationBar.lighter(by: 5)], locations: [0.0, 0.1, 0.3, 1.0])
+        
         titleLabel.text = "Welcome"
         subtitleLabel.text = "to Engage"
         detailLabel.text = "Create your own private or public group to for student societies, clubs, organizations and any other group you want your own social space for."

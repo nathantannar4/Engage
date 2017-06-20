@@ -20,9 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        //UIColor(hex: "#31485e")
-        Color.Default.setPrimary(to: .white)
-        Color.Default.setSecondary(to: UIColor(hex: "#0277BD"))
+        Color.Default.setPrimary(to: UIColor(hex: "31485e"))
+        Color.Default.setSecondary(to: .white)
+        Color.Default.setTertiary(to: UIColor(hex: "baa57b"))
+        Color.Default.Tint.Toolbar = UIColor(hex: "31485e")
         
         Font.Default.Title = Font.Roboto.Medium.withSize(15)
         Font.Default.Subtitle = Font.Roboto.Regular
@@ -30,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Font.Default.Caption = Font.Roboto.Medium.withSize(12)
         Font.Default.Subhead = Font.Roboto.Regular.withSize(14)
         Font.Default.Headline = Font.Roboto.Medium.withSize(15)
-        Font.Default.Callout = Font.Roboto.Regular.withSize(15)
+        Font.Default.Callout = Font.Roboto.Medium.withSize(15)
         Font.Default.Footnote = Font.Roboto.Regular.withSize(12)
         
         let config = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
@@ -50,31 +51,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         application.registerForRemoteNotifications()
         
-        //let dataSet = NTSlideDataSet(image: #imageLiteral(resourceName: "Engage_Logo"), title: "Engage", subtitle: "Create your own Social Network!", body: nil)
-        //let root = NTSlideShowViewController(dataSource: NTSlideShowDatasource(withValues: [dataSet]))
-        //root.completionViewController = LoginViewController()
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.backgroundColor = .white
-        let vc = NTLandingViewController()
-        vc.buttonA.isHidden = true
-        vc.buttonB.isHidden = true
-        window?.rootViewController = vc
+        window?.backgroundColor = UIColor(hex: "31485e")
+        window?.rootViewController = NTNavigationController(rootViewController: LoginViewController())
+        window?.rootViewController?.view.isHidden = true
         window?.makeKeyAndVisible()
         
-        let loginVC = LoginViewController()
-        
         if PFUser.current() != nil {
-            PFUser.current()?.fetchInBackground(block: { (object, error) in
-                guard let user = object as? PFUser else {
-                    loginVC.makeKeyAndVisible()
-                    return
-                }
-                User(user).login()
-            })
+             User(PFUser.current()!).login()
         } else {
-            loginVC.makeKeyAndVisible()
+            window?.rootViewController?.view.isHidden = false
         }
+        
         
         FBSDKSettings.setAppID(FACEBOOK_APPLICATION_ID)
         PFFacebookUtils.initializeFacebook(applicationLaunchOptions: launchOptions)

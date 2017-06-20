@@ -10,10 +10,13 @@ import NTComponents
 
 class GroupViewController: NTCollectionViewController {
     
+    var group: Group!
+    
     convenience init(forGroup group: Group) {
         self.init()
-        
+        self.group = group
         datasource = GroupDatasource(forGroup: group)
+        collectionView?.refreshControl = refreshControl()
     }
     
     override init() {
@@ -27,14 +30,20 @@ class GroupViewController: NTCollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Home"
+        title = "Group"
+    }
+    
+    override func handleRefresh() {
+        super.handleRefresh()
+        datasource = GroupDatasource(forGroup: group)
+        collectionView?.refreshControl?.endRefreshing()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         let menuButton = UIBarButtonItem(image: Icon.MoreVertical.scale(to: 25), style: .plain, target: self, action: #selector(handleMore))
-        navigationContainer?.centerView.navigationItem.rightBarButtonItem = menuButton
+        drawerController?.rootViewController?.navigationItem.setRightBarButton(menuButton, animated: true)
     }
     
     func handleMore() {
@@ -63,7 +72,8 @@ class GroupViewController: NTCollectionViewController {
                 NTActionSheetItem(title: "Leave \(group.name!)", icon: nil, action: {
                     group.leave(user: User.current()!, completion: { (success) in
                         if success {
-                            SideBarMenuViewController().makeKeyAndVisible()
+                            self.drawerController?.removeViewController(forSide: .left)
+                            self.drawerController?.setViewController(NTNavigationController(rootViewController: SideBarMenuViewController()), forSide: .center)
                         }
                     })
                 })
@@ -87,7 +97,7 @@ class GroupViewController: NTCollectionViewController {
     override open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         if indexPath.section == 0 {
-            return CGSize(width: view.frame.width, height: 266)
+            return CGSize(width: view.frame.width, height: 310)
         }
         
         return CGSize(width: view.frame.width, height: 44)

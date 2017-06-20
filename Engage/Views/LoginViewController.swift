@@ -86,18 +86,18 @@ class LoginViewController: NTLoginViewController, NTEmailAuthDelegate {
             
             guard let user = object else {
                 Log.write(.error, error.debugDescription)
+                controller.showActivityIndicator = false
                 NTPing(type: .isDanger, title: "Authorization Failed").show()
                 NTToast(text: error?.localizedDescription.capitalized ?? "Please check your credentials.", height: 52).show()
                 return
             }
             Log.write(.status, "Email Sign In Successful")
-            controller.dismiss(animated: true, completion: {
-                NTPing(type: .isSuccess, title: "Authorization Success").show()
-                DispatchQueue.executeAfter(1 , closure: {
-                    controller.showActivityIndicator = false
-                    User(user).login()
-                })
+            NTPing(type: .isSuccess, title: "Authorization Success").show()
+            DispatchQueue.executeAfter(0.5 , closure: {
+                controller.showActivityIndicator = false
+                User(user).login()              
             })
+            
         }
     }
     

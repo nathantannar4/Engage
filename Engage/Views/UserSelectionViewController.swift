@@ -10,59 +10,56 @@ import UIKit
 import NTComponents
 import Parse
 
-protocol UserSelectionDelegate {
-    func didMakeSelection(ofUsers users: [User])
-}
 
-class UserSelectionViewController: UserListViewController {
+class UserSelectionViewController: NTSearchSelectViewController<User> {
     
-    var selectionDelegate: UserSelectionDelegate!
-    var allowMultipleSelection = true
-    var selectedUsers = [User]()
+    var confirmedSelectionMethod: (([User])->Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(completedSelection(sender:)))
+        
+        title = "User Selection"
     }
     
-    func completedSelection(sender: UIButton) {
-        self.dismiss(animated: true, completion: {
-            self.selectionDelegate.didMakeSelection(ofUsers: self.selectedUsers)
+    override func updateResults() {
+        guard let query = Engagement.current()?.members.query() else {
+            return
+        }
+        query.limit = 1000
+        query.order(byAscending: PF_USER_FULLNAME)
+        query.whereKey(PF_USER_OBJECTID, notEqualTo: User.current()!.id)
+        query.whereKey(PF_USER_FULLNAME_LOWER, contains: self.searchBar.text?.lowercased())
+        query.findObjectsInBackground(block: { (objects, error) in
+            guard let users = objects as? [PFUser] else {
+                Log.write(.error, error.debugDescription)
+                NTPing(type: .isDanger, title: error?.localizedDescription.capitalized).show()
+                return
+            }
+            self.objects = users.map { return User($0) }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         })
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if self.selectedUsers.contains(where: { (user) -> Bool in
-            return (self.users[indexPath.row].id == user.id)
-        }) {
-            cell.accessoryType = .checkmark
-        }
+        cell.textLabel?.text = objects[indexPath.row].fullname
+        cell.imageView?.image = objects[indexPath.row].image?.toSquare()
+        cell.imageView?.fullyRound(diameter: 44, borderColor: Color.Default.Tint.View, borderWidth: 1)
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.tableView.deselectRow(at: indexPath, animated: true)
-        if self.allowMultipleSelection {
-            guard let cell = self.tableView.cellForRow(at: indexPath) else {
-                return
-            }
-            cell.tintColor = Color.Default.Tint.View
-            if self.selectedUsers.contains(where: { (user) -> Bool in
-                return (self.users[indexPath.row].id == user.id)
-            }) {
-                self.selectedUsers.append(self.users[indexPath.row])
-                cell.accessoryType = .none
-            } else {
-                self.selectedUsers.append(self.users[indexPath.row])
-                cell.accessoryType = .checkmark
-            }
-        } else {
-            self.dismiss(animated: true, completion: {
-                self.selectionDelegate.didMakeSelection(ofUsers: [self.users[indexPath.row]])
-            })
-        }
+    override func searchController(confirmedSelectionOfObjects objects: [User]) {
+        confirmedSelectionMethod?(objects)
+    }
+    
+    override func searchController(didCancelSelectionOfObject: User, atRow row: Int) {
+        
+    }
+    
+    override func searchController(didMakeSelectionOfObject object: User, atRow row: Int) {
+        
     }
 }
 

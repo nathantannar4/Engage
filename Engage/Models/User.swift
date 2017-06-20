@@ -10,7 +10,7 @@ import Parse
 import UIKit
 import NTComponents
 
-public class User {
+public class User: Equatable {
     
     private static var _current: User?
     private static let imageCache = NSCache<NSString, DiscardableImageCacheItem>()
@@ -25,6 +25,9 @@ public class User {
             }
             return id
         }
+    }
+    public static func ==(lhs: User, rhs: User) -> Bool {
+        return lhs.id == rhs.id
     }
     public var createdAt: Date? {
         get {
@@ -88,18 +91,18 @@ public class User {
     public init(_ object: PFUser) {
         self.object = object
         
-        if let logoFile = self.object.value(forKey: PF_USER_PICTURE) as? PFFile {
-            if let cachedItem = User.imageCache.object(forKey: NSString(string: logoFile.url!)) {
+        if let profileFile = self.object.value(forKey: PF_USER_PICTURE) as? PFFile {
+            if let cachedItem = User.imageCache.object(forKey: NSString(string: profileFile.url!)) {
                 image = cachedItem.image
             } else {
-                logoFile.getDataInBackground { (data, error) in
+                profileFile.getDataInBackground { (data, error) in
                     guard let imageData = data else {
                         Log.write(.error, error.debugDescription)
                         return
                     }
                     self.image = UIImage(data: imageData)
                     let cacheItem = DiscardableImageCacheItem(image: UIImage(data: imageData)!)
-                    User.imageCache.setObject(cacheItem, forKey: NSString(string: logoFile.url!))
+                    User.imageCache.setObject(cacheItem, forKey: NSString(string: profileFile.url!))
                 }
             }
         }
@@ -133,20 +136,33 @@ public class User {
         User._current = self
         let query = engagements?.query()
         query?.getFirstObjectInBackground(block: { (object, error) in
-            if object == nil {
-                GettingStartedViewController().makeKeyAndVisible()
-            } else {
-                NTNavigationController(rootViewController: SideBarMenuViewController()).makeKeyAndVisible()
-            }
+            DispatchQueue.main.async {
+                if object == nil {
+                    GettingStartedViewController().makeKeyAndVisible()
+                } else {
+                    NTDrawerController(centerViewController: NTNavigationController(rootViewController: SideBarMenuViewController())).makeKeyAndVisible()
+                }
+            }  
         })
     }
     
     public func logout() {
-        let logoutAction = NTActionSheetItem(title: "Sign Out") {
+        
+        guard let controller = UIViewController.topController() else {
+            return
+        }
+        
+        let logoutAction = NTActionSheetItem(title: "Logout") {
             PFUser.logOutInBackground { (error) in
                 if error == nil {
                     User._current = nil
-                    LoginViewController().makeKeyAndVisible()
+                    let vc = NTNavigationController(rootViewController: LoginViewController())
+                    if let navContainer = controller as? NTDrawerController {
+                        navContainer.removeViewController(forSide: .left)
+                        navContainer.setViewController(vc, forSide: .center)
+                    } else {
+                        vc.makeKeyAndVisible()
+                    }
                 } else {
                     NTPing.genericErrorMessage()
                 }
@@ -154,7 +170,7 @@ public class User {
         }
         let actionSheet = NTActionSheetViewController(title: nil, subtitle: nil, actions: [logoutAction])
         actionSheet.addDismissAction(withText: "Cancel", icon: nil)
-        UIViewController.topController()?.present(actionSheet, animated: false, completion: nil)
+        controller.present(actionSheet, animated: false, completion: nil)
     }
     
     public func save(completion: ((_ success: Bool) -> Void)?) {
@@ -171,6 +187,29 @@ public class User {
                 let toast = NTToast(text: error?.localizedDescription)
                 toast.show(duration: 1.0)
                 completion?(success)
+            }
+        }
+    }
+    
+    public func upload(image: UIImage?, forKey key: String, completion: (() -> Void)?) {
+        
+        guard let image = image else {
+            completion?()
+            return
+        }
+        
+        let ping = NTPing(type: .isInfo, title: "Uploading Image...")
+        ping.show()
+        if let pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(image, 0.6)!) {
+            pictureFile.saveInBackground { (succeeded: Bool, error: Error?) -> Void in
+                if error != nil {
+                    Log.write(.error, error.debugDescription)
+                    NTPing(type: .isDanger, title: error?.localizedDescription.capitalized).show()
+                } else {
+                    ping.dismiss()
+                    self.object[key] = pictureFile
+                    completion?()
+                }
             }
         }
     }
@@ -262,7 +301,7 @@ public class User {
         }
  
         
-        public func setValue(_ newValue: String, forField field: String) {
+        public func setValue(_ newValue: String?, forField field: String) {
             self.object[field] = newValue
         }
         

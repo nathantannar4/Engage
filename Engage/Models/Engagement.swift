@@ -66,32 +66,9 @@ public class Engagement: Group {
         return engagement
     }
     
-    public func upload(image: UIImage?, forKey key: String, completion: (() -> Void)?) {
-        
-        guard let image = image else {
-            completion?()
-            return
-        }
-        
-        NTToast(text: "Uploading Image...").show(duration: 1.0)
-        if let pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(image, 0.6)!) {
-            pictureFile.saveInBackground { (succeeded: Bool, error: Error?) -> Void in
-                if error != nil {
-                    Log.write(.error, error.debugDescription)
-                    NTPing(type: .isDanger, title: error?.localizedDescription.capitalized).show()
-                } else {
-                    NTToast(text: "Image Uploaded").show(duration: 1)
-                    self.object[key] = pictureFile
-                    completion?()
-                }
-            }
-            
-        }
-    }
-    
     public func create(completion: ((_ success: Bool) -> Void)?) {
         upload(image: coverImage, forKey: PF_ENGAGEMENTS_COVER_PHOTO) { 
-            upload(image: image, forKey: PF_ENGAGEMENTS_LOGO, completion: {
+            self.upload(image: self.image, forKey: PF_ENGAGEMENTS_LOGO, completion: {
                 self.members.add(User.current()!.object)
                 self.admins.add(User.current()!.object)
                 self.memberCount = 1
@@ -108,14 +85,34 @@ public class Engagement: Group {
     }
     
     public class func select(_ engagement: Engagement) {
+        
+        var navContainer = UIViewController.topController() as? NTDrawerController
+        if navContainer == nil {
+            navContainer = NTDrawerController()
+            navContainer?.makeKeyAndVisible(animated: true)
+        }
+        
         Engagement._current = engagement
         User.current()?.loadExtension(completion: {
-            let tabVC = NTScrollableTabBarController(viewControllers: [UserViewController(), GroupViewController(forGroup: engagement)])
+            let feedVC = FeedViewController().withTitle("Feed")
+            let messagesVC = MessagesViewController().withTitle("Messages")
+            let userVC = UserViewController().withTitle("Profile")
+            let groupVC = GroupViewController(forGroup: engagement)
+            let eventsVC = CalendarViewController().withTitle("Events")
+            let tabVC = NTScrollableTabBarController(viewControllers: [feedVC, messagesVC, userVC, groupVC, eventsVC])
+            tabVC.tabBarPosition = .top
+            tabVC.tabBarHeight = 30
+            tabVC.currentTabBarHeight = 3
             tabVC.title = engagement.name
-//            let menuNav = NTNavigationController(rootViewController: SideBarMenuViewController())
-//            let navVC = NTNavigationContainer(centerView: tabVC, leftView: menuNav)
-            let navVC = NTNavigationContainer(centerView: tabVC)
-            navVC.makeKeyAndVisible()
+            let menuNav = NTNavigationController(rootViewController: SideBarMenuViewController())
+            
+            navContainer?.setViewController(NTNavigationController(rootViewController: tabVC), forSide: .center, completion: {
+                navContainer?.setViewController(menuNav, forSide: .left)
+                navContainer.statusBar.alpha = 1
+            })
+            
         })
+        
+        
     }
 }

@@ -11,7 +11,6 @@ target 'Engage' do
   pod 'ParseFacebookUtilsV4'
   pod 'Bolts'
   pod 'Agrume'
-  # pod 'JSQMessagesViewController'
-  # pod 'CVCalendar'
+  pod 'JSQMessagesViewController'
 
 end

@@ -123,21 +123,17 @@ public class Group {
             self.object[PF_ENGAGEMENTS_ADMINS] = newValue
         }
     }
-    public var positions: [String]? {
+    public var positions: [String]  {
         get {
-            return self.object.value(forKey: PF_ENGAGEMENTS_POSITIONS) as? [String]
+            return self.object.value(forKey: PF_ENGAGEMENTS_POSITIONS) as? [String] ?? []
         }
         set {
             self.object[PF_ENGAGEMENTS_POSITIONS] = newValue
         }
     }
-    public var profileFields: [String]? {
+    public var profileFields: [String] {
         get {
-            let fields = self.object.value(forKey: PF_ENGAGEMENTS_PROFILE_FIELDS) as? [String]
-            if fields == nil {
-                self.profileFields = [String]()
-            }
-            return self.object.value(forKey: PF_ENGAGEMENTS_PROFILE_FIELDS) as? [String]
+            return self.object.value(forKey: PF_ENGAGEMENTS_PROFILE_FIELDS) as? [String] ?? []
         }
         set {
             self.object[PF_ENGAGEMENTS_PROFILE_FIELDS] = newValue
@@ -181,6 +177,29 @@ public class Group {
                 Log.write(.error, error.debugDescription)
                 NTToast(text: error?.localizedDescription).show()
                 NTPing(type: .isDanger, title: "Saved Failed").show()
+            }
+        }
+    }
+    
+    public func upload(image: UIImage?, forKey key: String, completion: (() -> Void)?) {
+        
+        guard let image = image else {
+            completion?()
+            return
+        }
+        
+        let ping = NTPing(type: .isInfo, title: "Uploading Image...")
+        ping.show()
+        if let pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(image, 0.6)!) {
+            pictureFile.saveInBackground { (succeeded: Bool, error: Error?) -> Void in
+                if error != nil {
+                    Log.write(.error, error.debugDescription)
+                    NTPing(type: .isDanger, title: error?.localizedDescription.capitalized).show()
+                } else {
+                    ping.dismiss()
+                    self.object[key] = pictureFile
+                    completion?()
+                }
             }
         }
     }
@@ -241,17 +260,22 @@ public class Group {
             if object == nil {
                 self.admins = admins
                 NTToast(text: "You are the only admin. You can delete the group.").show()
-                NTPing(type: .isWarning, title: "You cannot leave").show()
+                NTPing(type: .isDanger, title: "You cannot leave").show()
                 completion?(false)
             } else {
                 self.members.remove(user.object)
                 self.memberCount = self.memberCount - 1
                 self.save { (success) in
                     if success {
-                        Log.write(.status, "User \(user.id) left group \(self.id)")
-                        NTPing(type: .isSuccess, title: "You left \(self.name!)").show()
+                        user.engagements?.remove(self.object)
+                        user.save(completion: { (success) in
+                            completion?(success)
+                            if success {
+                                Log.write(.status, "User \(user.id) left group \(self.id)")
+                                NTPing(type: .isSuccess, title: "You left \(self.name!)").show()
+                            }
+                        })
                     }
-                    completion?(success)
                 }
             }
         }
@@ -282,10 +306,6 @@ public class Group {
     }
     
     public func position(forUser user: User) -> String? {
-        guard let positions = self.positions else {
-            Log.write(.status, "No positions exist")
-            return nil
-        }
         var positionIds = [String]()
         for position in positions {
             // Maps positions to the user ids

@@ -38,6 +38,7 @@ class GroupSearchViewController: NTTableViewController {
         }()
         
         let searchButton = NTButton()
+        searchButton.tintColor = .white
         searchButton.image = Icon.Search?.scale(to: 30)
         searchButton.trackTouchLocation = false
         searchButton.layer.cornerRadius = 25
@@ -65,32 +66,58 @@ class GroupSearchViewController: NTTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return engagements.count
+        if engagements.count != 0 {
+            tableView.separatorStyle = .singleLine
+            return engagements.count
+        }
+        tableView.separatorStyle = .none
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = NTTableViewCell()
 
-        cell.textLabel?.text = self.engagements[indexPath.row].value(forKey: PF_ENGAGEMENTS_NAME) as? String
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
-        if let memberCount = self.engagements[indexPath.row].value(forKey: PF_ENGAGEMENTS_MEMBER_COUNT) as? Int {
-            cell.detailTextLabel?.text = "\(memberCount) Members"
+        if engagements.count > 0 {
+            cell.textLabel?.text = self.engagements[indexPath.row].value(forKey: PF_ENGAGEMENTS_NAME) as? String
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+            if let memberCount = self.engagements[indexPath.row].value(forKey: PF_ENGAGEMENTS_MEMBER_COUNT) as? Int {
+                cell.detailTextLabel?.text = "\(memberCount) Members"
+            }
+            
+            let url = (self.engagements[indexPath.row].value(forKey: PF_ENGAGEMENTS_COVER_PHOTO) as? PFFile)?.url
+            (cell.imageView as? NTImageView)?.loadImage(urlString: url)
+            cell.imageView?.image = UIImage.from(color: Color.Default.Tint.View)
+            cell.imageView?.contentMode = .scaleAspectFill
+            cell.imageView?.layer.cornerRadius = 5
+            cell.imageView?.layer.borderWidth = 1
+            cell.imageView?.layer.borderColor = Color.Default.Tint.View.cgColor
+            cell.imageView?.layer.masksToBounds = true
+        } else {
+            cell.textLabel?.text = "No Results"
+            cell.backgroundColor = .clear
+            cell.selectionStyle = .none
         }
-        
-//        let url = (self.engagements[indexPath.row].value(forKey: PF_ENGAGEMENTS_COVER_PHOTO) as? PFFile)?.url
-//        (cell.imageView as? NTImageView)?.loadImage(urlString: url)
-//        cell.imageView?.image = UIImage.from(color: Color.Default.Tint.View)
-        cell.imageView?.contentMode = .scaleAspectFill
-        cell.imageView?.layer.cornerRadius = 5
-        cell.imageView?.layer.borderWidth = 1
-        cell.imageView?.layer.borderColor = Color.Default.Tint.View.cgColor
-        cell.imageView?.layer.masksToBounds = true
 
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(engagements[indexPath.row])
+        
+        if engagements.count > 0 {
+            let engagement = Engagement(engagements[indexPath.row])
+            let action = NTAlertViewController(title: "Would you like to join \(engagement.name!)?", subtitle: nil, type: .isInfo)
+            action.confirmButton.title = "Join"
+            action.onConfirm = {
+                Log.write(.status, "Trying to join \(engagement.name!)")
+                engagement.join(user: User.current()!) { (success) in
+                    if success {
+                        NTPing(type: .isSuccess, title: "Joined \(engagement.name!)").show()
+                        Engagement.select(engagement)
+                    }
+                }
+            }
+            action.show(self, sender: nil)
+        }
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -111,7 +138,6 @@ class GroupSearchViewController: NTTableViewController {
                 NTPing(type: .isDanger, title: error?.localizedDescription.capitalized).show()
                 return
             }
-            print(engagements)
             self.engagements = engagements
             DispatchQueue.main.async {
                 self.tableView.refreshControl?.endRefreshing()

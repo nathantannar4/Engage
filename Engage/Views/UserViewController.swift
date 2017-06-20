@@ -25,7 +25,7 @@ class UserViewController: NTCollectionViewController {
         super.viewDidAppear(animated)
         
         let menuButton = UIBarButtonItem(image: Icon.MoreVertical.scale(to: 25), style: .plain, target: self, action: #selector(handleMore))
-        navigationContainer?.centerView.navigationItem.rightBarButtonItem = menuButton
+        drawerController?.rootViewController?.navigationItem.setRightBarButton(menuButton, animated: true)
     }
     
     func handleMore() {
@@ -33,7 +33,13 @@ class UserViewController: NTCollectionViewController {
         if User.current()!.id == (datasource as? UserDatasource)?.user.id {
             items.append(
                 NTActionSheetItem(title: "Edit", icon: nil, action: {
-                    self.navigationController?.pushViewController(EditUserViewController(), animated: true)
+                    let navVC = NTNavigationViewController(rootViewController: EditUserViewController(User.current()!))
+                    self.present(navVC, animated: true, completion: nil)
+                })
+            )
+            items.append(
+                NTActionSheetItem(title: "Logout", icon: nil, action: {
+                    User.current()?.logout()
                 })
             )
         } else {
@@ -61,11 +67,10 @@ class UserViewController: NTCollectionViewController {
     override func handleRefresh() {
         collectionView?.refreshControl?.beginRefreshing()
         datasource = UserDatasource(fromUser: User.current()!)
-        collectionView?.reloadData()
         collectionView?.refreshControl?.endRefreshing()
         
         if let parent = parent as? NTScrollableTabBarController {
-            parent.setupTabView()
+            parent.setupTabBar()
         }
     }
     
