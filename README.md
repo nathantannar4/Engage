@@ -1,4 +1,4 @@
-# ![pageres](https://raw.githubusercontent.com/nathantannar4/Engage/master/Engage-Wide.jpg&raw=true)
+<img src="Engage/Engage-Wide.jpg">
 
 # Engage
 Engage is currently an iOS exclusive app that allows you to create your own social networking space! Designed specifically to help clubs, organizations and student societies to improve the communication and organization. 
