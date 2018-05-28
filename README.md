@@ -1,10 +1,10 @@
+**ATTENTION** This project has been depricated. It was a great first learning experience for myself in my earlier days of learning Swift.
+
 <img src="Engage/Engage-Wide.jpg">
 
 # Engage
-Engage is currently an iOS exclusive app that allows you to create your own social networking space! Designed specifically to help clubs, organizations and student societies to improve the communication and organization. 
+Engage was an iOS exclusive app that allows you to create your own social networking space! Designed specifically to help clubs, organizations and student societies to improve the communication and organization. 
 Create your own social network! <a href="https://appsto.re/ca/TmlJfb.i">Download Link</a>
-
-**ATTENTION** Current development is on the rebuild branch
 
 ## Some of the core features include:
 - Complete Customization: Make your group unique with a wide variety of customization options!
@@ -24,8 +24,6 @@ This app has been a personal project of mine and I thank you for your support!
 - [x] Create a marketing web page
 - [x] Full Push Notification integration
 - [x] Facebook Login Support
-- [ ] Enhance UI
-- [ ] Optimize UI
 
 ## Team
 
